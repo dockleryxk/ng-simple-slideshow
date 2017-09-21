@@ -169,7 +169,7 @@ $border-color: darken(#FFF, 5%);
   }
 }
 
-@keyframes slideInLeft {
+@keyframes slideInRight {
    0% {
      left: -100%;
    }
@@ -179,7 +179,7 @@ $border-color: darken(#FFF, 5%);
    }
  }
 
-@keyframes slideInRight {
+@keyframes slideInLeft {
   0% {
     left: 100%;
   }
@@ -188,8 +188,7 @@ $border-color: darken(#FFF, 5%);
     left: 0;
   }
 }
-
-@keyframes slideOutLeft {
+@keyframes slideOutRight {
   0% {
     left: 0;
   }
@@ -199,7 +198,7 @@ $border-color: darken(#FFF, 5%);
   }
 }
 
-@keyframes slideOutRight {
+@keyframes slideOutLeft {
   0% {
     left: 0;
   }
