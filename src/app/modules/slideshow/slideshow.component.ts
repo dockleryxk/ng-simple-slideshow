@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {SwipeService} from './swipe.service';
-import {isUndefined} from 'util';
+import {isNullOrUndefined, isUndefined} from 'util';
 
 @Component({
   selector: 'app-slideshow',
@@ -11,15 +11,18 @@ export class SlideshowComponent implements OnInit {
   public slideIndex: number = 0;
   public slides: {url: string, action: string, leftSide: boolean, rightSide: boolean, selected: boolean}[] = [];
   @Input() imageUrls: string[];
+  @Input() height: string;
+  @ViewChild('container') container: ElementRef;
 
   constructor(
-    private swipeService: SwipeService
+    private swipeService: SwipeService,
+    private renderer: Renderer2
   ) { }
 
   ngOnInit() {
-    for(let url of this.imageUrls)
-      this.slides.push({url: url, action: '', leftSide: false, rightSide: false, selected: false});
+    for(let url of this.imageUrls) this.slides.push({url: url, action: '', leftSide: false, rightSide: false, selected: false});
     this.slides[this.slideIndex].selected = true;
+    if(!isNullOrUndefined(this.height)) this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
   }
 
   slide(indexDirection: number): void {
