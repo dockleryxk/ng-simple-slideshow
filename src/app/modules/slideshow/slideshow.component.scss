@@ -1,0 +1,210 @@
+/*
+ styles adapted from https://www.w3schools.com/w3css/4/w3.css
+ arrow styles adapted from https://codepen.io/minustalent/pen/Frhaw
+ */
+$border-color: darken(#FFF, 5%);
+
+.slideshow-container {
+  position: relative;
+  display: block;
+  margin: auto;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  .hide-slide {
+    visibility: hidden;
+    position: absolute;
+    top: -100vw;
+    left: -100vw;
+    opacity: 0;
+  }
+
+  .slides {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    //transition: opacity 500ms linear, visibility 0s linear;
+    visibility: visible;
+    opacity: 1;
+
+    &.selected {
+      left: 0;
+    }
+
+    &.left-slide {
+      left: -100%;
+    }
+
+    &.right-slide {
+      left: 100%;
+    }
+
+    &.slide-in-left {
+      left: 0;
+      animation: slideInLeft .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+    }
+
+    &.slide-in-right {
+      left: 0;
+      animation: slideInRight .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+    }
+
+    &.slide-out-left {
+      left: -100%;
+      animation: slideOutLeft .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+    }
+
+    &.slide-out-right {
+      left: 100%;
+      animation: slideOutRight .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+    }
+  }
+
+  .arrow-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: auto;
+    cursor: pointer;
+    background-size: 100%;
+    background-image: linear-gradient(transparent, transparent);
+    z-index: 100;
+    user-select: none;
+
+    &:before {
+      display: block;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      opacity: 0;
+      width: 100%;
+      z-index: -100;
+      transition: opacity 0.45s;
+    }
+
+    &.prev {
+      left: 0;
+
+      &:before {
+        background-image: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.75));
+        content: '';
+      }
+    }
+
+    &.next {
+      right: 0;
+
+      &:before {
+        background-image: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.75));
+        content: '';
+      }
+    }
+
+    &:hover {
+      &:before {
+        opacity: 1;
+      }
+
+      .arrow {
+        border: {
+          width: 4px;
+        }
+      }
+    }
+
+    .arrow {
+      display: block;
+      margin: auto;
+      width: 60px;
+      height: 60px;
+      background: transparent;
+      text-indent: -9999px;
+      border: {
+        top: 2px solid $border-color;
+        left: 2px solid $border-color;
+      }
+      transition: all .3s ease-in-out;
+      text-decoration: none;
+      color: transparent;
+      user-select: none;
+
+      &:hover {
+        border: {
+          width: 4px;
+        }
+      }
+
+      &:before {
+        display: block;
+        height: 200%;
+        width: 200%;
+        margin: {
+          left: -50%;
+          top: -50%;
+        }
+        content: "";
+        transform: rotate(45deg);
+      }
+
+      &.prev {
+        transform: rotate(-45deg);
+        position: relative;
+        left: 20px;
+      }
+
+      &.next {
+        transform: rotate(135deg);
+        position: relative;
+        right: 20px;
+      }
+    }
+  }
+}
+
+@keyframes slideInLeft {
+   0% {
+     left: -100%;
+   }
+
+   100% {
+     left: 0;
+   }
+ }
+
+@keyframes slideInRight {
+  0% {
+    left: 100%;
+  }
+
+  100% {
+    left: 0;
+  }
+}
+
+@keyframes slideOutLeft {
+  0% {
+    left: 0;
+  }
+
+  100% {
+    left: -100%;
+  }
+}
+
+@keyframes slideOutRight {
+  0% {
+    left: 0;
+  }
+
+  100% {
+    left: 100%;
+  }
+}

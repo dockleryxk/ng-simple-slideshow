@@ -1,0 +1,22 @@
+<div (touchstart)="detectSwipe($event, 'start')"
+     (touchend)="detectSwipe($event, 'end')"
+     class="slideshow-container">
+  <div *ngFor="let slide of slides"
+       [class.selected]="slide.selected"
+       [class.hide-slide]="!slide.selected && !slide.leftSide && !slide.rightSide"
+       [class.left-side]="slide.leftSide"
+       [class.right-side]="slide.rightSide"
+       [class.slide-in-left]="slide.action === 'slideInLeft'"
+       [class.slide-in-right]="slide.action === 'slideInRight'"
+       [class.slide-out-left]="slide.action === 'slideOutLeft'"
+       [class.slide-out-right]="slide.action === 'slideOutRight'"
+       class="slides"
+       [ngStyle]="{'background-image': 'url('+slide.url+')'}">
+  </div>
+  <div (click)="slide(-1)" class="arrow-container prev">
+    <i title="Previous" class="arrow prev">&laquo; previous</i>
+  </div>
+  <div (click)="slide(1)" class="arrow-container next">
+    <i title="Next" class="arrow next">next &raquo; </i>
+  </div>
+</div>
