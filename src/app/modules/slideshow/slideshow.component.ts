@@ -3,7 +3,7 @@ import {SwipeService} from './swipe.service';
 import {isNullOrUndefined, isUndefined} from 'util';
 
 @Component({
-  selector: 'app-slideshow',
+  selector: 'slideshow',
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.scss']
 })
