@@ -3,6 +3,7 @@
      (touchend)="onSwipe($event, 'end')"
      class="slideshow-container">
   <div *ngFor="let slide of slides"
+       class="slides"
        [class.selected]="slide.selected"
        [class.hide-slide]="!slide.selected && !slide.leftSide && !slide.rightSide"
        [class.left-side]="slide.leftSide"
@@ -11,13 +12,12 @@
        [class.slide-in-right]="slide.action === 'slideInRight'"
        [class.slide-out-left]="slide.action === 'slideOutLeft'"
        [class.slide-out-right]="slide.action === 'slideOutRight'"
-       class="slides"
        [ngStyle]="{'background-image': 'url('+slide.url+')'}">
   </div>
-  <div (click)="onSlide(-1)" class="arrow-container prev">
-    <i title="Previous" class="arrow prev">&laquo; previous</i>
+  <div [hidden]="!this.showArrows" (click)="onSlide(-1)" class="arrow-container prev">
+    <i #prevArrow title="Previous" class="arrow prev">&laquo; previous</i>
   </div>
-  <div (click)="onSlide(1)" class="arrow-container next">
-    <i title="Next" class="arrow next">next &raquo; </i>
+  <div [hidden]="!this.showArrows" (click)="onSlide(1)" class="arrow-container next">
+    <i #nextArrow title="Next" class="arrow next">next &raquo;</i>
   </div>
 </div>

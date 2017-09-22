@@ -111,8 +111,8 @@ $border-color: darken(#FFF, 5%);
     .arrow {
       display: block;
       margin: auto;
-      width: 60px;
-      height: 60px;
+      width: 30px;
+      height: 30px;
       background: transparent;
       text-indent: -9999px;
       border: {
@@ -140,12 +140,14 @@ $border-color: darken(#FFF, 5%);
         transform: rotate(-45deg);
         position: relative;
         left: 20px;
+        margin-right: 10px;
       }
 
       &.next {
         transform: rotate(135deg);
         position: relative;
         right: 20px;
+        margin-left: 10px;
       }
     }
   }

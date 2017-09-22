@@ -38,7 +38,10 @@ The simplest use case is the following, but the full list of options is below:
 |---------------------|----------|---------|----------|-----------------------------------------------|
 | imageUrls           | yes      | []      | string[] | array of image urls                           |
 | height              | no       | 100%    | string   | CSS height of slideshow                       |
-| autoPlay            | no       | false   | boolean  | turn autoPlay on and off                      |
+| arrowSize           | no       | 30px    | string   | length of arrow lines                         |
+| showArrows          | no       | true    | boolean  | show or hide the arrows                       |
+| disableSwiping      | no       | false   | boolean  | turn swipe detection on or off                |
+| autoPlay            | no       | false   | boolean  | turn autoPlay on or off                       |
 | autoPlayInterval    | no       | 3333    | number   | time in ms between autoPlay slides            |
 | stopAutoPlayOnSlide | no       | true    | boolean  | stop autoPlay if slideshow is interacted with |
 | debug               | no       | false   | boolean  | write debugging information to the console    |
@@ -53,3 +56,23 @@ The simplest use case is the following, but the full list of options is below:
 | onSwipeRight | when a swipe right occurs       |
 
 Note: all events emit the index number of the new slide
+
+### API
+
+Take control of the slideshow if you want! Simply create a reference to your slideshow like so:
+
+```html
+<slideshow #slideshow [imageUrls]="imageUrlArray"></slideshow>
+```
+
+and in your component.ts reference it as a ViewChild:
+
+```typescript 
+@ViewChild('slideshow') slideshow: ElementRef;
+```
+
+Now you can access the public members such as the onSlide:
+
+```typescript
+this.slideshow.onSlide(1); // next slide
+```

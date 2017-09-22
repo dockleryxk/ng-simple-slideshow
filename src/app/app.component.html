@@ -1,26 +1,17 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
-    Welcome to {{title}}! Current slide: {{slideShow.slideIndex}}
+    Current slide: {{slideshow.slideIndex}}
   </h1>
   <div style="width: 100%; height: 500px; display: block;">
-    <slideshow #slideShow
+    <slideshow #slideshow
                [imageUrls]="urls"
                [autoPlay]="true"
                [debug]="true"
                [height]="'500px'"></slideshow>
   </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
 
+<p style="text-align:center">
+  Check the console for debug info
+</p>

@@ -5,6 +5,7 @@ import {
 import {SwipeService} from './swipe.service';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {isPlatformServer} from '@angular/common';
+import {ISlide} from './ISlide';
 
 @Component({
   selector: 'slideshow',
@@ -13,13 +14,16 @@ import {isPlatformServer} from '@angular/common';
 })
 export class SlideshowComponent implements OnChanges {
   public slideIndex: number = 0;
-  public slides: {url: string, action: string, leftSide: boolean, rightSide: boolean, selected: boolean}[] = [];
+  public slides: ISlide[] = [];
   private urlCache: string[];
   private autoplayIntervalId: any;
   private initial: boolean = true;
 
   @Input() imageUrls: string[];
   @Input() height: string;
+  @Input() arrowSize: string;
+  @Input() showArrows: boolean = true;
+  @Input() disableSwiping: boolean = false;
   @Input() autoPlay: boolean = false;
   @Input() autoPlayInterval: number = 3333;
   @Input() stopAutoPlayOnSlide: boolean = true;
@@ -31,6 +35,8 @@ export class SlideshowComponent implements OnChanges {
   @Output('onSwipeRight') public onSwipeRight = new EventEmitter<number>();
 
   @ViewChild('container') container: ElementRef;
+  @ViewChild('prevArrow') prevArrow: ElementRef;
+  @ViewChild('nextArrow') nextArrow: ElementRef;
 
   constructor(
     private swipeService: SwipeService,
@@ -42,7 +48,7 @@ export class SlideshowComponent implements OnChanges {
     if(this.debug === true) console.log(`ngOnChanges()`);
     if(this.initial === true) this.urlCache = this.imageUrls;
     this.setSlides();
-    this.setHeight();
+    this.setStyles();
     this.handleAutoPlay();
   }
 
@@ -65,6 +71,7 @@ export class SlideshowComponent implements OnChanges {
    * @description Use the swipe service to detect swipe events from phone and tablets
    */
   onSwipe(e: TouchEvent, when: string): void {
+    if(this.disableSwiping === true) return;
     const indexDirection = this.swipeService.swipe(e, when, this.debug === true);
     // handle a failed swipe
     if(indexDirection === 0) return;
@@ -181,11 +188,17 @@ export class SlideshowComponent implements OnChanges {
   }
 
   /**
-   * @description keep the height up to date with the input, if it exists
+   * @description Keep the styles up to date with the input
    */
-  private setHeight(): void {
-    if(this.debug === true) console.log(`setHeight()`);
+  private setStyles(): void {
+    if(this.debug === true) console.log(`setStyles()`);
     if(!isNullOrUndefined(this.height)) this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
+    if(!isNullOrUndefined(this.arrowSize)) {
+      this.renderer.setStyle(this.prevArrow.nativeElement, 'height', this.arrowSize);
+      this.renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
+      this.renderer.setStyle(this.nextArrow.nativeElement, 'height', this.arrowSize);
+      this.renderer.setStyle(this.nextArrow.nativeElement, 'width', this.arrowSize);
+    }
   }
 
   /**
