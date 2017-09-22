@@ -4,7 +4,13 @@
     Welcome to {{title}}!
   </h1>
   <div style="width: 100%; height: 500px; display: block;">
-    <slideshow [height]="'500px'" [imageUrls]="urls"></slideshow>
+    <slideshow [imageUrls]="urls"
+               [autoPlay]="true"
+               (onSlideLeft)="outputEvent($event, 'onSlideLeft')"
+               (onSlideRight)="outputEvent($event, 'onSlideRight')"
+               (onSwipeLeft)="outputEvent($event, 'onSwipeLeft')"
+               (onSwipeRight)="outputEvent($event, 'onSwipeRight')"
+               [height]="'500px'"></slideshow>
   </div>
 </div>
 <h2>Here are some links to help you start: </h2>

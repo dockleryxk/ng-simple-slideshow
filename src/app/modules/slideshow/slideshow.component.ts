@@ -11,13 +11,17 @@ import {isNullOrUndefined, isUndefined} from 'util';
   styleUrls: ['./slideshow.component.scss']
 })
 export class SlideshowComponent implements OnInit, OnChanges {
+  public slideIndex: number = 0;
   public slides: {url: string, action: string, leftSide: boolean, rightSide: boolean, selected: boolean}[] = [];
   private urlCache: string[];
+  private autoplayIntervalId: any;
 
   @Input() imageUrls: string[];
   @Input() height: string;
+  @Input() autoPlay: boolean = false;
+  @Input() autoPlayInterval: number = 3333;
+  @Input() stopAutoPlayOnSlide = true;
 
-  @Output('slideIndex') public slideIndex: number = 0;
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
   @Output('onSwipeLeft') public onSwipeLeft = new EventEmitter<number>();
@@ -34,30 +38,37 @@ export class SlideshowComponent implements OnInit, OnChanges {
     this.urlCache = this.imageUrls;
     this.setSlides(true);
     this.setHeight();
+    this.handleAutoPlay();
   }
 
   ngOnChanges() {
     this.setSlides(false);
     this.setHeight();
+    this.handleAutoPlay();
   }
 
   setSlides(initial: boolean): void {
-    if(initial || this.urlCache !== this.imageUrls) {
-      for (let url of this.imageUrls) this.slides.push({
-        url: url,
-        action: '',
-        leftSide: false,
-        rightSide: false,
-        selected: false
-      });
-      this.slides[this.slideIndex].selected = true;
+    if(initial === true || this.urlCache !== this.imageUrls) {
       this.urlCache = this.imageUrls;
+      this.slides = [];
+      for (let url of this.imageUrls)
+        this.slides.push({
+          url: url,
+          action: '',
+          leftSide: false,
+          rightSide: false,
+          selected: false
+        });
+      this.slides[this.slideIndex].selected = true;
     }
   }
 
+  onSlide(indexDirection: number, isSwipe?: boolean): void {
+    this.handleAutoPlay(this.stopAutoPlayOnSlide);
+    this.slide(indexDirection, isSwipe);
+  }
+
   slide(indexDirection: number, isSwipe?: boolean): void {
-    // handle a failed swipe
-    if(indexDirection === 0) return;
     const oldIndex = this.slideIndex;
     this.setSlideIndex(indexDirection);
 
@@ -109,10 +120,20 @@ export class SlideshowComponent implements OnInit, OnChanges {
 
   detectSwipe(e: TouchEvent, when: string): void {
     const indexDirection = this.swipeService.swipe(e, when);
-    this.slide(indexDirection, true);
+    // handle a failed swipe
+    if(indexDirection === 0) return;
+    else this.onSlide(indexDirection, true);
   }
 
   setHeight(): void {
     if(!isNullOrUndefined(this.height)) this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
+  }
+
+  handleAutoPlay(stopAutoPlay?: boolean): void {
+    if (stopAutoPlay === true || this.autoPlay === false) clearInterval(this.autoplayIntervalId);
+    else if(isNullOrUndefined(this.autoplayIntervalId))
+      this.autoplayIntervalId = setInterval(() => {
+      this.slide(1);
+    }, this.autoPlayInterval);
   }
 }

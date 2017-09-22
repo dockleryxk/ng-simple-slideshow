@@ -14,10 +14,10 @@
        class="slides"
        [ngStyle]="{'background-image': 'url('+slide.url+')'}">
   </div>
-  <div (click)="slide(-1)" class="arrow-container prev">
+  <div (click)="onSlide(-1)" class="arrow-container prev">
     <i title="Previous" class="arrow prev">&laquo; previous</i>
   </div>
-  <div (click)="slide(1)" class="arrow-container next">
+  <div (click)="onSlide(1)" class="arrow-container next">
     <i title="Next" class="arrow next">next &raquo; </i>
   </div>
 </div>

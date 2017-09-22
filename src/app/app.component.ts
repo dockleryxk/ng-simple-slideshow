@@ -13,4 +13,8 @@ export class AppComponent {
     'https://cdn.vox-cdn.com/uploads/chorus_image/image/56789263/akrales_170919_1976_0104.0.jpg',
     'https://cdn.vox-cdn.com/uploads/chorus_image/image/56674755/mr_pb_is_the_best.0.jpg'
   ];
+
+  outputEvent(event: Event, name: string) {
+    console.log(`${name}: ${event}`);
+  }
 }
