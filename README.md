@@ -4,7 +4,7 @@ A simple slideshow for Angular.
 
 [Click here](https://ng-simple-slideshow.firebaseapp.com) the check out the demo.
 
-![deps](https://david-dm.org/bichard/ng-simple-slideshow.svg)
+[![deps](https://david-dm.org/bichard/ng-simple-slideshow.svg)](https://david-dm.org/bichard/ng-simple-slideshow)
 
 ## Features
 
