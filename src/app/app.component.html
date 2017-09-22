@@ -1,15 +1,13 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
-    Welcome to {{title}}!
+    Welcome to {{title}}! Current slide: {{slideShow.slideIndex}}
   </h1>
   <div style="width: 100%; height: 500px; display: block;">
-    <slideshow [imageUrls]="urls"
+    <slideshow #slideShow
+               [imageUrls]="urls"
                [autoPlay]="true"
-               (onSlideLeft)="outputEvent($event, 'onSlideLeft')"
-               (onSlideRight)="outputEvent($event, 'onSlideRight')"
-               (onSwipeLeft)="outputEvent($event, 'onSwipeLeft')"
-               (onSwipeRight)="outputEvent($event, 'onSwipeRight')"
+               [debug]="true"
                [height]="'500px'"></slideshow>
   </div>
 </div>

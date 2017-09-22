@@ -16,10 +16,18 @@ A simple slideshow for Angular.
 
 ## Installation
 
-  Easy, just npm install:
+Easy, just npm install:
 
 ```shell
 npm i -S ng-simple-slideshow
+```
+
+## Usage
+
+The simplest use case is the following, but the full list of options is below:
+
+```html
+<slideshow [imageUrls]="imageUrlArray"></slideshow>
 ```
 
 ## Options
@@ -28,11 +36,12 @@ npm i -S ng-simple-slideshow
 
 | Option              | Required | Default | Type     | Description                                   |
 |---------------------|----------|---------|----------|-----------------------------------------------|
-| imageUrls           | yes      |         | string[] | array of image urls                           |
+| imageUrls           | yes      | []      | string[] | array of image urls                           |
 | height              | no       | 100%    | string   | CSS height of slideshow                       |
 | autoPlay            | no       | false   | boolean  | turn autoPlay on and off                      |
 | autoPlayInterval    | no       | 3333    | number   | time in ms between autoPlay slides            |
 | stopAutoPlayOnSlide | no       | true    | boolean  | stop autoPlay if slideshow is interacted with |
+| debug               | no       | false   | boolean  | write debugging information to the console    |
 
 ### Output Events
 

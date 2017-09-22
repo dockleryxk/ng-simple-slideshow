@@ -1,6 +1,6 @@
 <div #container
-     (touchstart)="detectSwipe($event, 'start')"
-     (touchend)="detectSwipe($event, 'end')"
+     (touchstart)="onSwipe($event, 'start')"
+     (touchend)="onSwipe($event, 'end')"
      class="slideshow-container">
   <div *ngFor="let slide of slides"
        [class.selected]="slide.selected"
