@@ -108,18 +108,6 @@ $border-color: darken(#FFF, 5%);
       }
     }
 
-    &:hover {
-      &:before {
-        opacity: 1;
-      }
-
-      .arrow {
-        border: {
-          width: 4px;
-        }
-      }
-    }
-
     .arrow {
       display: block;
       margin: auto;
@@ -135,12 +123,6 @@ $border-color: darken(#FFF, 5%);
       text-decoration: none;
       color: transparent;
       user-select: none;
-
-      &:hover {
-        border: {
-          width: 4px;
-        }
-      }
 
       &:before {
         display: block;
@@ -164,6 +146,30 @@ $border-color: darken(#FFF, 5%);
         transform: rotate(135deg);
         position: relative;
         right: 20px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .slideshow-container {
+    .arrow-container {
+      &:hover {
+        &:before {
+          opacity: 1;
+        }
+        .arrow {
+          border: {
+            width: 4px;
+          }
+        }
+      }
+      .arrow {
+        &:hover {
+          border: {
+            width: 4px;
+          }
+        }
       }
     }
   }

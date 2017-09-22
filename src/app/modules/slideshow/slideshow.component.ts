@@ -1,4 +1,7 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+  Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2,
+  ViewChild
+} from '@angular/core';
 import {SwipeService} from './swipe.service';
 import {isNullOrUndefined, isUndefined} from 'util';
 
@@ -8,12 +11,17 @@ import {isNullOrUndefined, isUndefined} from 'util';
   styleUrls: ['./slideshow.component.scss']
 })
 export class SlideshowComponent implements OnInit, OnChanges {
-  public slideIndex: number = 0;
   public slides: {url: string, action: string, leftSide: boolean, rightSide: boolean, selected: boolean}[] = [];
+  private urlCache: string[];
+
   @Input() imageUrls: string[];
   @Input() height: string;
+
+  @Output('slideIndex') public slideIndex: number = 0;
+  @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
+  @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
+
   @ViewChild('container') container: ElementRef;
-  private urlCache: string[];
 
   constructor(
     private swipeService: SwipeService,
@@ -76,6 +84,7 @@ export class SlideshowComponent implements OnInit, OnChanges {
   }
 
   slideLeft(oldIndex: number): void {
+    this.onSlideLeft.emit(this.slideIndex);
     this.slides[this.getLeftSideIndex(oldIndex)].leftSide = false;
     this.slides[oldIndex].leftSide = true;
     this.slides[oldIndex].action = 'slideOutLeft';
@@ -85,6 +94,7 @@ export class SlideshowComponent implements OnInit, OnChanges {
   }
 
   slideRight(oldIndex: number): void {
+    this.onSlideRight.emit(this.slideIndex);
     this.slides[this.getRightSideIndex(oldIndex)].rightSide = false;
     this.slides[oldIndex].rightSide = true;
     this.slides[oldIndex].action = 'slideOutRight';
