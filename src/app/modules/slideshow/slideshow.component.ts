@@ -20,6 +20,8 @@ export class SlideshowComponent implements OnInit, OnChanges {
   @Output('slideIndex') public slideIndex: number = 0;
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
+  @Output('onSwipeLeft') public onSwipeLeft = new EventEmitter<number>();
+  @Output('onSwipeRight') public onSwipeRight = new EventEmitter<number>();
 
   @ViewChild('container') container: ElementRef;
 
@@ -53,14 +55,14 @@ export class SlideshowComponent implements OnInit, OnChanges {
     }
   }
 
-  slide(indexDirection: number): void {
+  slide(indexDirection: number, isSwipe?: boolean): void {
     // handle a failed swipe
     if(indexDirection === 0) return;
     const oldIndex = this.slideIndex;
     this.setSlideIndex(indexDirection);
 
-    if(indexDirection === 1) this.slideRight(oldIndex);
-    else this.slideLeft(oldIndex);
+    if(indexDirection === 1) this.slideRight(oldIndex,isSwipe);
+    else this.slideLeft(oldIndex, isSwipe);
     this.slides[oldIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
   }
@@ -83,8 +85,9 @@ export class SlideshowComponent implements OnInit, OnChanges {
     return i;
   }
 
-  slideLeft(oldIndex: number): void {
-    this.onSlideLeft.emit(this.slideIndex);
+  slideLeft(oldIndex: number, isSwipe?: boolean): void {
+    if(isSwipe === true) this.onSwipeLeft.emit(this.slideIndex);
+    else this.onSlideLeft.emit(this.slideIndex);
     this.slides[this.getLeftSideIndex(oldIndex)].leftSide = false;
     this.slides[oldIndex].leftSide = true;
     this.slides[oldIndex].action = 'slideOutLeft';
@@ -93,8 +96,9 @@ export class SlideshowComponent implements OnInit, OnChanges {
     this.slides[this.slideIndex].action = 'slideInRight';
   }
 
-  slideRight(oldIndex: number): void {
-    this.onSlideRight.emit(this.slideIndex);
+  slideRight(oldIndex: number, isSwipe?: boolean): void {
+    if(isSwipe === true) this.onSwipeRight.emit(this.slideIndex);
+    else this.onSlideRight.emit(this.slideIndex);
     this.slides[this.getRightSideIndex(oldIndex)].rightSide = false;
     this.slides[oldIndex].rightSide = true;
     this.slides[oldIndex].action = 'slideOutRight';
@@ -104,7 +108,8 @@ export class SlideshowComponent implements OnInit, OnChanges {
   }
 
   detectSwipe(e: TouchEvent, when: string): void {
-    this.slide(this.swipeService.swipe(e, when));
+    const indexDirection = this.swipeService.swipe(e, when);
+    this.slide(indexDirection, true);
   }
 
   setHeight(): void {
