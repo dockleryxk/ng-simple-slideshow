@@ -1,28 +1,46 @@
 # NgSimpleSlideshow
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.2.
+A simple slideshow for Angular.
 
-## Development server
+[Click here](https://ng-simple-slideshow.firebaseapp.com) the check out the demo.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.2. 
 
-## Code scaffolding
+## Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+* NgSimpleSlideshow has no dependencies besides angular. All animations are 100% CSS, so @angular/animations is not needed.
+* Compiled and packaged in the [Angular Package Format v4.0](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview) with [ng-packagr](https://github.com/dherges/ng-packagr).
+* Compiled to es5, so this package is compatible with Angular Universal.
+* AOT ready
+* Responsive and captures swipes from phones and tablets
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+  Easy, just npm install:
 
-## Running unit tests
+```shell
+npm i -S ng-simple-slideshow
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Options
 
-## Running end-to-end tests
+### Inputs
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+| Option              | Required | Default | Type     | Description                                   |
+|---------------------|----------|---------|----------|-----------------------------------------------|
+| imageUrls           | yes      |         | string[] | array of image urls                           |
+| height              | no       | 100%    | string   | CSS height of slideshow                       |
+| autoPlay            | no       | false   | boolean  | turn autoPlay on and off                      |
+| autoPlayInterval    | no       | 3333    | number   | time in ms between autoPlay slides            |
+| stopAutoPlayOnSlide | no       | true    | boolean  | stop autoPlay if slideshow is interacted with |
 
-## Further help
+### Output Events
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+| Event        | Description                     |
+|--------------|---------------------------------|
+| onSlideLeft  | when the left arrow is clicked  |
+| onSlideRight | when the right arrow is clicked |
+| onSwipeLeft  | when a swipe left occurs        |
+| onSwipeRight | when a swipe right occurs       |
+
+Note: all events emit the index number of the new slide
