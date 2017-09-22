@@ -4,7 +4,7 @@ A simple slideshow for Angular.
 
 [Click here](https://ng-simple-slideshow.firebaseapp.com) the check out the demo.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.2. 
+![deps](https://david-dm.org/bichard/ng-simple-slideshow.svg)
 
 ## Features
 
