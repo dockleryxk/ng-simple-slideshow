@@ -12,6 +12,13 @@
     "packagr": "rm -rf .ng_build dist && ng-packagr -p ng-package.json"
   },
   "private": false,
+  "author": {
+    "name": "Richard Jeffords",
+    "email": "rajeffords@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/dockleryxk/ng-simple-slideshow/issues"
+  },
   "dependencies": {
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
@@ -46,5 +53,25 @@
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
     "typescript": "~2.3.3"
+  },
+  "deprecated": false,
+  "description": "A simple slideshow for Angular.",
+  "homepage": "https://github.com/dockleryxk/ng-simple-slideshow",
+  "keywords": [
+    "angular",
+    "angular2",
+    "angular4",
+    "angular-components",
+    "slideshow",
+    "carousel",
+    "slider",
+    "typescript",
+    "css",
+    "scss",
+    "html"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dockleryxk/ng-simple-slideshow.git"
   }
 }
