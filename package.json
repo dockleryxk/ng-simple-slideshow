@@ -14,7 +14,8 @@
   "private": false,
   "author": {
     "name": "Richard Jeffords",
-    "email": "rajeffords@gmail.com"
+    "email": "rajeffords@gmail.com",
+    "url": "https://richard.pizza"
   },
   "bugs": {
     "url": "https://github.com/dockleryxk/ng-simple-slideshow/issues"
