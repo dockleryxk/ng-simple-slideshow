@@ -38,6 +38,7 @@ The simplest use case is the following, but the full list of options is below:
 |---------------------|----------|---------|----------|-----------------------------------------------|
 | imageUrls           | yes      | []      | string[] | array of image urls                           |
 | height              | no       | 100%    | string   | CSS height of slideshow                       |
+| minHeight           | no       |         | string   | CSS min-height of slideshow                   |
 | arrowSize           | no       | 30px    | string   | length of arrow lines                         |
 | showArrows          | no       | true    | boolean  | show or hide the arrows                       |
 | disableSwiping      | no       | false   | boolean  | turn swipe detection on or off                |

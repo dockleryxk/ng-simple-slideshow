@@ -21,6 +21,7 @@ export class SlideshowComponent implements OnChanges {
 
   @Input() imageUrls: string[];
   @Input() height: string;
+  @Input() minHeight: string;
   @Input() arrowSize: string;
   @Input() showArrows: boolean = true;
   @Input() disableSwiping: boolean = false;
@@ -193,6 +194,7 @@ export class SlideshowComponent implements OnChanges {
   private setStyles(): void {
     if(this.debug === true) console.log(`setStyles()`);
     if(!isNullOrUndefined(this.height)) this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
+    if(!isNullOrUndefined(this.minHeight)) this.renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
     if(!isNullOrUndefined(this.arrowSize)) {
       this.renderer.setStyle(this.prevArrow.nativeElement, 'height', this.arrowSize);
       this.renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
