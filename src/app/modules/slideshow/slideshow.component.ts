@@ -150,10 +150,11 @@ export class SlideshowComponent implements OnChanges {
   private setSlides(): void {
     if(this.debug === true) console.log(`setSlides()`);
     if(this.initial === true || this.urlCache !== this.imageUrls) {
-      if(this.debug === true) console.log(`initial === true || this.urlCache !== this.imageUrls`);
-      if(this.debug === true) console.log(`this.initial: ${this.initial}`);
-      if(this.debug === true) console.log(`this.urlCache: ${this.urlCache}`);
-      if(this.debug === true) console.log(`this.imageUrls: ${this.imageUrls}`);
+      if(this.debug === true) { console.log(`initial === true || this.urlCache !== this.imageUrls`);
+        console.log(`this.initial: ${this.initial}`);
+        console.log(`this.urlCache: ${this.urlCache}`);
+        console.log(`this.imageUrls: ${this.imageUrls}`);
+      }
       this.initial = false;
       this.urlCache = this.imageUrls;
       this.slides = [];
