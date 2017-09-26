@@ -13,6 +13,7 @@ import {ISlide} from './ISlide';
   styleUrls: ['./slideshow.component.scss']
 })
 export class SlideshowComponent implements OnChanges {
+  // @todo: detect loading and show spinner until the images are loaded/just the first one
   public slideIndex: number = 0;
   public slides: ISlide[] = [];
   private urlCache: string[];
