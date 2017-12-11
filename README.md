@@ -22,6 +22,26 @@ Easy, just npm install:
 npm i -S ng-simple-slideshow
 ```
 
+Next, import the module:
+
+```
+import {SlideshowModule} from 'ng-simple-slideshow';
+
+@NgModule({
+  imports: [
+    SlideshowModule,
+    ...
+  ],
+  declarations: [
+    ...
+  ],
+  exports: [
+    ...
+  ]
+})
+...
+```
+
 ## Usage
 
 The simplest use case is the following, but the full list of options is below:
