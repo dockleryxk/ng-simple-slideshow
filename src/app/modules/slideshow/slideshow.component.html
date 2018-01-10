@@ -14,10 +14,10 @@
        [class.slide-out-right]="slide.action === 'slideOutRight'"
        [ngStyle]="{'background-image': 'url('+slide.url+')'}">
   </div>
-  <div [hidden]="!this.showArrows" (click)="onSlide(-1)" class="arrow-container prev">
+  <div *ngIf="this.showArrows" (click)="onSlide(-1)" class="arrow-container prev">
     <i #prevArrow title="Previous" class="arrow prev">&laquo; previous</i>
   </div>
-  <div [hidden]="!this.showArrows" (click)="onSlide(1)" class="arrow-container next">
+  <div *ngIf="this.showArrows" (click)="onSlide(1)" class="arrow-container next">
     <i #nextArrow title="Next" class="arrow next">next &raquo;</i>
   </div>
 </div>
