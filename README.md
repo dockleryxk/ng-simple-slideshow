@@ -1,10 +1,8 @@
 # NgSimpleSlideshow
 
-A simple slideshow for Angular.
+A simple slideshow for Angular 4+.
 
 [Click here](https://ng-simple-slideshow.firebaseapp.com) the check out the demo.
-
-[![deps](https://david-dm.org/bichard/ng-simple-slideshow.svg)](https://david-dm.org/bichard/ng-simple-slideshow)
 
 ## Features
 
@@ -20,6 +18,12 @@ Easy, just npm install:
 
 ```shell
 npm i -S ng-simple-slideshow
+```
+
+or for Angular 4 apps:
+
+```shell
+npm i -S ng-simple-slideshow@angular4
 ```
 
 Next, import the module:
@@ -96,4 +100,8 @@ Now you can access the public members such as the onSlide:
 
 ```typescript
 this.slideshow.onSlide(1); // next slide
+```
+
+```typescript
+this.slideshow.onSlide(-1); // previous slide
 ```

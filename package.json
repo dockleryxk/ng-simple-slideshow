@@ -1,6 +1,6 @@
 {
   "name": "ng-simple-slideshow",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -60,12 +60,14 @@
   "homepage": "https://github.com/dockleryxk/ng-simple-slideshow",
   "keywords": [
     "angular",
-    "angular2",
-    "angular4",
+    "ng",
     "angular-components",
     "slideshow",
     "carousel",
     "slider",
+    "angular2",
+    "angular4",
+    "angular5",
     "typescript",
     "css",
     "scss",
