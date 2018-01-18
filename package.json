@@ -9,8 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dist-package": "",
-    "packagr": "rm -rf .ng_build dist && ng-packagr -p ng-package.json && "
+    "dist-package": "rm dist/package.json && cp dist-package.json dist/package.json",
+    "packagr": "rm -rf .ng_build dist && ng-packagr -p ng-package.json && npm run dist-package"
   },
   "private": false,
   "author": {
