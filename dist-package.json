@@ -1,0 +1,39 @@
+{
+  "name": "ng-simple-slideshow",
+  "version": "1.0.7",
+  "license": "MIT",
+  "private": false,
+  "author": {
+    "name": "Richard Jeffords",
+    "email": "rajeffords@gmail.com",
+    "url": "https://richard.pizza"
+  },
+  "bugs": {
+    "url": "https://github.com/dockleryxk/ng-simple-slideshow/issues"
+  },
+  "peerDependencies": {
+    "@angular/core": "^4.0.0 || ^5.0.0"
+  },
+  "deprecated": false,
+  "description": "A simple slideshow for Angular.",
+  "homepage": "https://github.com/dockleryxk/ng-simple-slideshow",
+  "keywords": [
+    "angular",
+    "slideshow",
+    "carousel",
+    "slider",
+    "angular4",
+    "angular 4",
+    "angular5",
+    "angular 5"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dockleryxk/ng-simple-slideshow.git"
+  },
+  "main": "bundles/ng-simple-slideshow.umd.js",
+  "module": "ng-simple-slideshow.es5.js",
+  "es2015": "ng-simple-slideshow.js",
+  "typings": "ng-simple-slideshow.d.ts",
+  "metadata": "ng-simple-slideshow.metadata.json"
+}
