@@ -30,6 +30,9 @@ export class SlideshowComponent implements OnChanges {
   @Input() autoPlayInterval: number = 3333;
   @Input() stopAutoPlayOnSlide: boolean = true;
   @Input() debug: boolean = false;
+  @Input() backgroundSize: string = 'cover';
+  @Input() backgroundPosition: string = 'center center';
+  @Input() backgroundRepeat: string = 'no-repeat';
 
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
