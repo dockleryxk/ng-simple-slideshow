@@ -2,6 +2,7 @@
      (touchstart)="onSwipe($event, 'start')"
      (touchend)="onSwipe($event, 'end')"
      class="slideshow-container">
+  <!-- slides -->
   <div *ngFor="let slide of slides"
        [ngStyle]="{
           'background-image': 'url('+slide.url+')',
@@ -19,10 +20,20 @@
        [class.slide-out-left]="slide.action === 'slideOutLeft'"
        [class.slide-out-right]="slide.action === 'slideOutRight'">
   </div>
+  <!-- left arrow -->
   <div *ngIf="this.showArrows" (click)="onSlide(-1)" class="arrow-container prev">
     <i #prevArrow title="Previous" class="arrow prev">&laquo; previous</i>
   </div>
+  <!-- right arrow -->
   <div *ngIf="this.showArrows" (click)="onSlide(1)" class="arrow-container next">
     <i #nextArrow title="Next" class="arrow next">next &raquo;</i>
   </div>
+  <!-- dots -->
+  <ul class="slick-dots" *ngIf="showDots">
+    <li *ngFor="let slide of slides; let index = index"
+        (click)="onButtonClick(index)"
+        [class.slick-active]="slide.selected">
+      <button type="button">{{index}}</button>
+    </li>
+  </ul>
 </div>

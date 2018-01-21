@@ -5,12 +5,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "dist-package": "rm dist/package.json && cp dist-package.json dist/package.json",
-    "packagr": "rm -rf .ng_build dist && ng-packagr -p ng-package.json && npm run dist-package"
+    "packagr": "rm -rf .ng_build dist && ng-packagr -p ng-package.json && npm run dist-package",
+    "deploy": "npm run build && firebase deploy"
   },
   "private": false,
   "author": {
@@ -35,7 +36,7 @@
     "zone.js": "^0.8.18"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.0",
+    "@angular/cli": "^1.6.5",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "~2.5.53",

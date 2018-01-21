@@ -33,6 +33,7 @@ export class SlideshowComponent implements OnChanges {
   @Input() backgroundSize: string = 'cover';
   @Input() backgroundPosition: string = 'center center';
   @Input() backgroundRepeat: string = 'no-repeat';
+  @Input() showDots: boolean = false;
 
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
@@ -84,6 +85,22 @@ export class SlideshowComponent implements OnChanges {
   }
 
   /**
+   * @param {number} index
+   * @description set the index to the desired index - 1 and simulate a right slide
+   */
+  onButtonClick(index: number) {
+    if(this.debug === true) console.log(`onButtonClick(${index})`);
+    const beforeClickIndex = this.slideIndex;
+    this.slideIndex = index - 1;
+    this.setSlideIndex(1);
+    this.handleAutoPlay(this.stopAutoPlayOnSlide);
+
+    this.slideRight(beforeClickIndex);
+    this.slides[beforeClickIndex].selected = false;
+    this.slides[this.slideIndex].selected = true;
+  }
+
+  /**
    * @param {number} indexDirection
    * @param {boolean} isSwipe
    * @description Set the new slide index, then make the transition happen.
@@ -93,7 +110,7 @@ export class SlideshowComponent implements OnChanges {
     const oldIndex = this.slideIndex;
     this.setSlideIndex(indexDirection);
 
-    if(indexDirection === 1) this.slideRight(oldIndex,isSwipe);
+    if(indexDirection === 1) this.slideRight(oldIndex, isSwipe);
     else this.slideLeft(oldIndex, isSwipe);
     this.slides[oldIndex].selected = false;
     this.slides[this.slideIndex].selected = true;

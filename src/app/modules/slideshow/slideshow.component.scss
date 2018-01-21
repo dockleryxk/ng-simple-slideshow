@@ -147,6 +147,59 @@ $border-color: darken(#FFF, 5%);
       }
     }
   }
+
+  .slick-dots {
+    display: block;
+    bottom: 15px;
+    z-index: 1;
+    text-align: center;
+    position: absolute;
+    padding: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+
+    & li {
+      display: inline;
+      margin: 0;
+      padding: 0;
+
+      & button {
+        border: none;
+        background: none;
+        text-indent: -9999px;
+        font-size: 0;
+        width: 20px;
+        height: 20px;
+        outline: none;
+        position: relative;
+        z-index: 1;
+        cursor: pointer;
+
+        &:before {
+          content: '';
+          width: 4px;
+          height: 4px;
+          background: #fff;
+          border-radius: 4px;
+          display: block;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          opacity: .7;
+          transition: all .5s ease-out;
+        }
+      }
+
+      &.slick-active {
+        & button:before {
+          transform: translate(-50%, -50%) scale(1.4);
+          opacity: 1;
+        }
+      }
+    }
+  }
 }
 
 @media screen and (min-width: 768px) {
