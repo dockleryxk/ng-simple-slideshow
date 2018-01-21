@@ -67,6 +67,7 @@ The simplest use case is the following, but the full list of options is below:
 | backgroundSize      | no       | 'cover'         | string   | overwrite background-size property            |
 | backgroundPosition  | no       | 'center center' | string   | overwrite background-position property        |
 | backgroundRepeat    | no       | 'no-repeat'     | string   | overwrite background-repeat property          |
+| showDots            | no       | false           | boolean  | show clickable dots at the bottom             |
 
 ### Output Events
 
