@@ -6,6 +6,14 @@ export class SwipeService {
   private swipeCoord?: [number, number];
   private swipeTime?: number;
 
+  /**
+   * @param {TouchEvent} e
+   * @param {string} when
+   * @param {boolean} debug
+   * @returns {number}
+   * @description detect the direction of the swipe, and return a -1 or 1 if the duration is long enough
+   *              else return a 0 to do nothing
+   */
   swipe(e: TouchEvent, when: string, debug?: boolean): number {
     if(debug === true) console.log(`SwipeService::swipe(${e}, ${when})`);
     const coord: [number, number] = [e.changedTouches[0].pageX, e.changedTouches[0].pageY];
