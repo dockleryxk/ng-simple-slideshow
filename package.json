@@ -58,7 +58,7 @@
     "typescript": "2.4.2"
   },
   "deprecated": false,
-  "description": "A simple slideshow for Angular 4+.",
+  "description": "A simple, responsive slideshow for Angular 4+.",
   "homepage": "https://github.com/dockleryxk/ng-simple-slideshow",
   "keywords": [
     "angular",
