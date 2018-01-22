@@ -4,6 +4,10 @@
  */
 $border-color: darken(#FFF, 5%);
 
+.display-none {
+  display: none!important;
+}
+
 .slideshow-container {
   position: relative;
   display: block;

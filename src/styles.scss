@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
+table{
+  margin: auto;
+  tr {
+    width: 100%;
+
+    &:nth-child(even) {
+      background: #eeeeee
+    }
+
+    td {
+      box-sizing:border-box;
+      padding: 15px;
+
+      &:nth-child(odd) {
+        background: rgba(161, 161, 161, 0.1);
+      }
+    }
+  }
+}

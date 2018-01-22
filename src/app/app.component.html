@@ -1,17 +1,134 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
+<div style="margin-bottom:25px">
+  <h1 style="text-align:center">
     Current slide: {{slideshow.slideIndex}}
   </h1>
-  <div style="width: 100%; height: 500px; display: block;">
+  <div style="display:block;"
+       [style.width]="width">
     <slideshow #slideshow
-               [imageUrls]="urls"
-               [autoPlay]="true"
-               [debug]="true"
-               [height]="'500px'"></slideshow>
+               [imageUrls]="imageUrls"
+               [height]="height"
+               [minHeight]="minHeight"
+               [arrowSize]="arrowSize"
+               [showArrows]="showArrows"
+               [disableSwiping]="disableSwiping"
+               [autoPlay]="autoPlay"
+               [stopAutoPlayOnSlide]="stopAutoPlayOnSlide"
+               [debug]="debug"
+               [backgroundSize]="backgroundSize"
+               [backgroundPosition]="backgroundPosition"
+               [backgroundRepeat]="backgroundRepeat"
+               [showDots]="showDots">
+    </slideshow>
   </div>
 </div>
 
+<table>
+  <tr>
+    <td>
+      <label for="height">height</label>
+    </td>
+    <td>
+      <input id="height" name="height" [(ngModel)]="height">
+    </td>
+    <td>
+      <label for="minHeight">minHeight</label>
+    </td>
+    <td>
+      <input id="minHeight" name="minHeight" [(ngModel)]="minHeight">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="arrowSize">arrowSize</label>
+    </td>
+    <td>
+      <input id="arrowSize" name="arrowSize" [(ngModel)]="arrowSize">
+    </td>
+    <td>
+      <label for="showArrows">showArrows</label>
+    </td>
+    <td>
+      <input id="showArrows" type="checkbox" name="showArrows" [(ngModel)]="showArrows">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="disableSwiping">disableSwiping</label>
+    </td>
+    <td>
+      <input id="disableSwiping" type="checkbox" name="disableSwiping" [(ngModel)]="disableSwiping">
+    </td>
+    <td>
+      <label for="autoPlay">autoPlay</label>
+    </td>
+    <td>
+      <input id="autoPlay" type="checkbox" name="autoPlay" [(ngModel)]="autoPlay">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="autoPlayInterval">autoPlayInterval</label>
+    </td>
+    <td>
+      <input id="autoPlayInterval" type="number" name="autoPlayInterval" [(ngModel)]="autoPlayInterval">
+    </td>
+    <td>
+      <label for="stopAutoPlayOnSlide">stopAutoPlayOnSlide</label>
+    </td>
+    <td>
+      <input id="stopAutoPlayOnSlide" type="checkbox" name="stopAutoPlayOnSlide" [(ngModel)]="stopAutoPlayOnSlide">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="debug">debug*</label>
+    </td>
+    <td>
+      <input id="debug" type="checkbox" name="debug" [(ngModel)]="debug">
+    </td>
+    <td>
+      <label for="backgroundSize">backgroundSize</label>
+    </td>
+    <td>
+      <input id="backgroundSize" name="backgroundSize" [(ngModel)]="backgroundSize">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="backgroundPosition">backgroundPosition</label>
+    </td>
+    <td>
+      <input id="backgroundPosition" name="backgroundPosition" [(ngModel)]="backgroundPosition">
+    </td>
+    <td>
+      <label for="backgroundRepeat">backgroundRepeat</label>
+    </td>
+    <td>
+      <input id="backgroundRepeat" name="backgroundRepeat" [(ngModel)]="backgroundRepeat">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="showDots">showDots</label>
+    </td>
+    <td>
+      <input id="showDots" type="checkbox" name="showDots" [(ngModel)]="showDots">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="width">width**</label>
+    </td>
+    <td>
+      <input id="width" name="width" [(ngModel)]="width">
+    </td>
+  </tr>
+</table>
+
 <p style="text-align:center">
-  Check the console for debug info
+  *Check the console for debug info
+</p>
+<p style="text-align:center">
+  **This is not an option on the slideshow, it automatically adjusts to the width of its container.
 </p>

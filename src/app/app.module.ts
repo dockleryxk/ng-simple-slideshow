@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {SlideshowModule} from './modules/slideshow/slideshow.module';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import {SlideshowModule} from './modules/slideshow/slideshow.module';
   ],
   imports: [
     BrowserModule,
-    SlideshowModule
+    SlideshowModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
