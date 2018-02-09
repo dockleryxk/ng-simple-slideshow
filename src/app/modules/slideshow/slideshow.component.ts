@@ -1,6 +1,6 @@
 import {
-  Component, ElementRef, EventEmitter, Inject, Input, OnChanges, Output, PLATFORM_ID, Renderer2,
-  ViewChild
+  Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2,
+  ViewChild, DoCheck, KeyValueDiffers
 } from '@angular/core';
 import {SwipeService} from './swipe.service';
 import {isNullOrUndefined, isUndefined} from 'util';
@@ -12,13 +12,13 @@ import {ISlide} from './ISlide';
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.scss']
 })
-export class SlideshowComponent implements OnChanges {
+export class SlideshowComponent implements DoCheck {
   // @todo: detect loading and show spinner until the images are loaded/just the first one
   public slideIndex: number = 0;
   public slides: ISlide[] = [];
-  private urlCache: string[];
   private autoplayIntervalId: any;
   private initial: boolean = true;
+  private imgUrlsDifference: any;
 
   @Input() imageUrls: string[];
   @Input() height: string;
@@ -47,15 +47,25 @@ export class SlideshowComponent implements OnChanges {
   constructor(
     private swipeService: SwipeService,
     private renderer: Renderer2,
+    private differs: KeyValueDiffers,
     @Inject(PLATFORM_ID) private platform_id: any
-  ) { }
+  ) {
+    this.imgUrlsDifference = this.differs.find({}).create();
+  }
 
-  ngOnChanges() {
-    if(this.debug === true) console.log(`ngOnChanges()`);
-    if(this.initial === true) this.urlCache = this.imageUrls;
-    this.setSlides();
-    this.setStyles();
-    this.handleAutoPlay();
+  ngDoCheck() {
+    var changes = this.imgUrlsDifference.diff(this.imageUrls);
+    if(changes) { // imageUrls have been changed, need to reset the slides
+      if(this.debug === true)  {
+        console.log('changes detected in DoCheck')
+        changes.forEachChangedItem(item => console.log('changed item: ', item.currentValue));
+      };
+      this.setSlides();
+      this.setStyles();
+      this.handleAutoPlay();
+    } else {
+      if(this.debug) console.log('nothing changed');
+    }
   }
 
   /**
@@ -170,25 +180,20 @@ export class SlideshowComponent implements OnChanges {
    */
   private setSlides(): void {
     if(this.debug === true) console.log(`setSlides()`);
-    if(this.initial === true || this.urlCache !== this.imageUrls) {
-      if(this.debug === true) { console.log(`initial === true || this.urlCache !== this.imageUrls`);
-        console.log(`this.initial: ${this.initial}`);
-        console.log(`this.urlCache: ${this.urlCache}`);
-        console.log(`this.imageUrls: ${this.imageUrls}`);
-      }
-      this.initial = false;
-      this.urlCache = this.imageUrls;
-      this.slides = [];
-      for (let url of this.imageUrls)
-        this.slides.push({
-          url: url,
-          action: '',
-          leftSide: false,
-          rightSide: false,
-          selected: false
-        });
-      this.slides[this.slideIndex].selected = true;
-    }
+    this.slides = [];
+    for (let url of this.imageUrls)
+      this.slides.push({
+        url: url,
+        action: '',
+        leftSide: false,
+        rightSide: false,
+        selected: false
+      });
+    /* @todo: improve the slideIndex logic as if the images were changed dynamically,
+       we will see a glitch as the image displayed would be changed. For instance if the slideIndex was 0
+       and we do imgUrls.unshift(), with autoplay the next item at 1 will become the item shown at 0 earlier.
+    */
+    this.slides[this.slideIndex].selected = true;
   }
 
   /**
