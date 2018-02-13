@@ -65,6 +65,15 @@ $border-color: darken(#FFF, 5%);
     }
   }
 
+  .caption {
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    width: 100%;
+    background-color: rgba(0,0,0,.35);
+    color: white;
+  }
+
   .arrow-container {
     display: flex;
     align-items: center;

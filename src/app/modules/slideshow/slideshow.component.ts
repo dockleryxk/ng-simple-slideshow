@@ -6,6 +6,7 @@ import {SwipeService} from './swipe.service';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {isPlatformServer} from '@angular/common';
 import {ISlide} from './ISlide';
+import {IImage} from './IImage'
 
 @Component({
   selector: 'slideshow',
@@ -16,11 +17,11 @@ export class SlideshowComponent implements OnChanges {
   // @todo: detect loading and show spinner until the images are loaded/just the first one
   public slideIndex: number = 0;
   public slides: ISlide[] = [];
-  private urlCache: string[];
+  private urlCache: (string | IImage)[];
   private autoplayIntervalId: any;
   private initial: boolean = true;
 
-  @Input() imageUrls: string[];
+  @Input() imageUrls: (string | IImage)[];
   @Input() height: string;
   @Input() minHeight: string;
   @Input() arrowSize: string;
@@ -171,7 +172,8 @@ export class SlideshowComponent implements OnChanges {
   private setSlides(): void {
     if(this.debug === true) console.log(`setSlides()`);
     if(this.initial === true || this.urlCache !== this.imageUrls) {
-      if(this.debug === true) { console.log(`initial === true || this.urlCache !== this.imageUrls`);
+      if(this.debug === true) {
+        console.log(`initial === true || this.urlCache !== this.imageUrls`);
         console.log(`this.initial: ${this.initial}`);
         console.log(`this.urlCache: ${this.urlCache}`);
         console.log(`this.imageUrls: ${this.imageUrls}`);
@@ -179,14 +181,15 @@ export class SlideshowComponent implements OnChanges {
       this.initial = false;
       this.urlCache = this.imageUrls;
       this.slides = [];
-      for (let url of this.imageUrls)
+      for (let image of this.imageUrls) {
         this.slides.push({
-          url: url,
+          image: (typeof image === 'string' ? {url: image} : image),
           action: '',
           leftSide: false,
           rightSide: false,
           selected: false
         });
+      }
       this.slides[this.slideIndex].selected = true;
     }
   }
