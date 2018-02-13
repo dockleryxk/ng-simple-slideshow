@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     console.log(`
-                                  /   \\
+                                  /   \\       
  _                        )      ((   ))     (
 (@)                      /|\\      ))_((     /|\\
 |-|                     / | \\    (/\\|/\\)   / | \\                      (@)
@@ -46,9 +46,5 @@ export class AppComponent implements OnInit {
                                    \`\\ /'
 				                     \`
     `);
-    // adding an image url dynamically.
-    setTimeout(() => {
-      this.imageUrls.push('https://cdn-images-1.medium.com/max/2000/1*Nccd2ofdArlXF7v58UK94Q.jpeg')
-    }, 3000);
   }
 }
