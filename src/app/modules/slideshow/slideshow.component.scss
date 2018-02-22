@@ -63,6 +63,10 @@ $border-color: darken(#FFF, 5%);
       left: 100%;
       animation: slideOutRight .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
     }
+
+    &.link {
+      cursor: pointer;
+    }
   }
 
   .caption {

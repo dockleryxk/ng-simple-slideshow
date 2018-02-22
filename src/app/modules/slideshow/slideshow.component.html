@@ -18,7 +18,9 @@
        [class.slide-in-left]="slide.action === 'slideInLeft'"
        [class.slide-in-right]="slide.action === 'slideInRight'"
        [class.slide-out-left]="slide.action === 'slideOutLeft'"
-       [class.slide-out-right]="slide.action === 'slideOutRight'">
+       [class.slide-out-right]="slide.action === 'slideOutRight'"
+       [class.link]="slide.image.href"
+       (click)="onClick($event)">
        <div *ngIf="slide.image.caption" class="caption">{{slide.image.caption}}</div>
   </div>
   <!-- left arrow -->

@@ -86,6 +86,17 @@ export class SlideshowComponent implements OnChanges {
   }
 
   /**
+   * @param {MouseEvent} e
+   * @description Redirect to current slide "href" if defined
+   */
+  onClick(e: MouseEvent) : void {
+    let currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
+    if (currentSlide && currentSlide.image.href) {
+      window.location.href = currentSlide.image.href;
+    }
+  }
+
+  /**
    * @param {number} index
    * @description set the index to the desired index - 1 and simulate a right slide
    */
