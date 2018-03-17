@@ -194,9 +194,8 @@ export class SlideshowComponent implements OnChanges {
       this.slides = [];
       for (let image of this.imageUrls) {
         this.slides.push({
-          image: (typeof image === 'string' ? { url: image } : image),
+          image: (typeof image === 'string' ? { url: image, href: '#' } : image),
           action: '',
-          href: (typeof image === 'string' ? '#' : image.href),
           leftSide: false,
           rightSide: false,
           selected: false

@@ -6,5 +6,4 @@ export interface ISlide {
   leftSide: boolean;
   rightSide: boolean;
   selected: boolean;
-  href:string;
 }
