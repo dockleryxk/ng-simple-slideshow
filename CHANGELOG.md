@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 - Lazy Loading
+- Change colors of dots
+
+## [1.1.5] - 2018-03-017
+### Changed
+- Slider as a tags instead of div tags for SEO -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/7)
+- Optional image caption -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/11)
 
 ## [1.1.4] - 2018-03-017
 ### Added

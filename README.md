@@ -1,9 +1,9 @@
 ```prettier
- _  _      ___ _            _     ___ _ _    _        _               
+ _  _      ___ _            _     ___ _ _    _        _
 | \| |__ _/ __(_)_ __  _ __| |___/ __| (_)__| |___ __| |_  _____ __ __
 | .` / _` \__ \ | '  \| '_ \ / -_)__ \ | / _` / -_|_-< ' \/ _ \ V  V /
-|_|\_\__, |___/_|_|_|_| .__/_\___|___/_|_\__,_\___/__/_||_\___/\_/\_/ 
-     |___/            |_|                                             
+|_|\_\__, |___/_|_|_|_| .__/_\___|___/_|_\__,_\___/__/_||_\___/\_/\_/
+     |___/            |_|
 ```
 
 A simple slideshow for Angular 4+.
@@ -58,27 +58,27 @@ The simplest use case is the following, but the full list of options is below:
 
 ### Inputs
 
-| Option              | Required | Default         | Type     | Description                                   |
-|---------------------|----------|-----------------|----------|-----------------------------------------------|
-| imageUrls           | yes      | []              | string[] | array of image urls                           |
-| height              | no       | '100%'          | string   | CSS height of slideshow                       |
-| minHeight           | no       |                 | string   | CSS min-height of slideshow                   |
-| arrowSize           | no       | '30px'          | string   | length of arrow lines                         |
-| showArrows          | no       | true            | boolean  | show or hide the arrows                       |
-| disableSwiping      | no       | false           | boolean  | turn swipe detection on or off                |
-| autoPlay            | no       | false           | boolean  | turn autoPlay on or off                       |
-| autoPlayInterval    | no       | 3333            | number   | time in ms between autoPlay slides            |
-| stopAutoPlayOnSlide | no       | true            | boolean  | stop autoPlay if slideshow is interacted with |
-| debug               | no       | false           | boolean  | write debugging information to the console    |
-| backgroundSize      | no       | 'cover'         | string   | overwrite background-size property            |
-| backgroundPosition  | no       | 'center center' | string   | overwrite background-position property        |
-| backgroundRepeat    | no       | 'no-repeat'     | string   | overwrite background-repeat property          |
-| showDots            | no       | false           | boolean  | show clickable dots at the bottom             |
+| Option              | Required | Default         | Type                 | Description                                   |
+| ------------------- | -------- | --------------- | -------------------- | --------------------------------------------- |
+| imageUrls           | yes      | []              | string[] or IImage[] | array of image urls or IImage                 |
+| height              | no       | '100%'          | string               | CSS height of slideshow                       |
+| minHeight           | no       |                 | string               | CSS min-height of slideshow                   |
+| arrowSize           | no       | '30px'          | string               | length of arrow lines                         |
+| showArrows          | no       | true            | boolean              | show or hide the arrows                       |
+| disableSwiping      | no       | false           | boolean              | turn swipe detection on or off                |
+| autoPlay            | no       | false           | boolean              | turn autoPlay on or off                       |
+| autoPlayInterval    | no       | 3333            | number               | time in ms between autoPlay slides            |
+| stopAutoPlayOnSlide | no       | true            | boolean              | stop autoPlay if slideshow is interacted with |
+| debug               | no       | false           | boolean              | write debugging information to the console    |
+| backgroundSize      | no       | 'cover'         | string               | overwrite background-size property            |
+| backgroundPosition  | no       | 'center center' | string               | overwrite background-position property        |
+| backgroundRepeat    | no       | 'no-repeat'     | string               | overwrite background-repeat property          |
+| showDots            | no       | false           | boolean              | show clickable dots at the bottom             |
 
 ### Output Events
 
 | Event        | Description                     |
-|--------------|---------------------------------|
+| ------------ | ------------------------------- |
 | onSlideLeft  | when the left arrow is clicked  |
 | onSlideRight | when the right arrow is clicked |
 | onSwipeLeft  | when a swipe left occurs        |
@@ -96,7 +96,7 @@ Take control of the slideshow if you want! Simply create a reference to your sli
 
 and in your component.ts reference it as a ViewChild:
 
-```typescript 
+```typescript
 @ViewChild('slideshow') slideshow: ElementRef;
 ```
 
