@@ -4,36 +4,48 @@
      class="slideshow-container">
   <!-- slides -->
   <a *ngFor="let slide of slides"
-       [ngStyle]="{
+     class="slides"
+     [ngStyle]="{
           'background-image': 'url('+slide.image.url+')',
           'background-size': backgroundSize,
           'background-position': backgroundPosition,
           'background-repeat': backgroundRepeat
        }"
-       href="{{slide.href}}"
-       class="slides"
-       [class.selected]="slide.selected"
-       [class.hide-slide]="!slide.selected && !slide.leftSide && !slide.rightSide"
-       [class.left-side]="slide.leftSide"
-       [class.right-side]="slide.rightSide"
-       [class.slide-in-left]="slide.action === 'slideInLeft'"
-       [class.slide-in-right]="slide.action === 'slideInRight'"
-       [class.slide-out-left]="slide.action === 'slideOutLeft'"
-       [class.slide-out-right]="slide.action === 'slideOutRight'"
-       [class.link]="slide.image.href"
-       (click)="onClick($event)">
-       <div *ngIf="slide.image.caption" class="caption">{{slide.image.caption}}</div>
+     [href]="slide.href"
+     [class.selected]="slide.selected"
+     [class.hide-slide]="!slide.selected && !slide.leftSide && !slide.rightSide"
+     [class.left-side]="slide.leftSide"
+     [class.right-side]="slide.rightSide"
+     [class.slide-in-left]="slide.action === 'slideInLeft'"
+     [class.slide-in-right]="slide.action === 'slideInRight'"
+     [class.slide-out-left]="slide.action === 'slideOutLeft'"
+     [class.slide-out-right]="slide.action === 'slideOutRight'"
+     [class.link]="slide.image.href"
+     (click)="onClick($event)">
+    <div *ngIf="slide.image.caption"
+         class="caption"
+         [innerHTML]="slide.image.caption">
+    </div>
   </a>
   <!-- left arrow -->
-  <div [class.display-none]="!this.showArrows" (click)="onSlide(-1)" class="arrow-container prev">
-    <i #prevArrow title="Previous" class="arrow prev">&laquo; previous</i>
+  <div [class.display-none]="!this.showArrows"
+       (click)="onSlide(-1)"
+       class="arrow-container prev">
+    <i #prevArrow
+       title="Previous"
+       class="arrow prev">&laquo; previous</i>
   </div>
   <!-- right arrow -->
-  <div [class.display-none]="!this.showArrows" (click)="onSlide(1)" class="arrow-container next">
-    <i #nextArrow title="Next" class="arrow next">next &raquo;</i>
+  <div [class.display-none]="!this.showArrows"
+       (click)="onSlide(1)"
+       class="arrow-container next">
+    <i #nextArrow
+       title="Next"
+       class="arrow next">next &raquo;</i>
   </div>
   <!-- dots -->
-  <ul class="slick-dots" *ngIf="showDots">
+  <ul class="slick-dots"
+      *ngIf="showDots">
     <li *ngFor="let slide of slides; let index = index"
         (click)="onButtonClick(index)"
         [class.slick-active]="slide.selected">

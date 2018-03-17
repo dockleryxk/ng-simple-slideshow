@@ -1,13 +1,12 @@
-import { IImage } from './IImage';
 import {
   Component, ElementRef, EventEmitter, Inject, Input, OnChanges, Output, PLATFORM_ID, Renderer2,
   ViewChild
 } from '@angular/core';
-import {SwipeService} from './swipe.service';
-import {isNullOrUndefined, isUndefined} from 'util';
-import {isPlatformServer} from '@angular/common';
-import {ISlide} from './ISlide';
-import {IImage} from './IImage';
+import { SwipeService } from './swipe.service';
+import { isNullOrUndefined, isUndefined } from 'util';
+import { isPlatformServer } from '@angular/common';
+import { ISlide } from './ISlide';
+import { IImage } from './IImage';
 
 @Component({
   selector: 'slideshow',
@@ -68,7 +67,7 @@ export class SlideshowComponent implements OnChanges {
    *              0 is taken into account for failed swipes
    */
   onSlide(indexDirection: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`onSlide(${indexDirection}, ${isSwipe})`);
+    if (this.debug === true) console.log(`onSlide(${ indexDirection }, ${ isSwipe })`);
     this.handleAutoPlay(this.stopAutoPlayOnSlide);
     this.slide(indexDirection, isSwipe);
   }
@@ -90,7 +89,7 @@ export class SlideshowComponent implements OnChanges {
    * @param {MouseEvent} e
    * @description Redirect to current slide "href" if defined
    */
-  onClick(e: MouseEvent) : void {
+  onClick(e: MouseEvent): void {
     let currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
     if (currentSlide && currentSlide.image.href) {
       window.location.href = currentSlide.image.href;
@@ -102,7 +101,7 @@ export class SlideshowComponent implements OnChanges {
    * @description set the index to the desired index - 1 and simulate a right slide
    */
   onButtonClick(index: number) {
-    if (this.debug === true) console.log(`onButtonClick(${index})`);
+    if (this.debug === true) console.log(`onButtonClick(${ index })`);
     const beforeClickIndex = this.slideIndex;
     this.slideIndex = index - 1;
     this.setSlideIndex(1);
@@ -119,7 +118,7 @@ export class SlideshowComponent implements OnChanges {
    * @description Set the new slide index, then make the transition happen.
    */
   private slide(indexDirection: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`slide(${indexDirection}, ${isSwipe})`);
+    if (this.debug === true) console.log(`slide(${ indexDirection }, ${ isSwipe })`);
     const oldIndex = this.slideIndex;
     this.setSlideIndex(indexDirection);
 
@@ -134,7 +133,7 @@ export class SlideshowComponent implements OnChanges {
    * @description This is just treating the url array like a circular list.
    */
   private setSlideIndex(indexDirection: number): void {
-    if (this.debug === true) console.log(`setSlideIndex(${this.slideIndex})`);
+    if (this.debug === true) console.log(`setSlideIndex(${ this.slideIndex })`);
     this.slideIndex += indexDirection;
     if (this.slideIndex < 0) this.slideIndex = this.slides.length - 1;
     if (this.slideIndex >= this.slides.length) this.slideIndex = 0;
@@ -148,7 +147,7 @@ export class SlideshowComponent implements OnChanges {
    *              the left and right are assigned classes.
    */
   private slideLeft(oldIndex: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`slideLeft(${oldIndex}, ${isSwipe})`);
+    if (this.debug === true) console.log(`slideLeft(${ oldIndex }, ${ isSwipe })`);
     if (isSwipe === true) this.onSwipeLeft.emit(this.slideIndex);
     else this.onSlideLeft.emit(this.slideIndex);
     this.slides[this.getLeftSideIndex(oldIndex)].leftSide = false;
@@ -167,7 +166,7 @@ export class SlideshowComponent implements OnChanges {
    *              the left and right are assigned classes.
    */
   private slideRight(oldIndex: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`slideRight(${oldIndex}, ${isSwipe})`);
+    if (this.debug === true) console.log(`slideRight(${ oldIndex }, ${ isSwipe })`);
     if (isSwipe === true) this.onSwipeRight.emit(this.slideIndex);
     else this.onSlideRight.emit(this.slideIndex);
     this.slides[this.getRightSideIndex(oldIndex)].rightSide = false;
@@ -182,22 +181,22 @@ export class SlideshowComponent implements OnChanges {
    * @description Check to make sure slide images have been set or haven't changed
    */
   private setSlides(): void {
-    if(this.debug === true) console.log(`setSlides()`);
-    if(this.initial === true || this.urlCache !== this.imageUrls) {
-      if(this.debug === true) {
+    if (this.debug === true) console.log(`setSlides()`);
+    if (this.initial === true || this.urlCache !== this.imageUrls) {
+      if (this.debug === true) {
         console.log(`initial === true || this.urlCache !== this.imageUrls`);
-        console.log(`this.initial: ${this.initial}`);
-        console.log(`this.urlCache: ${this.urlCache}`);
-        console.log(`this.imageUrls: ${this.imageUrls}`);
+        console.log(`this.initial: ${ this.initial }`);
+        console.log(`this.urlCache: ${ this.urlCache }`);
+        console.log(`this.imageUrls: ${ this.imageUrls }`);
       }
       this.initial = false;
       this.urlCache = this.imageUrls;
       this.slides = [];
       for (let image of this.imageUrls) {
         this.slides.push({
-          image: (typeof image === 'string' ? {url: image} : image),
+          image: (typeof image === 'string' ? { url: image } : image),
           action: '',
-          href: url.href,
+          href: (typeof image === 'string' ? '#' : image.href),
           leftSide: false,
           rightSide: false,
           selected: false
