@@ -1,6 +1,7 @@
 import {
-  Component, ElementRef, EventEmitter, Inject, Input, OnChanges, Output, PLATFORM_ID, Renderer2,
-  ViewChild
+  Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2,
+  ViewChild,
+  DoCheck
 } from '@angular/core';
 import { SwipeService } from './swipe.service';
 import { isNullOrUndefined, isUndefined } from 'util';
@@ -14,7 +15,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.scss']
 })
-export class SlideshowComponent implements OnChanges {
+export class SlideshowComponent implements DoCheck {
   // @todo: detect loading and show spinner until the images are loaded/just the first one
   public slideIndex: number = 0;
   public slides: ISlide[] = [];
@@ -56,9 +57,9 @@ export class SlideshowComponent implements OnChanges {
     @Inject(PLATFORM_ID) private platform_id: any
   ) { }
 
-  ngOnChanges() {
+  ngDoCheck() {
     if (this.debug === true) console.log(`ngOnChanges()`);
-    if (this.initial === true) this.urlCache = this.imageUrls;
+    if (this.initial === true) this.urlCache = Array.from(this.imageUrls);
     this.setSlides();
     this.setStyles();
     this.handleAutoPlay();
@@ -187,15 +188,16 @@ export class SlideshowComponent implements OnChanges {
    */
   private setSlides(): void {
     if (this.debug === true) console.log(`setSlides()`);
-    if (this.initial === true || this.urlCache !== this.imageUrls) {
+    // a1.every((v, i) => v === a2[i])
+    if (this.checkCache() || this.initial === true) {
       if (this.debug === true) {
-        console.log(`initial === true || this.urlCache !== this.imageUrls`);
+        console.log(`this.checkCache() || this.initial === true`);
         console.log(`this.initial: ${ this.initial }`);
         console.log(`this.urlCache: ${ this.urlCache }`);
         console.log(`this.imageUrls: ${ this.imageUrls }`);
       }
       this.initial = false;
-      this.urlCache = this.imageUrls;
+      this.urlCache = Array.from(this.imageUrls);
       this.slides = [];
       for (let image of this.imageUrls) {
         this.slides.push({
@@ -242,6 +244,14 @@ export class SlideshowComponent implements OnChanges {
       this.renderer.setStyle(this.nextArrow.nativeElement, 'height', this.arrowSize);
       this.renderer.setStyle(this.nextArrow.nativeElement, 'width', this.arrowSize);
     }
+  }
+
+  /**
+   * @description compare image array to the cache, returns false if no changes
+   */
+  private checkCache(): boolean {
+    if (this.debug === true) console.log(`checkCache()`);
+    return !(this.urlCache.length === this.imageUrls.length && this.urlCache.every((cacheElement, i) => cacheElement === this.imageUrls[i]));
   }
 
   /**

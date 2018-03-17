@@ -30,6 +30,11 @@ export class AppComponent implements OnInit {
   width: string = '100%';
 
   ngOnInit() {
+    // adding an image url dynamically.
+    setTimeout(() => {
+      console.log('adding an image url dynamically.');
+      this.imageUrls.push('https://cdn-images-1.medium.com/max/2000/1*Nccd2ofdArlXF7v58UK94Q.jpeg');
+    }, 2000);
     console.log(`
                                   /   \\
  _                        )      ((   ))     (
