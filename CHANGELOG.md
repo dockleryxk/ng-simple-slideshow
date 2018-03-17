@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Lazy Loading
 - Change colors of dots
 
+## [1.1.7] - 2018-03-017
+- fix image url binding update -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/8)
+
 ## [1.1.6] - 2018-03-017
 ### Added
 - Option to change dot color -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/15)
