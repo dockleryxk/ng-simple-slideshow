@@ -76,8 +76,6 @@ $border-color: darken(#FFF, 5%);
     bottom: 0;
     padding: 10px;
     width: 100%;
-    background-color: rgba(0, 0, 0, .35);
-    color: white;
   }
 
   .arrow-container {
@@ -200,7 +198,7 @@ $border-color: darken(#FFF, 5%);
           content: '';
           width: 4px;
           height: 4px;
-          background: #fff;
+          background: var(--dot-color, #FFF);
           border-radius: 4px;
           display: block;
           position: absolute;

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Lazy Loading
 - Change colors of dots
 
+## [1.1.6] - 2018-03-017
+### Added
+- Option to change dot color -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/15)
+- Option to change caption text color
+- Option to change caption background
+
 ## [1.1.5] - 2018-03-017
 ### Changed
 - Slider as a tags instead of div tags for SEO -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/7)

@@ -24,6 +24,10 @@
      (click)="onClick($event)">
     <div *ngIf="slide.image.caption"
          class="caption"
+         [ngStyle]="{
+           'color': captionColor,
+           'background-color': captionBackground
+          }"
          [innerHTML]="slide.image.caption">
     </div>
   </a>
@@ -49,7 +53,10 @@
     <li *ngFor="let slide of slides; let index = index"
         (click)="onButtonClick(index)"
         [class.slick-active]="slide.selected">
-      <button type="button">{{index}}</button>
+      <button type="button"
+              [attr.style]="sanitizer.bypassSecurityTrustStyle('--dot-color:' + dotColor)">
+        {{index}}
+      </button>
     </li>
   </ul>
 </div>

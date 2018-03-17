@@ -18,7 +18,10 @@
                [backgroundSize]="backgroundSize"
                [backgroundPosition]="backgroundPosition"
                [backgroundRepeat]="backgroundRepeat"
-               [showDots]="showDots">
+               [showDots]="showDots"
+               [dotColor]="dotColor"
+               [captionColor]="captionColor"
+               [captionBackground]="captionBackground">
     </slideshow>
   </div>
 </div>
@@ -147,6 +150,32 @@
              type="checkbox"
              name="showDots"
              [(ngModel)]="showDots">
+    </td>
+    <td>
+      <label for="dotColor">dotColor</label>
+    </td>
+    <td>
+      <input id="dotColor"
+             name="dotColor"
+             [(ngModel)]="dotColor">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="captionColor">captionColor</label>
+    </td>
+    <td>
+      <input id="captionColor"
+             name="captionColor"
+             [(ngModel)]="captionColor">
+    </td>
+    <td>
+      <label for="captionBackground">captionBackground</label>
+    </td>
+    <td>
+      <input id="captionBackground"
+             name="captionBackground"
+             [(ngModel)]="captionBackground">
     </td>
   </tr>
   <tr>

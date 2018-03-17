@@ -19,11 +19,14 @@ export class AppComponent implements OnInit {
   autoPlay: boolean = true;
   autoPlayInterval: number = 3333;
   stopAutoPlayOnSlide: boolean = true;
-  debug: boolean = true;
+  debug: boolean = false;
   backgroundSize: string = 'cover';
   backgroundPosition: string = 'center center';
   backgroundRepeat: string = 'no-repeat';
-  showDots: boolean = false;
+  showDots: boolean = true;
+  dotColor: string = '#FFF';
+  captionColor: string = '#FFF';
+  captionBackground: string = 'rgba(0, 0, 0, .35)';
   width: string = '100%';
 
   ngOnInit() {

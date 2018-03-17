@@ -7,6 +7,7 @@ import { isNullOrUndefined, isUndefined } from 'util';
 import { isPlatformServer } from '@angular/common';
 import { ISlide } from './ISlide';
 import { IImage } from './IImage';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'slideshow',
@@ -35,6 +36,9 @@ export class SlideshowComponent implements OnChanges {
   @Input() backgroundPosition: string = 'center center';
   @Input() backgroundRepeat: string = 'no-repeat';
   @Input() showDots: boolean = false;
+  @Input() dotColor: string = '#FFF';
+  @Input() captionColor: string = '#FFF';
+  @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
 
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
@@ -48,6 +52,7 @@ export class SlideshowComponent implements OnChanges {
   constructor(
     private swipeService: SwipeService,
     private renderer: Renderer2,
+    public sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) private platform_id: any
   ) { }
 
