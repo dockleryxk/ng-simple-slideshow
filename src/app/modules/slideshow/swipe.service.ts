@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class SwipeService {
@@ -15,7 +15,7 @@ export class SwipeService {
    *              else return a 0 to do nothing
    */
   swipe(e: TouchEvent, when: string, debug?: boolean): number {
-    if(debug === true) console.log(`SwipeService::swipe(${e}, ${when})`);
+    if (debug === true) console.log(`SwipeService::swipe(${ e }, ${ when })`);
     const coord: [number, number] = [e.changedTouches[0].pageX, e.changedTouches[0].pageY];
     const time = new Date().getTime();
 

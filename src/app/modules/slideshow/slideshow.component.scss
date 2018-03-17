@@ -2,10 +2,11 @@
  styles adapted from https://www.w3schools.com/w3css/4/w3.css
  arrow styles adapted from https://codepen.io/minustalent/pen/Frhaw
  */
+
 $border-color: darken(#FFF, 5%);
 
 .display-none {
-  display: none!important;
+  display: none !important;
 }
 
 .slideshow-container {
@@ -75,7 +76,7 @@ $border-color: darken(#FFF, 5%);
     bottom: 0;
     padding: 10px;
     width: 100%;
-    background-color: rgba(0,0,0,.35);
+    background-color: rgba(0, 0, 0, .35);
     color: white;
   }
 
@@ -97,7 +98,8 @@ $border-color: darken(#FFF, 5%);
       display: block;
       height: 100%;
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       opacity: 0;
       width: 100%;
       z-index: -100;
@@ -245,14 +247,14 @@ $border-color: darken(#FFF, 5%);
 }
 
 @keyframes slideInRight {
-   0% {
-     left: -100%;
-   }
+  0% {
+    left: -100%;
+  }
 
-   100% {
-     left: 0;
-   }
- }
+  100% {
+    left: 0;
+  }
+}
 
 @keyframes slideInLeft {
   0% {
@@ -263,6 +265,7 @@ $border-color: darken(#FFF, 5%);
     left: 0;
   }
 }
+
 @keyframes slideOutRight {
   0% {
     left: 0;

@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-table{
+table {
   margin: auto;
   tr {
     width: 100%;
@@ -10,7 +10,7 @@ table{
     }
 
     td {
-      box-sizing:border-box;
+      box-sizing: border-box;
       padding: 15px;
 
       &:nth-child(odd) {
