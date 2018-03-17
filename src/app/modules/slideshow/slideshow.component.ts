@@ -1,11 +1,12 @@
+import { IImage } from './IImage';
 import {
   Component, ElementRef, EventEmitter, Inject, Input, OnChanges, Output, PLATFORM_ID, Renderer2,
   ViewChild
 } from '@angular/core';
-import {SwipeService} from './swipe.service';
-import {isNullOrUndefined, isUndefined} from 'util';
-import {isPlatformServer} from '@angular/common';
-import {ISlide} from './ISlide';
+import { SwipeService } from './swipe.service';
+import { isNullOrUndefined, isUndefined } from 'util';
+import { isPlatformServer } from '@angular/common';
+import { ISlide } from './ISlide';
 
 @Component({
   selector: 'slideshow',
@@ -16,11 +17,11 @@ export class SlideshowComponent implements OnChanges {
   // @todo: detect loading and show spinner until the images are loaded/just the first one
   public slideIndex: number = 0;
   public slides: ISlide[] = [];
-  private urlCache: string[];
+  private urlCache: Array<IImage>;
   private autoplayIntervalId: any;
   private initial: boolean = true;
 
-  @Input() imageUrls: string[];
+  @Input() imageUrls: Array<IImage>;
   @Input() height: string;
   @Input() minHeight: string;
   @Input() arrowSize: string;
@@ -51,8 +52,8 @@ export class SlideshowComponent implements OnChanges {
   ) { }
 
   ngOnChanges() {
-    if(this.debug === true) console.log(`ngOnChanges()`);
-    if(this.initial === true) this.urlCache = this.imageUrls;
+    if (this.debug === true) console.log(`ngOnChanges()`);
+    if (this.initial === true) this.urlCache = this.imageUrls;
     this.setSlides();
     this.setStyles();
     this.handleAutoPlay();
@@ -66,7 +67,7 @@ export class SlideshowComponent implements OnChanges {
    *              0 is taken into account for failed swipes
    */
   onSlide(indexDirection: number, isSwipe?: boolean): void {
-    if(this.debug === true) console.log(`onSlide(${indexDirection}, ${isSwipe})`);
+    if (this.debug === true) console.log(`onSlide(${indexDirection}, ${isSwipe})`);
     this.handleAutoPlay(this.stopAutoPlayOnSlide);
     this.slide(indexDirection, isSwipe);
   }
@@ -77,10 +78,10 @@ export class SlideshowComponent implements OnChanges {
    * @description Use the swipe service to detect swipe events from phone and tablets
    */
   onSwipe(e: TouchEvent, when: string): void {
-    if(this.disableSwiping === true) return;
+    if (this.disableSwiping === true) return;
     const indexDirection = this.swipeService.swipe(e, when, this.debug === true);
     // handle a failed swipe
-    if(indexDirection === 0) return;
+    if (indexDirection === 0) return;
     else this.onSlide(indexDirection, true);
   }
 
@@ -89,7 +90,7 @@ export class SlideshowComponent implements OnChanges {
    * @description set the index to the desired index - 1 and simulate a right slide
    */
   onButtonClick(index: number) {
-    if(this.debug === true) console.log(`onButtonClick(${index})`);
+    if (this.debug === true) console.log(`onButtonClick(${index})`);
     const beforeClickIndex = this.slideIndex;
     this.slideIndex = index - 1;
     this.setSlideIndex(1);
@@ -106,11 +107,11 @@ export class SlideshowComponent implements OnChanges {
    * @description Set the new slide index, then make the transition happen.
    */
   private slide(indexDirection: number, isSwipe?: boolean): void {
-    if(this.debug === true) console.log(`slide(${indexDirection}, ${isSwipe})`);
+    if (this.debug === true) console.log(`slide(${indexDirection}, ${isSwipe})`);
     const oldIndex = this.slideIndex;
     this.setSlideIndex(indexDirection);
 
-    if(indexDirection === 1) this.slideRight(oldIndex, isSwipe);
+    if (indexDirection === 1) this.slideRight(oldIndex, isSwipe);
     else this.slideLeft(oldIndex, isSwipe);
     this.slides[oldIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
@@ -121,10 +122,10 @@ export class SlideshowComponent implements OnChanges {
    * @description This is just treating the url array like a circular list.
    */
   private setSlideIndex(indexDirection: number): void {
-    if(this.debug === true) console.log(`setSlideIndex(${this.slideIndex})`);
+    if (this.debug === true) console.log(`setSlideIndex(${this.slideIndex})`);
     this.slideIndex += indexDirection;
-    if(this.slideIndex < 0) this.slideIndex = this.slides.length - 1;
-    if(this.slideIndex >= this.slides.length) this.slideIndex = 0;
+    if (this.slideIndex < 0) this.slideIndex = this.slides.length - 1;
+    if (this.slideIndex >= this.slides.length) this.slideIndex = 0;
   }
 
   /**
@@ -135,8 +136,8 @@ export class SlideshowComponent implements OnChanges {
    *              the left and right are assigned classes.
    */
   private slideLeft(oldIndex: number, isSwipe?: boolean): void {
-    if(this.debug === true) console.log(`slideLeft(${oldIndex}, ${isSwipe})`);
-    if(isSwipe === true) this.onSwipeLeft.emit(this.slideIndex);
+    if (this.debug === true) console.log(`slideLeft(${oldIndex}, ${isSwipe})`);
+    if (isSwipe === true) this.onSwipeLeft.emit(this.slideIndex);
     else this.onSlideLeft.emit(this.slideIndex);
     this.slides[this.getLeftSideIndex(oldIndex)].leftSide = false;
     this.slides[oldIndex].leftSide = true;
@@ -154,8 +155,8 @@ export class SlideshowComponent implements OnChanges {
    *              the left and right are assigned classes.
    */
   private slideRight(oldIndex: number, isSwipe?: boolean): void {
-    if(this.debug === true) console.log(`slideRight(${oldIndex}, ${isSwipe})`);
-    if(isSwipe === true) this.onSwipeRight.emit(this.slideIndex);
+    if (this.debug === true) console.log(`slideRight(${oldIndex}, ${isSwipe})`);
+    if (isSwipe === true) this.onSwipeRight.emit(this.slideIndex);
     else this.onSlideRight.emit(this.slideIndex);
     this.slides[this.getRightSideIndex(oldIndex)].rightSide = false;
     this.slides[oldIndex].rightSide = true;
@@ -169,9 +170,10 @@ export class SlideshowComponent implements OnChanges {
    * @description Check to make sure slide images have been set or haven't changed
    */
   private setSlides(): void {
-    if(this.debug === true) console.log(`setSlides()`);
-    if(this.initial === true || this.urlCache !== this.imageUrls) {
-      if(this.debug === true) { console.log(`initial === true || this.urlCache !== this.imageUrls`);
+    if (this.debug === true) console.log(`setSlides()`);
+    if (this.initial === true || this.urlCache !== this.imageUrls) {
+      if (this.debug === true) {
+        console.log(`initial === true || this.urlCache !== this.imageUrls`);
         console.log(`this.initial: ${this.initial}`);
         console.log(`this.urlCache: ${this.urlCache}`);
         console.log(`this.imageUrls: ${this.imageUrls}`);
@@ -181,8 +183,9 @@ export class SlideshowComponent implements OnChanges {
       this.slides = [];
       for (let url of this.imageUrls)
         this.slides.push({
-          url: url,
+          url: url.image,
           action: '',
+          href: url.href,
           leftSide: false,
           rightSide: false,
           selected: false
@@ -196,15 +199,15 @@ export class SlideshowComponent implements OnChanges {
    * @description Start or stop autoPlay, don't do it at all server side
    */
   private handleAutoPlay(stopAutoPlay?: boolean): void {
-    if(isPlatformServer(this.platform_id)) return;
+    if (isPlatformServer(this.platform_id)) return;
     if (stopAutoPlay === true || this.autoPlay === false) {
-      if(this.debug === true) console.log(`stop autoPlay`);
-      if(!isNullOrUndefined(this.autoplayIntervalId)) clearInterval(this.autoplayIntervalId);
+      if (this.debug === true) console.log(`stop autoPlay`);
+      if (!isNullOrUndefined(this.autoplayIntervalId)) clearInterval(this.autoplayIntervalId);
     }
-    else if(isNullOrUndefined(this.autoplayIntervalId)) {
-      if(this.debug === true) console.log(`start autoPlay`);
+    else if (isNullOrUndefined(this.autoplayIntervalId)) {
+      if (this.debug === true) console.log(`start autoPlay`);
       this.autoplayIntervalId = setInterval(() => {
-        if(this.debug === true) console.log(`autoPlay slide event`);
+        if (this.debug === true) console.log(`autoPlay slide event`);
         this.slide(1);
       }, this.autoPlayInterval);
     }
@@ -214,10 +217,10 @@ export class SlideshowComponent implements OnChanges {
    * @description Keep the styles up to date with the input
    */
   private setStyles(): void {
-    if(this.debug === true) console.log(`setStyles()`);
-    if(!isNullOrUndefined(this.height)) this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
-    if(!isNullOrUndefined(this.minHeight)) this.renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
-    if(!isNullOrUndefined(this.arrowSize)) {
+    if (this.debug === true) console.log(`setStyles()`);
+    if (!isNullOrUndefined(this.height)) this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
+    if (!isNullOrUndefined(this.minHeight)) this.renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
+    if (!isNullOrUndefined(this.arrowSize)) {
       this.renderer.setStyle(this.prevArrow.nativeElement, 'height', this.arrowSize);
       this.renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
       this.renderer.setStyle(this.nextArrow.nativeElement, 'height', this.arrowSize);
@@ -231,8 +234,8 @@ export class SlideshowComponent implements OnChanges {
    * @description get the index for the slide to the left of the new slide
    */
   private getLeftSideIndex(i?: number): number {
-    if(isUndefined(i)) i = this.slideIndex;
-    if(--i < 0) i = this.slides.length - 1;
+    if (isUndefined(i)) i = this.slideIndex;
+    if (--i < 0) i = this.slides.length - 1;
     return i;
   }
 
@@ -242,8 +245,8 @@ export class SlideshowComponent implements OnChanges {
    * @description get the index for the slide to the right of the new slide
    */
   private getRightSideIndex(i?: number): number {
-    if(isUndefined(i)) i = this.slideIndex;
-    if(++i >= this.slides.length) i = 0;
+    if (isUndefined(i)) i = this.slideIndex;
+    if (++i >= this.slides.length) i = 0;
     return i;
   }
 }
