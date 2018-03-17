@@ -187,28 +187,30 @@ export class SlideshowComponent implements DoCheck {
    * @description Check to make sure slide images have been set or haven't changed
    */
   private setSlides(): void {
-    if (this.debug === true) console.log(`setSlides()`);
-    // a1.every((v, i) => v === a2[i])
-    if (this.checkCache() || this.initial === true) {
-      if (this.debug === true) {
-        console.log(`this.checkCache() || this.initial === true`);
-        console.log(`this.initial: ${ this.initial }`);
-        console.log(`this.urlCache: ${ this.urlCache }`);
-        console.log(`this.imageUrls: ${ this.imageUrls }`);
+    if (!isNullOrUndefined(this.imageUrls)) {
+      if (this.debug === true) console.log(`setSlides()`);
+      // a1.every((v, i) => v === a2[i])
+      if (this.checkCache() || this.initial === true) {
+        if (this.debug === true) {
+          console.log(`this.checkCache() || this.initial === true`);
+          console.log(`this.initial: ${ this.initial }`);
+          console.log(`this.urlCache: ${ this.urlCache }`);
+          console.log(`this.imageUrls: ${ this.imageUrls }`);
+        }
+        this.initial = false;
+        this.urlCache = Array.from(this.imageUrls);
+        this.slides = [];
+        for (let image of this.imageUrls) {
+          this.slides.push({
+            image: (typeof image === 'string' ? { url: image, href: '#' } : image),
+            action: '',
+            leftSide: false,
+            rightSide: false,
+            selected: false
+          });
+        }
+        this.slides[this.slideIndex].selected = true;
       }
-      this.initial = false;
-      this.urlCache = Array.from(this.imageUrls);
-      this.slides = [];
-      for (let image of this.imageUrls) {
-        this.slides.push({
-          image: (typeof image === 'string' ? { url: image, href: '#' } : image),
-          action: '',
-          leftSide: false,
-          rightSide: false,
-          selected: false
-        });
-      }
-      this.slides[this.slideIndex].selected = true;
     }
   }
 

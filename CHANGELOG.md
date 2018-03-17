@@ -5,9 +5,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 - Lazy Loading
-- Change colors of dots
+
+## [1.1.8] - 2018-03-017
+### Changed
+- fix async binding error -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/13)
 
 ## [1.1.7] - 2018-03-017
+### Changed
 - fix image url binding update -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/8)
 
 ## [1.1.6] - 2018-03-017
