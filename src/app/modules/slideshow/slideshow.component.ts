@@ -3,10 +3,11 @@ import {
   Component, ElementRef, EventEmitter, Inject, Input, OnChanges, Output, PLATFORM_ID, Renderer2,
   ViewChild
 } from '@angular/core';
-import { SwipeService } from './swipe.service';
-import { isNullOrUndefined, isUndefined } from 'util';
-import { isPlatformServer } from '@angular/common';
-import { ISlide } from './ISlide';
+import {SwipeService} from './swipe.service';
+import {isNullOrUndefined, isUndefined} from 'util';
+import {isPlatformServer} from '@angular/common';
+import {ISlide} from './ISlide';
+import {IImage} from './IImage';
 
 @Component({
   selector: 'slideshow',
@@ -17,11 +18,11 @@ export class SlideshowComponent implements OnChanges {
   // @todo: detect loading and show spinner until the images are loaded/just the first one
   public slideIndex: number = 0;
   public slides: ISlide[] = [];
-  private urlCache: Array<IImage>;
+  private urlCache: (string | IImage)[];
   private autoplayIntervalId: any;
   private initial: boolean = true;
 
-  @Input() imageUrls: Array<IImage>;
+  @Input() imageUrls: (string | IImage)[];
   @Input() height: string;
   @Input() minHeight: string;
   @Input() arrowSize: string;
@@ -83,6 +84,17 @@ export class SlideshowComponent implements OnChanges {
     // handle a failed swipe
     if (indexDirection === 0) return;
     else this.onSlide(indexDirection, true);
+  }
+
+  /**
+   * @param {MouseEvent} e
+   * @description Redirect to current slide "href" if defined
+   */
+  onClick(e: MouseEvent) : void {
+    let currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
+    if (currentSlide && currentSlide.image.href) {
+      window.location.href = currentSlide.image.href;
+    }
   }
 
   /**
@@ -170,9 +182,9 @@ export class SlideshowComponent implements OnChanges {
    * @description Check to make sure slide images have been set or haven't changed
    */
   private setSlides(): void {
-    if (this.debug === true) console.log(`setSlides()`);
-    if (this.initial === true || this.urlCache !== this.imageUrls) {
-      if (this.debug === true) {
+    if(this.debug === true) console.log(`setSlides()`);
+    if(this.initial === true || this.urlCache !== this.imageUrls) {
+      if(this.debug === true) {
         console.log(`initial === true || this.urlCache !== this.imageUrls`);
         console.log(`this.initial: ${this.initial}`);
         console.log(`this.urlCache: ${this.urlCache}`);
@@ -181,15 +193,16 @@ export class SlideshowComponent implements OnChanges {
       this.initial = false;
       this.urlCache = this.imageUrls;
       this.slides = [];
-      for (let url of this.imageUrls)
+      for (let image of this.imageUrls) {
         this.slides.push({
-          url: url.image,
+          image: (typeof image === 'string' ? {url: image} : image),
           action: '',
           href: url.href,
           leftSide: false,
           rightSide: false,
           selected: false
         });
+      }
       this.slides[this.slideIndex].selected = true;
     }
   }

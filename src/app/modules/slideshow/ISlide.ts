@@ -1,5 +1,7 @@
+import { IImage } from "./IImage";
+
 export interface ISlide {
-  url: string;
+  image: IImage;
   action: string;
   leftSide: boolean;
   rightSide: boolean;

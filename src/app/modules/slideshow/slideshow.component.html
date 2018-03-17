@@ -5,7 +5,7 @@
   <!-- slides -->
   <a *ngFor="let slide of slides"
        [ngStyle]="{
-          'background-image': 'url('+slide.url+')',
+          'background-image': 'url('+slide.image.url+')',
           'background-size': backgroundSize,
           'background-position': backgroundPosition,
           'background-repeat': backgroundRepeat
@@ -19,8 +19,11 @@
        [class.slide-in-left]="slide.action === 'slideInLeft'"
        [class.slide-in-right]="slide.action === 'slideInRight'"
        [class.slide-out-left]="slide.action === 'slideOutLeft'"
-       [class.slide-out-right]="slide.action === 'slideOutRight'">
-     </a>
+       [class.slide-out-right]="slide.action === 'slideOutRight'"
+       [class.link]="slide.image.href"
+       (click)="onClick($event)">
+       <div *ngIf="slide.image.caption" class="caption">{{slide.image.caption}}</div>
+  </a>
   <!-- left arrow -->
   <div [class.display-none]="!this.showArrows" (click)="onSlide(-1)" class="arrow-container prev">
     <i #prevArrow title="Previous" class="arrow prev">&laquo; previous</i>
