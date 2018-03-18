@@ -22,7 +22,7 @@
      [class.slide-out-right]="slide?.action === 'slideOutRight'"
      [class.link]="slide?.image?.href"
      (click)="onClick($event)">
-    <div *ngIf="slide?.image?.caption"
+    <div *ngIf="showCaptions && slide?.image?.caption"
          class="caption"
          [ngStyle]="{
            'color': captionColor,

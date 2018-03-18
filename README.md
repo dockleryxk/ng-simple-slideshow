@@ -75,6 +75,7 @@ The simplest use case is the following, but the full list of options is below:
 | backgroundRepeat    | no       | 'no-repeat'          | string               | overwrite background-repeat property           |
 | showDots            | no       | false                | boolean              | show clickable dots at the bottom              |
 | dotColor            | no       | '#FFF'               | string               | color of clickable dots at the bottom          |
+| showCaptions        | no       | true                 | boolean              | show or hide captions                          |
 | captionColor        | no       | '#FFF'               | string               | color of caption text                          |
 | captionBackground   | no       | 'rgba(0, 0, 0, .35)' | string               | color of caption background                    |
 | lazyLoad            | no       | false                | boolean              | turn on to lazy load images instead of preload |

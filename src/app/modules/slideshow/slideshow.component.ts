@@ -38,6 +38,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() backgroundRepeat: string = 'no-repeat';
   @Input() showDots: boolean = false;
   @Input() dotColor: string = '#FFF';
+  @Input() showCaptions: boolean = true;
   @Input() captionColor: string = '#FFF';
   @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
   @Input() lazyLoad: boolean = false;
