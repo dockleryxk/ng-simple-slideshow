@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   dotColor: string = '#FFF';
   captionColor: string = '#FFF';
   captionBackground: string = 'rgba(0, 0, 0, .35)';
+  lazyLoad: boolean = false;
   width: string = '100%';
 
   ngOnInit() {

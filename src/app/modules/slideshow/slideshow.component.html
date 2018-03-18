@@ -6,29 +6,29 @@
   <a *ngFor="let slide of slides"
      class="slides"
      [ngStyle]="{
-          'background-image': 'url('+slide.image.url+')',
+          'background-image': 'url('+slide?.image?.url+')',
           'background-size': backgroundSize,
           'background-position': backgroundPosition,
           'background-repeat': backgroundRepeat
        }"
-     [href]="slide.image.href"
-     [class.selected]="slide.selected"
-     [class.hide-slide]="!slide.selected && !slide.leftSide && !slide.rightSide"
-     [class.left-side]="slide.leftSide"
-     [class.right-side]="slide.rightSide"
-     [class.slide-in-left]="slide.action === 'slideInLeft'"
-     [class.slide-in-right]="slide.action === 'slideInRight'"
-     [class.slide-out-left]="slide.action === 'slideOutLeft'"
-     [class.slide-out-right]="slide.action === 'slideOutRight'"
-     [class.link]="slide.image.href"
+     [href]="slide?.image?.href"
+     [class.selected]="slide?.selected"
+     [class.hide-slide]="!slide?.selected && !slide?.leftSide && !slide?.rightSide"
+     [class.left-side]="slide?.leftSide"
+     [class.right-side]="slide?.rightSide"
+     [class.slide-in-left]="slide?.action === 'slideInLeft'"
+     [class.slide-in-right]="slide?.action === 'slideInRight'"
+     [class.slide-out-left]="slide?.action === 'slideOutLeft'"
+     [class.slide-out-right]="slide?.action === 'slideOutRight'"
+     [class.link]="slide?.image?.href"
      (click)="onClick($event)">
-    <div *ngIf="slide.image.caption"
+    <div *ngIf="slide?.image?.caption"
          class="caption"
          [ngStyle]="{
            'color': captionColor,
            'background-color': captionBackground
           }"
-         [innerHTML]="slide.image.caption">
+         [innerHTML]="slide?.image?.caption">
     </div>
   </a>
   <!-- left arrow -->

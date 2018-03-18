@@ -40,6 +40,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() dotColor: string = '#FFF';
   @Input() captionColor: string = '#FFF';
   @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
+  @Input() lazyLoad: boolean = false;
 
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
@@ -116,6 +117,7 @@ export class SlideshowComponent implements DoCheck {
     this.slideRight(beforeClickIndex);
     this.slides[beforeClickIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
+    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
   }
 
   /**
@@ -132,6 +134,7 @@ export class SlideshowComponent implements DoCheck {
     else this.slideLeft(oldIndex, isSwipe);
     this.slides[oldIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
+    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
   }
 
   /**
@@ -200,18 +203,44 @@ export class SlideshowComponent implements DoCheck {
         this.initial = false;
         this.urlCache = Array.from(this.imageUrls);
         this.slides = [];
-        for (let image of this.imageUrls) {
-          this.slides.push({
-            image: (typeof image === 'string' ? { url: image, href: '#' } : image),
-            action: '',
-            leftSide: false,
-            rightSide: false,
-            selected: false
-          });
+        if (this.lazyLoad === true) {
+          for (let image of this.imageUrls) {
+            this.slides.push({
+              image: (typeof image === 'string' ? { url: '', href: '#' } : { url: '', href: image.href || '#' }),
+              action: '',
+              leftSide: false,
+              rightSide: false,
+              selected: false,
+              loaded: false
+            });
+          }
+        }
+        else {
+          for (let image of this.imageUrls) {
+            this.slides.push({
+              image: (typeof image === 'string' ? { url: image, href: '#' } : image),
+              action: '',
+              leftSide: false,
+              rightSide: false,
+              selected: false,
+              loaded: true
+            });
+          }
         }
         this.slides[this.slideIndex].selected = true;
+        if (!this.slides[this.slideIndex].loaded) this.loadSlide();
       }
     }
+  }
+
+  /**
+   * @param {boolean} loadSlide
+   * @description load the slide image
+   */
+  private loadSlide(): void {
+    const tmp = this.imageUrls[this.slideIndex];
+    this.slides[this.slideIndex].image = (typeof tmp === 'string' ? { url: tmp, href: '#' } : tmp);
+    this.slides[this.slideIndex].loaded = true;
   }
 
   /**
