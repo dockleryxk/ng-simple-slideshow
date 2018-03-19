@@ -17,6 +17,7 @@ A simple slideshow for Angular 4+.
 * Compiled to es5, so this package is compatible with Angular Universal.
 * AOT ready
 * Responsive and captures swipes from phones and tablets
+* Lazy load option to help with initial pageload speed
 
 ## Installation
 
