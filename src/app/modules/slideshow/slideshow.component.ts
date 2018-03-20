@@ -110,8 +110,8 @@ export class SlideshowComponent implements DoCheck {
    * @param {number} index
    * @description set the index to the desired index - 1 and simulate a right slide
    */
-  onButtonClick(index: number) {
-    if (this.debug === true) console.log(`onButtonClick(${ index })`);
+  goToSlide(index: number) {
+    if (this.debug === true) console.log(`goToSlide(${ index })`);
     const beforeClickIndex = this.slideIndex;
     this.slideIndex = index - 1;
     this.setSlideIndex(1);

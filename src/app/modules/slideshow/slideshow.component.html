@@ -51,7 +51,7 @@
   <ul class="slick-dots"
       *ngIf="showDots">
     <li *ngFor="let slide of slides; let index = index"
-        (click)="onButtonClick(index)"
+        (click)="goToSlide(index)"
         [class.slick-active]="slide.selected">
       <button type="button"
               [attr.style]="sanitizer.bypassSecurityTrustStyle('--dot-color:' + dotColor)">

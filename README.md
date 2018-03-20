@@ -108,7 +108,11 @@ and in your component.ts reference it as a ViewChild:
 @ViewChild('slideshow') slideshow: ElementRef;
 ```
 
-Now you can access the public members such as the onSlide:
+Now you can access the public members such as the goToSlide and onSlide:
+
+```typescript
+this.slideshow.goToSlide(3); // go to slide index 3 (i.e. imageUrls[3])
+```
 
 ```typescript
 this.slideshow.onSlide(1); // next slide
