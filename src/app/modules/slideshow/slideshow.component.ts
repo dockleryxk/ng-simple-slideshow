@@ -243,12 +243,19 @@ export class SlideshowComponent implements DoCheck {
   private loadSlide(): void {
     const tmpIndex = this.slideIndex;
     const tmpImage = this.imageUrls[tmpIndex];
-    let loadImage = new Image();
-    loadImage.addEventListener('load', () => {
+
+    if (isPlatformServer(this.platform_id)) {
       this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
       this.slides[tmpIndex].loaded = true;
-    });
-    loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
+    }
+    else {
+      let loadImage = new Image();
+      loadImage.addEventListener('load', () => {
+        this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
+        this.slides[tmpIndex].loaded = true;
+      });
+      loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
+    }
   }
 
   /**
