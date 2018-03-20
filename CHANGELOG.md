@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
 
+## [1.1.15] - 2018-03-20
+### Changed
+- Better lazy loading for server side rendered applications
+
 ## [1.1.14] - 2018-03-20
 ### Changed
 - Lazy loading logic now lets DOM load completely before continuing to load images
