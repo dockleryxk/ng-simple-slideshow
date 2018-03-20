@@ -264,6 +264,7 @@ export class SlideshowComponent implements DoCheck {
       }
       else {
         this.slides[tmpIndex] = firstSlideFromTransferState;
+        this.transferState.remove(FIRST_SLIDE_KEY);
       }
     }
   }
