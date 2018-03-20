@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
 
+## [1.1.16] - 2018-03-20
+### Changed
+- Fix glitchy-looking UX by removing slide from transfer state after using it once
+
 ## [1.1.15] - 2018-03-20
 ### Changed
 - Better lazy loading for server side rendered applications
