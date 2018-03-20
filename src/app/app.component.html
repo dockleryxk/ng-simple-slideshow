@@ -20,6 +20,7 @@
                [backgroundRepeat]="backgroundRepeat"
                [showDots]="showDots"
                [dotColor]="dotColor"
+               [showCaptions]="showCaptions"
                [captionColor]="captionColor"
                [captionBackground]="captionBackground"
                [lazyLoad]="lazyLoad">
@@ -177,6 +178,17 @@
       <input id="captionBackground"
              name="captionBackground"
              [(ngModel)]="captionBackground">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="showCaptions">showCaptions</label>
+    </td>
+    <td>
+      <input id="showCaptions"
+             type="checkbox"
+             name="showCaptions"
+             [(ngModel)]="showCaptions">
     </td>
   </tr>
   <tr>

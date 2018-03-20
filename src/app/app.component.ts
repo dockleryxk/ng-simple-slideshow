@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
   backgroundRepeat: string = 'no-repeat';
   showDots: boolean = true;
   dotColor: string = '#FFF';
+  showCaptions: boolean = true;
   captionColor: string = '#FFF';
   captionBackground: string = 'rgba(0, 0, 0, .35)';
   lazyLoad: boolean = false;
