@@ -32,7 +32,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() autoPlay: boolean = false;
   @Input() autoPlayInterval: number = 3333;
   @Input() stopAutoPlayOnSlide: boolean = true;
-  @Input() autoPlayWaitForLazyLoad: boolean = false;
+  @Input() autoPlayWaitForLazyLoad: boolean = true;
   @Input() debug: boolean = false;
   @Input() backgroundSize: string = 'cover';
   @Input() backgroundPosition: string = 'center center';
@@ -115,7 +115,7 @@ export class SlideshowComponent implements DoCheck {
     const beforeClickIndex = this.slideIndex;
     this.slideIndex = index - 1;
     this.setSlideIndex(1);
-    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
+    if (!this.slides[this.slideIndex].loaded) this.loadRemainingSlides();
     this.handleAutoPlay(this.stopAutoPlayOnSlide);
 
     this.slideRight(beforeClickIndex);
@@ -132,7 +132,7 @@ export class SlideshowComponent implements DoCheck {
     if (this.debug === true) console.log(`slide(${ indexDirection }, ${ isSwipe })`);
     const oldIndex = this.slideIndex;
     this.setSlideIndex(indexDirection);
-    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
+    if (!this.slides[this.slideIndex].loaded) this.loadRemainingSlides();
     if (indexDirection === 1) this.slideRight(oldIndex, isSwipe);
     else this.slideLeft(oldIndex, isSwipe);
     this.slides[oldIndex].selected = false;
@@ -216,6 +216,8 @@ export class SlideshowComponent implements DoCheck {
               loaded: false
             });
           }
+          this.slides[this.slideIndex].selected = true;
+          this.loadFirstSlide();
         }
         else {
           for (let image of this.imageUrls) {
@@ -228,9 +230,8 @@ export class SlideshowComponent implements DoCheck {
               loaded: true
             });
           }
+          this.slides[this.slideIndex].selected = true;
         }
-        this.slides[this.slideIndex].selected = true;
-        if (!this.slides[this.slideIndex].loaded) this.loadSlide();
       }
     }
   }
@@ -238,7 +239,7 @@ export class SlideshowComponent implements DoCheck {
   /**
    * @description lazy load the slide image
    */
-  private loadSlide(): void {
+  private loadFirstSlide(): void {
     const tmpIndex = this.slideIndex;
     const tmpImage = this.imageUrls[tmpIndex];
 
@@ -248,11 +249,31 @@ export class SlideshowComponent implements DoCheck {
     }
     else {
       let loadImage = new Image();
+      loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
       loadImage.addEventListener('load', () => {
         this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
         this.slides[tmpIndex].loaded = true;
       });
-      loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
+    }
+  }
+
+  /**
+   * @description if lazy loading in browser, go ahead and start to load remaining slides
+   */
+  private loadRemainingSlides(): void {
+    for (let i = 0; i < this.slides.length; i++) {
+      if (!this.slides[i].loaded) {
+        new Promise((resolve) => {
+          const tmpImage = this.imageUrls[i];
+          let loadImage = new Image();
+          loadImage.addEventListener('load', () => {
+            this.slides[i].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
+            this.slides[i].loaded = true;
+            resolve();
+          });
+          loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
+        });
+      }
     }
   }
 
