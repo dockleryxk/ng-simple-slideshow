@@ -115,12 +115,12 @@ export class SlideshowComponent implements DoCheck {
     const beforeClickIndex = this.slideIndex;
     this.slideIndex = index - 1;
     this.setSlideIndex(1);
+    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
     this.handleAutoPlay(this.stopAutoPlayOnSlide);
 
     this.slideRight(beforeClickIndex);
     this.slides[beforeClickIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
-    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
   }
 
   /**
@@ -132,12 +132,11 @@ export class SlideshowComponent implements DoCheck {
     if (this.debug === true) console.log(`slide(${ indexDirection }, ${ isSwipe })`);
     const oldIndex = this.slideIndex;
     this.setSlideIndex(indexDirection);
-
+    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
     if (indexDirection === 1) this.slideRight(oldIndex, isSwipe);
     else this.slideLeft(oldIndex, isSwipe);
     this.slides[oldIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
-    if (!this.slides[this.slideIndex].loaded) this.loadSlide();
   }
 
   /**
@@ -237,7 +236,6 @@ export class SlideshowComponent implements DoCheck {
   }
 
   /**
-   * @param {boolean} loadSlide
    * @description lazy load the slide image
    */
   private loadSlide(): void {
