@@ -32,7 +32,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() autoPlay: boolean = false;
   @Input() autoPlayInterval: number = 3333;
   @Input() stopAutoPlayOnSlide: boolean = true;
-  @Input() autoPlayWaitForLazyLoad: boolean = true;
+  @Input() autoPlayWaitForLazyLoad: boolean = false;
   @Input() debug: boolean = false;
   @Input() backgroundSize: string = 'cover';
   @Input() backgroundPosition: string = 'center center';
