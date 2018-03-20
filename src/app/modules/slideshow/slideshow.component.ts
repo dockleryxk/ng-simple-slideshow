@@ -8,7 +8,9 @@ import { isNullOrUndefined, isUndefined } from 'util';
 import { isPlatformServer } from '@angular/common';
 import { ISlide } from './ISlide';
 import { IImage } from './IImage';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, TransferState, makeStateKey } from '@angular/platform-browser';
+
+const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
 
 @Component({
   selector: 'slideshow',
@@ -57,6 +59,7 @@ export class SlideshowComponent implements DoCheck {
   constructor(
     private swipeService: SwipeService,
     private renderer: Renderer2,
+    private transferState: TransferState,
     public sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) private platform_id: any
   ) { }
@@ -240,20 +243,28 @@ export class SlideshowComponent implements DoCheck {
    * @description lazy load the slide image
    */
   private loadFirstSlide(): void {
+    if (this.debug === true) console.log(`loadFirstSlide()`);
     const tmpIndex = this.slideIndex;
     const tmpImage = this.imageUrls[tmpIndex];
 
     if (isPlatformServer(this.platform_id)) {
       this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
       this.slides[tmpIndex].loaded = true;
+      this.transferState.set(FIRST_SLIDE_KEY, this.slides[tmpIndex]);
     }
     else {
-      let loadImage = new Image();
-      loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
-      loadImage.addEventListener('load', () => {
-        this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
-        this.slides[tmpIndex].loaded = true;
-      });
+      const firstSlideFromTransferState = this.transferState.get(FIRST_SLIDE_KEY, null as any);
+      if (firstSlideFromTransferState === null) {
+        let loadImage = new Image();
+        loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
+        loadImage.addEventListener('load', () => {
+          this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
+          this.slides[tmpIndex].loaded = true;
+        });
+      }
+      else {
+        this.slides[tmpIndex] = firstSlideFromTransferState;
+      }
     }
   }
 
@@ -261,6 +272,7 @@ export class SlideshowComponent implements DoCheck {
    * @description if lazy loading in browser, go ahead and start to load remaining slides
    */
   private loadRemainingSlides(): void {
+    if (this.debug === true) console.log(`loadRemainingSlides()`);
     for (let i = 0; i < this.slides.length; i++) {
       if (!this.slides[i].loaded) {
         new Promise((resolve) => {
