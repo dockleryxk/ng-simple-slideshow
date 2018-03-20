@@ -32,6 +32,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() autoPlay: boolean = false;
   @Input() autoPlayInterval: number = 3333;
   @Input() stopAutoPlayOnSlide: boolean = true;
+  @Input() autoPlayWaitForLazyLoad: boolean = false;
   @Input() debug: boolean = false;
   @Input() backgroundSize: string = 'cover';
   @Input() backgroundPosition: string = 'center center';
@@ -42,6 +43,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() captionColor: string = '#FFF';
   @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
   @Input() lazyLoad: boolean = false;
+  @Input() lazyLoadSpinnerUrl: string = '/assets/_loading.gif';
 
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
@@ -207,7 +209,7 @@ export class SlideshowComponent implements DoCheck {
         if (this.lazyLoad === true) {
           for (let image of this.imageUrls) {
             this.slides.push({
-              image: (typeof image === 'string' ? { url: '', href: '#' } : { url: '', href: image.href || '#' }),
+              image: (typeof image === 'string' ? { url: this.lazyLoadSpinnerUrl, href: '#' } : { url: this.lazyLoadSpinnerUrl, href: image.href || '#' }),
               action: '',
               leftSide: false,
               rightSide: false,
@@ -236,12 +238,17 @@ export class SlideshowComponent implements DoCheck {
 
   /**
    * @param {boolean} loadSlide
-   * @description load the slide image
+   * @description lazy load the slide image
    */
   private loadSlide(): void {
-    const tmp = this.imageUrls[this.slideIndex];
-    this.slides[this.slideIndex].image = (typeof tmp === 'string' ? { url: tmp, href: '#' } : tmp);
-    this.slides[this.slideIndex].loaded = true;
+    const tmpIndex = this.slideIndex;
+    const tmpImage = this.imageUrls[tmpIndex];
+    let loadImage = new Image();
+    loadImage.addEventListener('load', () => {
+      this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
+      this.slides[tmpIndex].loaded = true;
+    });
+    loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
   }
 
   /**
@@ -258,7 +265,7 @@ export class SlideshowComponent implements DoCheck {
       if (this.debug === true) console.log(`start autoPlay`);
       this.autoplayIntervalId = setInterval(() => {
         if (this.debug === true) console.log(`autoPlay slide event`);
-        this.slide(1);
+        if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex].loaded)) this.slide(1);
       }, this.autoPlayInterval);
     }
   }
