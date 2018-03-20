@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
 
+## [1.1.13] - 2018-03-20
+### Changed
+- Bug fix for lazy loading
+
 ## [1.1.11] - 2018-03-19
 ### Added
 - Spinner in place of blank space while images are lazy loading
