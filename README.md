@@ -59,27 +59,29 @@ The simplest use case is the following, but the full list of options is below:
 
 ### Inputs
 
-| Option              | Required | Default              | Type                 | Description                                    |
-| ------------------- | -------- | -------------------- | -------------------- | ---------------------------------------------- |
-| imageUrls           | yes      | []                   | string[] or IImage[] | array of image urls or IImage                  |
-| height              | no       | '100%'               | string               | CSS height of slideshow                        |
-| minHeight           | no       |                      | string               | CSS min-height of slideshow                    |
-| arrowSize           | no       | '30px'               | string               | length of arrow lines                          |
-| showArrows          | no       | true                 | boolean              | show or hide the arrows                        |
-| disableSwiping      | no       | false                | boolean              | turn swipe detection on or off                 |
-| autoPlay            | no       | false                | boolean              | turn autoPlay on or off                        |
-| autoPlayInterval    | no       | 3333                 | number               | time in ms between autoPlay slides             |
-| stopAutoPlayOnSlide | no       | true                 | boolean              | stop autoPlay if slideshow is interacted with  |
-| debug               | no       | false                | boolean              | write debugging information to the console     |
-| backgroundSize      | no       | 'cover'              | string               | overwrite background-size property             |
-| backgroundPosition  | no       | 'center center'      | string               | overwrite background-position property         |
-| backgroundRepeat    | no       | 'no-repeat'          | string               | overwrite background-repeat property           |
-| showDots            | no       | false                | boolean              | show clickable dots at the bottom              |
-| dotColor            | no       | '#FFF'               | string               | color of clickable dots at the bottom          |
-| showCaptions        | no       | true                 | boolean              | show or hide captions                          |
-| captionColor        | no       | '#FFF'               | string               | color of caption text                          |
-| captionBackground   | no       | 'rgba(0, 0, 0, .35)' | string               | color of caption background                    |
-| lazyLoad            | no       | false                | boolean              | turn on to lazy load images instead of preload |
+| Option                  | Required | Default                | Type                 | Description                                                      |
+| ----------------------- | -------- | ---------------------- | -------------------- | ---------------------------------------------------------------- |
+| imageUrls               | yes      | []                     | string[] or IImage[] | array of image urls or IImage                                    |
+| height                  | no       | '100%'                 | string               | CSS height of slideshow                                          |
+| minHeight               | no       |                        | string               | CSS min-height of slideshow                                      |
+| arrowSize               | no       | '30px'                 | string               | length of arrow lines                                            |
+| showArrows              | no       | true                   | boolean              | show or hide the arrows                                          |
+| disableSwiping          | no       | false                  | boolean              | turn swipe detection on or off                                   |
+| autoPlay                | no       | false                  | boolean              | turn autoPlay on or off                                          |
+| autoPlayInterval        | no       | 3333                   | number               | time in ms between autoPlay slides                               |
+| stopAutoPlayOnSlide     | no       | true                   | boolean              | stop autoPlay if slideshow is interacted with                    |
+| autoPlayWaitForLazyLoad | no       | false                  | boolean              | autoplay to waits for images to lazy load before changing slides |
+| debug                   | no       | false                  | boolean              | write debugging information to the console                       |
+| backgroundSize          | no       | 'cover'                | string               | overwrite background-size property                               |
+| backgroundPosition      | no       | 'center center'        | string               | overwrite background-position property                           |
+| backgroundRepeat        | no       | 'no-repeat'            | string               | overwrite background-repeat property                             |
+| showDots                | no       | false                  | boolean              | show clickable dots at the bottom                                |
+| dotColor                | no       | '#FFF'                 | string               | color of clickable dots at the bottom                            |
+| showCaptions            | no       | true                   | boolean              | show or hide captions                                            |
+| captionColor            | no       | '#FFF'                 | string               | color of caption text                                            |
+| captionBackground       | no       | 'rgba(0, 0, 0, .35)'   | string               | color of caption background                                      |
+| lazyLoad                | no       | false                  | boolean              | turn on to lazy load images instead of preload                   |
+| lazyLoadSpinnerUrl      | no       | '/assets/_loading.gif' | string               | url of loading spinner image                                     |
 
 ### Output Events
 
