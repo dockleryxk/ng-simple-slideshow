@@ -18,7 +18,6 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   styleUrls: ['./slideshow.component.scss']
 })
 export class SlideshowComponent implements DoCheck {
-  // @todo: detect loading and show spinner until the images are loaded/just the first one
   public slideIndex: number = 0;
   public slides: ISlide[] = [];
   private urlCache: (string | IImage)[];
@@ -66,6 +65,7 @@ export class SlideshowComponent implements DoCheck {
 
   ngDoCheck() {
     if (this.debug === true) console.log(`ngOnChanges()`);
+    // if this is the first being called, create a copy of the input
     if (this.initial === true) this.urlCache = Array.from(this.imageUrls);
     this.setSlides();
     this.setStyles();
@@ -197,7 +197,6 @@ export class SlideshowComponent implements DoCheck {
   private setSlides(): void {
     if (!isNullOrUndefined(this.imageUrls)) {
       if (this.debug === true) console.log(`setSlides()`);
-      // a1.every((v, i) => v === a2[i])
       if (this.checkCache() || this.initial === true) {
         if (this.debug === true) {
           console.log(`this.checkCache() || this.initial === true`);
@@ -209,38 +208,56 @@ export class SlideshowComponent implements DoCheck {
         this.urlCache = Array.from(this.imageUrls);
         this.slides = [];
         if (this.lazyLoad === true) {
-          for (let image of this.imageUrls) {
-            this.slides.push({
-              image: (typeof image === 'string' ? { url: this.lazyLoadSpinnerUrl, href: '#' } : { url: this.lazyLoadSpinnerUrl, href: image.href || '#' }),
-              action: '',
-              leftSide: false,
-              rightSide: false,
-              selected: false,
-              loaded: false
-            });
-          }
-          this.slides[this.slideIndex].selected = true;
-          this.loadFirstSlide();
+          this.buildLazyLoadSlideArray();
         }
         else {
-          for (let image of this.imageUrls) {
-            this.slides.push({
-              image: (typeof image === 'string' ? { url: image, href: '#' } : image),
-              action: '',
-              leftSide: false,
-              rightSide: false,
-              selected: false,
-              loaded: true
-            });
-          }
-          this.slides[this.slideIndex].selected = true;
+          this.buildSlideArray();
         }
       }
     }
   }
 
   /**
-   * @description lazy load the slide image
+   * @description create the slides without background urls, which will be added in
+   *              for the "lazy load," then load only the first slide
+   */
+  private buildLazyLoadSlideArray(): void {
+    if (this.debug === true) console.log(`buildLazyLoadSlideArray()`);
+    for (let image of this.imageUrls) {
+      this.slides.push({
+        image: (typeof image === 'string' ? { url: this.lazyLoadSpinnerUrl, href: '#' } : { url: this.lazyLoadSpinnerUrl, href: image.href || '#' }),
+        action: '',
+        leftSide: false,
+        rightSide: false,
+        selected: false,
+        loaded: false
+      });
+    }
+    this.slides[this.slideIndex].selected = true;
+    this.loadFirstSlide();
+  }
+
+  /**
+   * @description create the slides with background urls all at once
+   */
+  private buildSlideArray(): void {
+    if (this.debug === true) console.log(`buildSlideArray()`);
+    for (let image of this.imageUrls) {
+      this.slides.push({
+        image: (typeof image === 'string' ? { url: image, href: '#' } : image),
+        action: '',
+        leftSide: false,
+        rightSide: false,
+        selected: false,
+        loaded: true
+      });
+    }
+    this.slides[this.slideIndex].selected = true;
+  }
+
+  /**
+   * @description load the slide image for lazy loading
+   *              this takes server side and browser side into account
    */
   private loadFirstSlide(): void {
     if (this.debug === true) console.log(`loadFirstSlide()`);
@@ -270,7 +287,7 @@ export class SlideshowComponent implements DoCheck {
   }
 
   /**
-   * @description if lazy loading in browser, go ahead and start to load remaining slides
+   * @description if lazy loading in browser, go ahead and start loading remaining slides
    */
   private loadRemainingSlides(): void {
     if (this.debug === true) console.log(`loadRemainingSlides()`);
