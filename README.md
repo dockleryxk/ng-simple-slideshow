@@ -49,10 +49,23 @@ import {SlideshowModule} from 'ng-simple-slideshow';
 
 ## Usage
 
-The simplest use case is the following, but the full list of options is below:
+The simplest use case is the following:
 
 ```html
 <slideshow [imageUrls]="imageUrlArray"></slideshow>
+```
+
+A more complex example of how I use this in one of my own projects (full list of options in next section):
+
+```html
+<slideshow [height]="height"
+           [minHeight]="'525px'"
+           [autoPlay]="true"
+           [showArrows]="false"
+           [imageUrls]="imageSources"
+           [lazyLoad]="imageSources?.length > 1"
+           [autoPlayWaitForLazyLoad]="true">
+</slideshow>
 ```
 
 ## Options
