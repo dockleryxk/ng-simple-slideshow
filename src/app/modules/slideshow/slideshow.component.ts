@@ -256,7 +256,7 @@ export class SlideshowComponent implements DoCheck {
   }
 
   /**
-   * @description load the slide image for lazy loading
+   * @description load the first slide image if lazy loading
    *              this takes server side and browser side into account
    */
   private loadFirstSlide(): void {
@@ -264,6 +264,7 @@ export class SlideshowComponent implements DoCheck {
     const tmpIndex = this.slideIndex;
     const tmpImage = this.imageUrls[tmpIndex];
 
+    // if server side, we don't need to worry about the rest of the slides
     if (isPlatformServer(this.platform_id)) {
       this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '#' } : tmpImage);
       this.slides[tmpIndex].loaded = true;
@@ -271,6 +272,7 @@ export class SlideshowComponent implements DoCheck {
     }
     else {
       const firstSlideFromTransferState = this.transferState.get(FIRST_SLIDE_KEY, null as any);
+      // if the first slide didn't finish loading on the server side, we need to load it
       if (firstSlideFromTransferState === null) {
         let loadImage = new Image();
         loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
@@ -287,7 +289,8 @@ export class SlideshowComponent implements DoCheck {
   }
 
   /**
-   * @description if lazy loading in browser, go ahead and start loading remaining slides
+   * @description if lazy loading in browser, start loading remaining slides
+   * @todo: figure out how to not show the spinner if images are loading fast enough
    */
   private loadRemainingSlides(): void {
     if (this.debug === true) console.log(`loadRemainingSlides()`);
