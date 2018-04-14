@@ -247,7 +247,7 @@ export class SlideshowComponent implements DoCheck {
     if (this.debug === true) console.log(`buildLazyLoadSlideArray()`);
     for (let image of this.imageUrls) {
       this.slides.push({
-        image: (typeof image === 'string' ? { url: null, href: '' } : { url: null, href: image.href || '' }),
+        image: (typeof image === 'string' ? { url: null } : { url: null, href: image.href || '' }),
         action: '',
         leftSide: false,
         rightSide: false,
@@ -266,7 +266,7 @@ export class SlideshowComponent implements DoCheck {
     if (this.debug === true) console.log(`buildSlideArray()`);
     for (let image of this.imageUrls) {
       this.slides.push({
-        image: (typeof image === 'string' ? { url: image, href: '' } : image),
+        image: (typeof image === 'string' ? { url: image } : image),
         action: '',
         leftSide: false,
         rightSide: false,
@@ -288,7 +288,7 @@ export class SlideshowComponent implements DoCheck {
 
     // if server side, we don't need to worry about the rest of the slides
     if (isPlatformServer(this.platform_id)) {
-      this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '' } : tmpImage);
+      this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
       this.slides[tmpIndex].loaded = true;
       this.transferState.set(FIRST_SLIDE_KEY, this.slides[tmpIndex]);
     }
@@ -299,7 +299,7 @@ export class SlideshowComponent implements DoCheck {
         let loadImage = new Image();
         loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
         loadImage.addEventListener('load', () => {
-          this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '' } : tmpImage);
+          this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
           this.slides[tmpIndex].loaded = true;
         });
       }
@@ -322,7 +322,7 @@ export class SlideshowComponent implements DoCheck {
           const tmpImage = this.imageUrls[i];
           let loadImage = new Image();
           loadImage.addEventListener('load', () => {
-            this.slides[i].image = (typeof tmpImage === 'string' ? { url: tmpImage, href: '' } : tmpImage);
+            this.slides[i].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
             this.slides[i].loaded = true;
             resolve();
           });
