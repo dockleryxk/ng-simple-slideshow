@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
 
+## [1.1.18] - 2018-04-14
+### Changed
+- actually make sure slides without hrefs don't redirect
+
 ## [1.1.17] - 2018-04-14
 ### Changed
 - Make sure slides without hrefs don't redirect -- [bug report](https://github.com/dockleryxk/ng-simple-slideshow/pull/11#commitcomment-28466991)
