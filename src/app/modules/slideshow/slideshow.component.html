@@ -5,13 +5,13 @@
   <!-- slides -->
   <a *ngFor="let slide of slides"
      class="slides"
+     href="{{slide?.image?.href}}"
      [ngStyle]="{
           'background-image': 'url('+slide?.image?.url+')',
           'background-size': slide.loaded ? backgroundSize : 'auto',
           'background-position': slide.loaded ? backgroundPosition : 'center center',
           'background-repeat': slide.loaded ? backgroundRepeat : 'no-repeat'
        }"
-     [href]="slide?.image?.href"
      [class.selected]="slide?.selected"
      [class.hide-slide]="!slide?.selected && !slide?.leftSide && !slide?.rightSide"
      [class.left-side]="slide?.leftSide"
