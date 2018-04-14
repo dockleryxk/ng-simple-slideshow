@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { SwipeService } from './swipe.service';
 import { isNullOrUndefined, isUndefined } from 'util';
-import { isPlatformServer } from '@angular/common';
+import { isPlatformServer, DOCUMENT } from '@angular/common';
 import { ISlide } from './ISlide';
 import { IImage } from './IImage';
 import { DomSanitizer, TransferState, makeStateKey } from '@angular/platform-browser';
@@ -60,7 +60,8 @@ export class SlideshowComponent implements DoCheck {
     private renderer: Renderer2,
     private transferState: TransferState,
     public sanitizer: DomSanitizer,
-    @Inject(PLATFORM_ID) private platform_id: any
+    @Inject(PLATFORM_ID) private platform_id: any,
+    @Inject(DOCUMENT) private document: any
   ) { }
 
   ngDoCheck() {
@@ -106,7 +107,7 @@ export class SlideshowComponent implements DoCheck {
     e.preventDefault();
     const currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
     if (currentSlide && !isNullOrUndefined(currentSlide.image.href)) {
-      window.location.href = currentSlide.image.href;
+      this.document.location.href = currentSlide.image.href;
     }
   }
 
