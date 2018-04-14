@@ -44,7 +44,6 @@ export class SlideshowComponent implements DoCheck {
   @Input() captionColor: string = '#FFF';
   @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
   @Input() lazyLoad: boolean = false;
-  @Input() lazyLoadSpinnerUrl: string = '/assets/_loading.gif';
 
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
@@ -126,6 +125,27 @@ export class SlideshowComponent implements DoCheck {
     this.slideRight(beforeClickIndex);
     this.slides[beforeClickIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
+  }
+
+  /**
+   * @param {number} index
+   * @description set the index to the desired index - 1 and simulate a right slide
+   */
+  getSlideStyle(index: number) {
+    if (this.debug === true) console.log(`getSlideStyle(${ index })`);
+    const slide = this.slides[index];
+
+    if (slide.loaded) {
+      return {
+        'background-image': 'url(' + slide.image.url + ')',
+        'background-size': slide.loaded ? this.backgroundSize : 'auto',
+        'background-position': slide.loaded ? this.backgroundPosition : 'center center',
+        'background-repeat': slide.loaded ? this.backgroundRepeat : 'no-repeat'
+      };
+    }
+    else {
+      return {};
+    }
   }
 
   /**
@@ -227,7 +247,7 @@ export class SlideshowComponent implements DoCheck {
     if (this.debug === true) console.log(`buildLazyLoadSlideArray()`);
     for (let image of this.imageUrls) {
       this.slides.push({
-        image: (typeof image === 'string' ? { url: this.lazyLoadSpinnerUrl, href: '' } : { url: this.lazyLoadSpinnerUrl, href: image.href || '' }),
+        image: (typeof image === 'string' ? { url: null, href: '' } : { url: null, href: image.href || '' }),
         action: '',
         leftSide: false,
         rightSide: false,

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
 
+## [1.1.17] - 2018-04-14
+### Changed
+- Make sure slides without hrefs don't redirect -- [bug report](https://github.com/dockleryxk/ng-simple-slideshow/pull/11#commitcomment-28466991)
+- Use the document from angular core instead of the window object
+- add ability to use titles in anchor tags for images
+### Breaking Changes
+- use a css spinner instead of a gif, remove option
+
 ## [1.1.16] - 2018-03-20
 ### Changed
 - Fix glitchy-looking UX by removing slide from transfer state after using it once

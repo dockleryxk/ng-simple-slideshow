@@ -3,16 +3,11 @@
      (touchend)="onSwipe($event, 'end')"
      class="slideshow-container">
   <!-- slides -->
-  <a *ngFor="let slide of slides"
+  <a *ngFor="let slide of slides; let i = index"
      class="slides"
      href="{{slide?.image?.href}}"
      title="{{slide?.image?.title}}"
-     [ngStyle]="{
-          'background-image': 'url('+slide?.image?.url+')',
-          'background-size': slide.loaded ? backgroundSize : 'auto',
-          'background-position': slide.loaded ? backgroundPosition : 'center center',
-          'background-repeat': slide.loaded ? backgroundRepeat : 'no-repeat'
-       }"
+     [ngStyle]="getSlideStyle(i)"
      [class.selected]="slide?.selected"
      [class.hide-slide]="!slide?.selected && !slide?.leftSide && !slide?.rightSide"
      [class.left-side]="slide?.leftSide"
@@ -23,6 +18,8 @@
      [class.slide-out-right]="slide?.action === 'slideOutRight'"
      [class.link]="slide?.image?.href"
      (click)="onClick($event)">
+    <div class="loader"
+         *ngIf="!slide?.loaded"></div>
     <div *ngIf="showCaptions && slide?.image?.caption"
          class="caption"
          [ngStyle]="{
