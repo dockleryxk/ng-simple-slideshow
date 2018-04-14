@@ -6,6 +6,7 @@
   <a *ngFor="let slide of slides"
      class="slides"
      href="{{slide?.image?.href}}"
+     title="{{slide?.image?.title}}"
      [ngStyle]="{
           'background-image': 'url('+slide?.image?.url+')',
           'background-size': slide.loaded ? backgroundSize : 'auto',
