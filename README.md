@@ -117,7 +117,7 @@ Take control of the slideshow if you want! Simply create a reference to your sli
 and in your component.ts reference it as a ViewChild:
 
 ```typescript
-@ViewChild('slideshow') slideshow: ElementRef;
+@ViewChild() slideshow: any;
 ```
 
 Now you can access the public members such as the goToSlide and onSlide:
