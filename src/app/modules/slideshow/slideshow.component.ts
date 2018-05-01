@@ -24,8 +24,8 @@ export class SlideshowComponent implements DoCheck {
   private autoplayIntervalId: any;
   private initial: boolean = true;
 
-  @Input() imageUrls: (string | IImage)[];
-  @Input() height: string;
+  @Input() imageUrls: (string | IImage)[] = [];
+  @Input() height: string = '100%';
   @Input() minHeight: string;
   @Input() arrowSize: string;
   @Input() showArrows: boolean = true;
