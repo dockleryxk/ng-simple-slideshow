@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
 
+## [1.1.19] - 2018-05-18
+### Changed
+- imageUrl array initialized to []
+- make default height 100% from the ts instead of scss
+
 ## [1.1.18] - 2018-04-14
 ### Changed
 - actually make sure slides without hrefs don't redirect
