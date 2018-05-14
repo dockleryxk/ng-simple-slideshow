@@ -1,6 +1,6 @@
 {
   "name": "ng-simple-slideshow",
-  "version": "1.1.19",
+  "version": "1.2.0",
   "license": "MIT",
   "private": false,
   "author": {
@@ -12,7 +12,7 @@
     "url": "https://github.com/dockleryxk/ng-simple-slideshow/issues"
   },
   "peerDependencies": {
-    "@angular/core": "^4.0.0 || ^5.0.0"
+    "@angular/core": "^4.0.0 || ^5.0.0 || ^6.0.0"
   },
   "deprecated": false,
   "description": "A simple, responsive slideshow for Angular 4+.",

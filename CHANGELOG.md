@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
 
-## [1.1.19] - 2018-05-18
+## [1.2.0] - 2018-05-13
+### Changed
+- Update peer dependency for Angular 6
+
+## [1.1.19] - 2018-04-18
 ### Changed
 - imageUrl array initialized to []
 - make default height 100% from the ts instead of scss
