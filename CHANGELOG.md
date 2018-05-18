@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 - Angular Universal (server side rendered) demo
+- Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
 ## [1.2.0] - 2018-05-13
 ### Changed
