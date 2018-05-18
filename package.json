@@ -63,20 +63,23 @@
   "homepage": "https://github.com/dockleryxk/ng-simple-slideshow",
   "keywords": [
     "angular",
+    "angular 2",
+    "angular 4",
+    "angular 5",
+    "angular 6",
     "ng",
     "ngx",
     "ng2",
     "ng4",
     "ng5",
+    "ng6",
     "slideshow",
     "carousel",
     "slider",
     "angular2",
-    "angular 2",
     "angular4",
-    "angular 4",
     "angular5",
-    "angular 5"
+    "angular6"
   ],
   "repository": {
     "type": "git",
