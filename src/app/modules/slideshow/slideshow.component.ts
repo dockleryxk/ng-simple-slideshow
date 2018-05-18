@@ -137,14 +137,20 @@ export class SlideshowComponent implements DoCheck {
 
     if (slide.loaded) {
       return {
-        'background-image': 'url(' + slide.image.url + ')',
-        'background-size': slide.loaded ? this.backgroundSize : 'auto',
-        'background-position': slide.loaded ? this.backgroundPosition : 'center center',
-        'background-repeat': slide.loaded ? this.backgroundRepeat : 'no-repeat'
+        "background-image": 'url(' + slide.image.url + ')',
+        "background-size": this.backgroundSize,
+        "background-position": this.backgroundPosition,
+        "background-repeat": this.backgroundRepeat
       };
     }
     else {
-      return {};
+      // doesn't compile correctly if returning an empty object, sooooo.....
+      return {
+        "background-image": undefined,
+        "background-size": undefined,
+        "background-position": undefined,
+        "background-repeat": undefined
+      };
     }
   }
 
