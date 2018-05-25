@@ -5,7 +5,7 @@
   <!-- slides -->
   <a *ngFor="let slide of slides; let i = index"
      class="slides"
-     href="{{slide?.image?.href}}"
+     href="{{slide?.image?.clickAction ? '#' : slide?.image?.href}}"
      title="{{slide?.image?.title}}"
      [ngStyle]="getSlideStyle(i)"
      [class.selected]="slide?.selected"
@@ -16,7 +16,7 @@
      [class.slide-in-right]="slide?.action === 'slideInRight'"
      [class.slide-out-left]="slide?.action === 'slideOutLeft'"
      [class.slide-out-right]="slide?.action === 'slideOutRight'"
-     [class.link]="slide?.image?.href"
+     [class.link]="slide?.image?.clickAction ? null : slide?.image?.href"
      (click)="onClick($event)">
     <div class="loader"
          *ngIf="!slide?.loaded"></div>
