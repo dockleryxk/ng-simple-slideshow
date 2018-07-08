@@ -5,7 +5,7 @@
   <!-- slides -->
   <a *ngFor="let slide of slides; let i = index"
      class="slides"
-     href="{{slide?.image?.href}}"
+     href="{{slide?.image?.clickAction ? '#' : slide?.image?.href}}"
      title="{{slide?.image?.title}}"
      [ngStyle]="getSlideStyle(i)"
      [class.selected]="slide?.selected"
