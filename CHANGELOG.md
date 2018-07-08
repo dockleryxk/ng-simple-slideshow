@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.2.3] - 2018-07-08
+### Changed
+- Merge Pull #23 for custom click functions -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/23)
+- Remove "next" and "previous" text -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/24)
+
 ## [1.2.2] - 2018-05-17
 ### Changed
 - Update npm tags
