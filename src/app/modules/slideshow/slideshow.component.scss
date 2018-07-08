@@ -128,14 +128,11 @@ $border-color: darken(#FFF, 5%);
       width: 30px;
       height: 30px;
       background: transparent;
-      text-indent: -9999px;
       border: {
         top: 2px solid $border-color;
         left: 2px solid $border-color;
       }
       transition: all .3s ease-in-out;
-      text-decoration: none;
-      color: transparent;
       user-select: none;
 
       &:before {
