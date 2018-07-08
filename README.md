@@ -68,6 +68,10 @@ A more complex example of how I use this in one of my own projects (full list of
 </slideshow>
 ```
 
+### More Info on imageUrls
+
+The imageUrls input can be an array of strings, however in order to enable slides to have links, captions, or custom click functions, you must use an object of type [IImage](https://github.com/dockleryxk/ng-simple-slideshow/blob/master/src/app/modules/slideshow/IImage.ts) instead of a string. For example usage, [see here](https://github.com/dockleryxk/ng-simple-slideshow/blob/master/src/app/app.component.ts#L8).
+
 ## Options
 
 ### Inputs
