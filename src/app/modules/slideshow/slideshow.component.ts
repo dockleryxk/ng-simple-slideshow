@@ -105,7 +105,10 @@ export class SlideshowComponent implements DoCheck {
   onClick(e: MouseEvent): void {
     e.preventDefault();
     const currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
-    if (currentSlide && !isNullOrUndefined(currentSlide.image.href)) {
+    if (currentSlide && !isNullOrUndefined(currentSlide.image.clickAction)) {
+      currentSlide.image.clickAction();
+    }
+    else if (currentSlide && !isNullOrUndefined(currentSlide.image.href)) {
       this.document.location.href = currentSlide.image.href;
     }
   }

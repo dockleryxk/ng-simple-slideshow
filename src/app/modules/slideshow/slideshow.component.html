@@ -16,7 +16,7 @@
      [class.slide-in-right]="slide?.action === 'slideInRight'"
      [class.slide-out-left]="slide?.action === 'slideOutLeft'"
      [class.slide-out-right]="slide?.action === 'slideOutRight'"
-     [class.link]="slide?.image?.href"
+     [class.link]="slide?.image?.clickAction || slide?.image?.href"
      (click)="onClick($event)">
     <div class="loader"
          *ngIf="!slide?.loaded"></div>

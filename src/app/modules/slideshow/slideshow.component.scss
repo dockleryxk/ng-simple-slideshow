@@ -69,6 +69,10 @@ $border-color: darken(#FFF, 5%);
     &.link {
       cursor: pointer;
     }
+
+    &:not(.link) {
+      cursor: default;
+    }
   }
 
   .caption {
