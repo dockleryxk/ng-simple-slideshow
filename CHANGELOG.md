@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.2.4] - 2018-08-26
+### Added
+- backgroundPosition, backgroundRepeat, and backgroundSize props added to the IImage interface. This adds the ability to set these properties for each slide individually. These properties will default to the slideshow inputs
+
 ## [1.2.3] - 2018-07-08
 ### Changed
 - Merge Pull #23 for custom click functions -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/23)
