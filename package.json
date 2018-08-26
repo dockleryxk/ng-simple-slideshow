@@ -1,6 +1,6 @@
 {
   "name": "ng-simple-slideshow",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
