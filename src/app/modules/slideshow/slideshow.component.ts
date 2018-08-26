@@ -141,9 +141,9 @@ export class SlideshowComponent implements DoCheck {
     if (slide.loaded) {
       return {
         "background-image": 'url(' + slide.image.url + ')',
-        "background-size": this.backgroundSize,
-        "background-position": this.backgroundPosition,
-        "background-repeat": this.backgroundRepeat
+        "background-size": slide.image.backgroundSize || this.backgroundSize,
+        "background-position": slide.image.backgroundPosition || this.backgroundPosition,
+        "background-repeat": slide.image.backgroundRepeat || this.backgroundRepeat
       };
     }
     else {

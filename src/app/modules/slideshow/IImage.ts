@@ -4,4 +4,7 @@ export interface IImage {
     clickAction?: Function;
     caption?: string;
     title?: string;
+    backgroundSize?: string;
+    backgroundPosition?: string;
+    backgroundRepeat?: string;
 }
