@@ -9,6 +9,7 @@
 A simple slideshow for Angular 4+.
 
 [Click here](https://ng-simple-slideshow.firebaseapp.com) the check out the demo.
+[Click here](https://americansecurestorage.com) the see the slideshow in production on a [StoragePug](https://storagepug.com) client site, which is what I originally made this slideshow package for.
 
 ## Features
 
