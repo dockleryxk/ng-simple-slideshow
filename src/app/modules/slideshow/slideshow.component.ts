@@ -75,13 +75,13 @@ export class SlideshowComponent implements DoCheck {
         this.isHidden = false;
       }
       this.setSlides();
-      this.setStyles();
-      this.handleAutoPlay();
     }
     else if (this.hideOnNoSlides === true) {
       this.renderer.setStyle(this.container.nativeElement, 'display', 'none');
       this.isHidden = true;
     }
+    this.setStyles();
+    this.handleAutoPlay();
   }
 
   /**

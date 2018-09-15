@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
   captionColor: string = '#FFF';
   captionBackground: string = 'rgba(0, 0, 0, .35)';
   lazyLoad: boolean = false;
+  hideOnNoSlides: boolean = false;
   width: string = '100%';
 
   ngOnInit() {
