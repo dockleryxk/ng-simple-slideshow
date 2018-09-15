@@ -23,6 +23,7 @@ export class SlideshowComponent implements DoCheck {
   private urlCache: (string | IImage)[];
   private autoplayIntervalId: any;
   private initial: boolean = true;
+  private isHidden = false;
 
   @Input() imageUrls: (string | IImage)[] = [];
   @Input() height: string = '100%';
@@ -44,6 +45,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() captionColor: string = '#FFF';
   @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
   @Input() lazyLoad: boolean = false;
+  @Input() hideOnNoSlides: boolean = false;
 
   @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
   @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
@@ -66,10 +68,20 @@ export class SlideshowComponent implements DoCheck {
   ngDoCheck() {
     if (this.debug === true) console.log(`ngOnChanges()`);
     // if this is the first being called, create a copy of the input
-    if (this.initial === true) this.urlCache = Array.from(this.imageUrls);
-    this.setSlides();
-    this.setStyles();
-    this.handleAutoPlay();
+    if (!isNullOrUndefined(this.imageUrls) && this.imageUrls.length > 0) {
+      if (this.initial === true) this.urlCache = Array.from(this.imageUrls);
+      if (this.isHidden === true) {
+        this.renderer.removeStyle(this.container.nativeElement, 'display');
+        this.isHidden = false;
+      }
+      this.setSlides();
+      this.setStyles();
+      this.handleAutoPlay();
+    }
+    else if (this.hideOnNoSlides === true) {
+      this.renderer.setStyle(this.container.nativeElement, 'display', 'none');
+      this.isHidden = true;
+    }
   }
 
   /**
