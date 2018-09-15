@@ -99,6 +99,7 @@ The imageUrls input can be an array of strings, however in order to enable slide
 | captionColor            | no       | '#FFF'               | string                                                                                                                    | color of caption text                                                                                                              |
 | captionBackground       | no       | 'rgba(0, 0, 0, .35)' | string                                                                                                                    | color of caption background                                                                                                        |
 | lazyLoad                | no       | false                | boolean                                                                                                                   | turn on to lazy load images instead of preload                                                                                     |
+| hideOnNoSlides          | no       | false                | boolean                                                                                                                   | set the slideshow container display to none if imageUrls is empty, null, or undefined                                              |
 
 ### Output Events
 
