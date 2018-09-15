@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.2.5] - 2018-09-15
+### Added
+- hideOnNoSlides which sets the container element style to display:none if no slides exists, or if the imageUrls array's length is zero
+### Changed
+- imageUrls array can now be empty, null, or undefined
+
 ## [1.2.4] - 2018-08-26
 ### Added
 - backgroundPosition, backgroundRepeat, and backgroundSize props added to the IImage interface. This adds the ability to set these properties for each slide individually. These properties will default to the slideshow inputs
