@@ -416,4 +416,14 @@ export class SlideshowComponent implements DoCheck {
     if (++i >= this.slides.length) i = 0;
     return i;
   }
+
+  /**
+   * @param {number} index
+   * @param {ISlide} slide
+   * @returns {any}
+   * @description a trackBy function for the ngFor loops
+   */
+  trackByFn(index: number, slide: ISlide): any {
+    return slide.image;
+  }
 }

@@ -3,7 +3,7 @@
      (touchend)="onSwipe($event, 'end')"
      class="slideshow-container">
   <!-- slides -->
-  <a *ngFor="let slide of slides; let i = index"
+  <a *ngFor="let slide of slides; index as i; trackBy: trackByFn"
      class="slides"
      href="{{slide?.image?.clickAction ? '#' : slide?.image?.href}}"
      title="{{slide?.image?.title}}"
@@ -48,12 +48,12 @@
   <!-- dots -->
   <ul class="slick-dots"
       *ngIf="showDots">
-    <li *ngFor="let slide of slides; let index = index"
-        (click)="goToSlide(index)"
+    <li *ngFor="let slide of slides; index as i; trackBy: trackByFn"
+        (click)="goToSlide(i)"
         [class.slick-active]="slide.selected">
       <button type="button"
               [attr.style]="sanitizer.bypassSecurityTrustStyle('--dot-color:' + dotColor)">
-        {{index}}
+        {{i}}
       </button>
     </li>
   </ul>
