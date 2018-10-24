@@ -47,10 +47,10 @@ export class SlideshowComponent implements DoCheck {
   @Input() lazyLoad: boolean = false;
   @Input() hideOnNoSlides: boolean = false;
 
-  @Output('onSlideLeft') public onSlideLeft = new EventEmitter<number>();
-  @Output('onSlideRight') public onSlideRight = new EventEmitter<number>();
-  @Output('onSwipeLeft') public onSwipeLeft = new EventEmitter<number>();
-  @Output('onSwipeRight') public onSwipeRight = new EventEmitter<number>();
+  @Output() public onSlideLeft = new EventEmitter<number>();
+  @Output() public onSlideRight = new EventEmitter<number>();
+  @Output() public onSwipeLeft = new EventEmitter<number>();
+  @Output() public onSwipeRight = new EventEmitter<number>();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('prevArrow') prevArrow: ElementRef;
