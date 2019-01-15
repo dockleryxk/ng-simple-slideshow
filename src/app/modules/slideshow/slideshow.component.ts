@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone } from '@angular/core';
 import { SwipeService } from './swipe.service';
 import { isNullOrUndefined, isUndefined } from 'util';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
@@ -56,6 +56,7 @@ export class SlideshowComponent implements DoCheck {
     private swipeService: SwipeService,
     private renderer: Renderer2,
     private transferState: TransferState,
+    private ngZone: NgZone,
     public sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) private platform_id: any,
     @Inject(DOCUMENT) private document: any
@@ -357,14 +358,20 @@ export class SlideshowComponent implements DoCheck {
     if (isPlatformServer(this.platform_id)) return;
     if (stopAutoPlay === true || this.autoPlay === false) {
       if (this.debug === true) console.log(`stop autoPlay`);
-      if (!isNullOrUndefined(this.autoplayIntervalId)) clearInterval(this.autoplayIntervalId);
+      if (!isNullOrUndefined(this.autoplayIntervalId)) {
+        this.ngZone.runOutsideAngular(() => clearInterval(this.autoplayIntervalId));
+      }
     }
     else if (isNullOrUndefined(this.autoplayIntervalId)) {
       if (this.debug === true) console.log(`start autoPlay`);
-      this.autoplayIntervalId = setInterval(() => {
-        if (this.debug === true) console.log(`autoPlay slide event`);
-        if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex].loaded)) this.slide(1);
-      }, this.autoPlayInterval);
+      this.ngZone.runOutsideAngular(() => {
+        this.autoplayIntervalId = setInterval(() => {
+          if (this.debug === true) console.log(`autoPlay slide event`);
+          if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex].loaded)) {
+            this.ngZone.run(() => this.slide(1));
+          }
+        }, this.autoPlayInterval);
+      });
     }
   }
 
