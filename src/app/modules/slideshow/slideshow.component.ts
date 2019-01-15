@@ -1,8 +1,4 @@
-import {
-  Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2,
-  ViewChild,
-  DoCheck
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck } from '@angular/core';
 import { SwipeService } from './swipe.service';
 import { isNullOrUndefined, isUndefined } from 'util';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
