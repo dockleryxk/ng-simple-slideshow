@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.2.7] - unknown
+### Changed
+- run setInterval outside of Angular zone
+
 ## [1.2.6] - 2018-10-24
 ### Added
 - Use trackBy in the array of images
