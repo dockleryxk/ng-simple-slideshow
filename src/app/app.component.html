@@ -109,13 +109,10 @@
   </tr>
   <tr>
     <td>
-      <label for="debug">debug*</label>
+      <label for="debug">debug</label>
     </td>
     <td>
-      <input id="debug"
-             type="checkbox"
-             name="debug"
-             [(ngModel)]="debug">
+      <strong>debug has been deprecated, will be completely removed in 1.3.0</strong>
     </td>
     <td>
       <label for="backgroundSize">backgroundSize</label>
@@ -194,7 +191,7 @@
   </tr>
   <tr>
     <td>
-      <label for="width">width**</label>
+      <label for="width">width*</label>
     </td>
     <td>
       <input id="width"
@@ -203,10 +200,6 @@
     </td>
   </tr>
 </table>
-
 <p style="text-align:center">
-  *Check the console for debug info
-</p>
-<p style="text-align:center">
-  **This is not an option on the slideshow, it automatically adjusts to the width of its container.
+  *This is not an option on the slideshow, it automatically adjusts to the width of its container.
 </p>

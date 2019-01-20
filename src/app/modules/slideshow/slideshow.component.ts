@@ -1,6 +1,5 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit } from '@angular/core';
 import { SwipeService } from './swipe.service';
-import { isNullOrUndefined, isUndefined } from 'util';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
 import { ISlide } from './ISlide';
 import { IImage } from './IImage';
@@ -13,9 +12,9 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.scss']
 })
-export class SlideshowComponent implements DoCheck {
-  public slideIndex: number = 0;
-  public slides: ISlide[] = [];
+export class SlideshowComponent implements OnInit, DoCheck {
+  slideIndex: number = 0;
+  slides: ISlide[] = [];
   private urlCache: (string | IImage)[];
   private autoplayIntervalId: any;
   private initial: boolean = true;
@@ -31,7 +30,7 @@ export class SlideshowComponent implements DoCheck {
   @Input() autoPlayInterval: number = 3333;
   @Input() stopAutoPlayOnSlide: boolean = true;
   @Input() autoPlayWaitForLazyLoad: boolean = false;
-  @Input() debug: boolean = false;
+  @Input() debug: boolean;
   @Input() backgroundSize: string = 'cover';
   @Input() backgroundPosition: string = 'center center';
   @Input() backgroundRepeat: string = 'no-repeat';
@@ -43,10 +42,10 @@ export class SlideshowComponent implements DoCheck {
   @Input() lazyLoad: boolean = false;
   @Input() hideOnNoSlides: boolean = false;
 
-  @Output() public onSlideLeft = new EventEmitter<number>();
-  @Output() public onSlideRight = new EventEmitter<number>();
-  @Output() public onSwipeLeft = new EventEmitter<number>();
-  @Output() public onSwipeRight = new EventEmitter<number>();
+  @Output() onSlideLeft = new EventEmitter<number>();
+  @Output() onSlideRight = new EventEmitter<number>();
+  @Output() onSwipeLeft = new EventEmitter<number>();
+  @Output() onSwipeRight = new EventEmitter<number>();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('prevArrow') prevArrow: ElementRef;
@@ -62,21 +61,31 @@ export class SlideshowComponent implements DoCheck {
     @Inject(DOCUMENT) private document: any
   ) { }
 
+  ngOnInit() {
+    if (this.debug !== undefined) {
+      console.warn('[Deprecation Warning]: The debug input will be removed from ng-simple-slideshow in 1.3.0');
+    }
+  }
+
   ngDoCheck() {
-    if (this.debug === true) console.log(`ngOnChanges()`);
     // if this is the first being called, create a copy of the input
-    if (!isNullOrUndefined(this.imageUrls) && this.imageUrls.length > 0) {
-      if (this.initial === true) this.urlCache = Array.from(this.imageUrls);
+    if (this.imageUrls && this.imageUrls.length > 0) {
+      if (this.initial === true) {
+        this.urlCache = Array.from(this.imageUrls);
+      }
+
       if (this.isHidden === true) {
         this.renderer.removeStyle(this.container.nativeElement, 'display');
         this.isHidden = false;
       }
+
       this.setSlides();
     }
     else if (this.hideOnNoSlides === true) {
       this.renderer.setStyle(this.container.nativeElement, 'display', 'none');
       this.isHidden = true;
     }
+
     this.setStyles();
     this.handleAutoPlay();
   }
@@ -89,7 +98,6 @@ export class SlideshowComponent implements DoCheck {
    *              0 is taken into account for failed swipes
    */
   onSlide(indexDirection: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`onSlide(${ indexDirection }, ${ isSwipe })`);
     this.handleAutoPlay(this.stopAutoPlayOnSlide);
     this.slide(indexDirection, isSwipe);
   }
@@ -100,11 +108,18 @@ export class SlideshowComponent implements DoCheck {
    * @description Use the swipe service to detect swipe events from phone and tablets
    */
   onSwipe(e: TouchEvent, when: string): void {
-    if (this.disableSwiping === true) return;
-    const indexDirection = this.swipeService.swipe(e, when, this.debug === true);
+    if (this.disableSwiping === true) {
+      return;
+    }
+
+    const indexDirection = this.swipeService.swipe(e, when);
     // handle a failed swipe
-    if (indexDirection === 0) return;
-    else this.onSlide(indexDirection, true);
+    if (indexDirection === 0) {
+      return;
+    }
+    else {
+      this.onSlide(indexDirection, true);
+    }
   }
 
   /**
@@ -114,10 +129,11 @@ export class SlideshowComponent implements DoCheck {
   onClick(e: MouseEvent): void {
     e.preventDefault();
     const currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
-    if (currentSlide && !isNullOrUndefined(currentSlide.image.clickAction)) {
+
+    if (currentSlide && currentSlide.image.clickAction) {
       currentSlide.image.clickAction();
     }
-    else if (currentSlide && !isNullOrUndefined(currentSlide.image.href)) {
+    else if (currentSlide && currentSlide.image.href) {
       this.document.location.href = currentSlide.image.href;
     }
   }
@@ -127,13 +143,15 @@ export class SlideshowComponent implements DoCheck {
    * @description set the index to the desired index - 1 and simulate a right slide
    */
   goToSlide(index: number) {
-    if (this.debug === true) console.log(`goToSlide(${ index })`);
     const beforeClickIndex = this.slideIndex;
     this.slideIndex = index - 1;
     this.setSlideIndex(1);
-    if (!this.slides[this.slideIndex].loaded) this.loadRemainingSlides();
-    this.handleAutoPlay(this.stopAutoPlayOnSlide);
 
+    if (!this.slides[this.slideIndex].loaded) {
+      this.loadRemainingSlides();
+    }
+
+    this.handleAutoPlay(this.stopAutoPlayOnSlide);
     this.slideRight(beforeClickIndex);
     this.slides[beforeClickIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
@@ -144,7 +162,6 @@ export class SlideshowComponent implements DoCheck {
    * @description set the index to the desired index - 1 and simulate a right slide
    */
   getSlideStyle(index: number) {
-    if (this.debug === true) console.log(`getSlideStyle(${ index })`);
     const slide = this.slides[index];
 
     if (slide.loaded) {
@@ -172,12 +189,21 @@ export class SlideshowComponent implements DoCheck {
    * @description Set the new slide index, then make the transition happen.
    */
   private slide(indexDirection: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`slide(${ indexDirection }, ${ isSwipe })`);
     const oldIndex = this.slideIndex;
+
     this.setSlideIndex(indexDirection);
-    if (!this.slides[this.slideIndex].loaded) this.loadRemainingSlides();
-    if (indexDirection === 1) this.slideRight(oldIndex, isSwipe);
-    else this.slideLeft(oldIndex, isSwipe);
+
+    if (!this.slides[this.slideIndex].loaded) {
+      this.loadRemainingSlides();
+    }
+
+    if (indexDirection === 1) {
+      this.slideRight(oldIndex, isSwipe);
+    }
+    else {
+      this.slideLeft(oldIndex, isSwipe);
+    }
+
     this.slides[oldIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
   }
@@ -187,10 +213,15 @@ export class SlideshowComponent implements DoCheck {
    * @description This is just treating the url array like a circular list.
    */
   private setSlideIndex(indexDirection: number): void {
-    if (this.debug === true) console.log(`setSlideIndex(${ this.slideIndex })`);
     this.slideIndex += indexDirection;
-    if (this.slideIndex < 0) this.slideIndex = this.slides.length - 1;
-    if (this.slideIndex >= this.slides.length) this.slideIndex = 0;
+
+    if (this.slideIndex < 0) {
+      this.slideIndex = this.slides.length - 1;
+    }
+
+    if (this.slideIndex >= this.slides.length) {
+      this.slideIndex = 0;
+    }
   }
 
   /**
@@ -201,9 +232,13 @@ export class SlideshowComponent implements DoCheck {
    *              the left and right are assigned classes.
    */
   private slideLeft(oldIndex: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`slideLeft(${ oldIndex }, ${ isSwipe })`);
-    if (isSwipe === true) this.onSwipeLeft.emit(this.slideIndex);
-    else this.onSlideLeft.emit(this.slideIndex);
+    if (isSwipe === true) {
+      this.onSwipeLeft.emit(this.slideIndex);
+    }
+    else {
+      this.onSlideLeft.emit(this.slideIndex);
+    }
+
     this.slides[this.getLeftSideIndex(oldIndex)].leftSide = false;
     this.slides[oldIndex].leftSide = true;
     this.slides[oldIndex].action = 'slideOutLeft';
@@ -220,9 +255,13 @@ export class SlideshowComponent implements DoCheck {
    *              the left and right are assigned classes.
    */
   private slideRight(oldIndex: number, isSwipe?: boolean): void {
-    if (this.debug === true) console.log(`slideRight(${ oldIndex }, ${ isSwipe })`);
-    if (isSwipe === true) this.onSwipeRight.emit(this.slideIndex);
-    else this.onSlideRight.emit(this.slideIndex);
+    if (isSwipe === true) {
+      this.onSwipeRight.emit(this.slideIndex);
+    }
+    else {
+      this.onSlideRight.emit(this.slideIndex);
+    }
+
     this.slides[this.getRightSideIndex(oldIndex)].rightSide = false;
     this.slides[oldIndex].rightSide = true;
     this.slides[oldIndex].action = 'slideOutRight';
@@ -235,18 +274,12 @@ export class SlideshowComponent implements DoCheck {
    * @description Check to make sure slide images have been set or haven't changed
    */
   private setSlides(): void {
-    if (!isNullOrUndefined(this.imageUrls)) {
-      if (this.debug === true) console.log(`setSlides()`);
+    if (this.imageUrls) {
       if (this.checkCache() || this.initial === true) {
-        if (this.debug === true) {
-          console.log(`this.checkCache() || this.initial === true`);
-          console.log(`this.initial: ${ this.initial }`);
-          console.log(`this.urlCache: ${ this.urlCache }`);
-          console.log(`this.imageUrls: ${ this.imageUrls }`);
-        }
         this.initial = false;
         this.urlCache = Array.from(this.imageUrls);
         this.slides = [];
+
         if (this.lazyLoad === true) {
           this.buildLazyLoadSlideArray();
         }
@@ -262,7 +295,6 @@ export class SlideshowComponent implements DoCheck {
    *              for the "lazy load," then load only the first slide
    */
   private buildLazyLoadSlideArray(): void {
-    if (this.debug === true) console.log(`buildLazyLoadSlideArray()`);
     for (let image of this.imageUrls) {
       this.slides.push({
         image: (typeof image === 'string' ? { url: null } : { url: null, href: image.href || '' }),
@@ -273,6 +305,7 @@ export class SlideshowComponent implements DoCheck {
         loaded: false
       });
     }
+
     this.slides[this.slideIndex].selected = true;
     this.loadFirstSlide();
   }
@@ -281,7 +314,6 @@ export class SlideshowComponent implements DoCheck {
    * @description create the slides with background urls all at once
    */
   private buildSlideArray(): void {
-    if (this.debug === true) console.log(`buildSlideArray()`);
     for (let image of this.imageUrls) {
       this.slides.push({
         image: (typeof image === 'string' ? { url: image } : image),
@@ -292,6 +324,7 @@ export class SlideshowComponent implements DoCheck {
         loaded: true
       });
     }
+
     this.slides[this.slideIndex].selected = true;
   }
 
@@ -300,7 +333,6 @@ export class SlideshowComponent implements DoCheck {
    *              this takes server side and browser side into account
    */
   private loadFirstSlide(): void {
-    if (this.debug === true) console.log(`loadFirstSlide()`);
     const tmpIndex = this.slideIndex;
     const tmpImage = this.imageUrls[tmpIndex];
 
@@ -333,7 +365,6 @@ export class SlideshowComponent implements DoCheck {
    * @todo: figure out how to not show the spinner if images are loading fast enough
    */
   private loadRemainingSlides(): void {
-    if (this.debug === true) console.log(`loadRemainingSlides()`);
     for (let i = 0; i < this.slides.length; i++) {
       if (!this.slides[i].loaded) {
         new Promise((resolve) => {
@@ -355,18 +386,18 @@ export class SlideshowComponent implements DoCheck {
    * @description Start or stop autoPlay, don't do it at all server side
    */
   private handleAutoPlay(stopAutoPlay?: boolean): void {
-    if (isPlatformServer(this.platform_id)) return;
+    if (isPlatformServer(this.platform_id)) {
+      return;
+    }
+
     if (stopAutoPlay === true || this.autoPlay === false) {
-      if (this.debug === true) console.log(`stop autoPlay`);
-      if (!isNullOrUndefined(this.autoplayIntervalId)) {
+      if (this.autoplayIntervalId) {
         this.ngZone.runOutsideAngular(() => clearInterval(this.autoplayIntervalId));
       }
     }
-    else if (isNullOrUndefined(this.autoplayIntervalId)) {
-      if (this.debug === true) console.log(`start autoPlay`);
+    else if (!this.autoplayIntervalId) {
       this.ngZone.runOutsideAngular(() => {
         this.autoplayIntervalId = setInterval(() => {
-          if (this.debug === true) console.log(`autoPlay slide event`);
           if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex].loaded)) {
             this.ngZone.run(() => this.slide(1));
           }
@@ -379,10 +410,15 @@ export class SlideshowComponent implements DoCheck {
    * @description Keep the styles up to date with the input
    */
   private setStyles(): void {
-    if (this.debug === true) console.log(`setStyles()`);
-    if (!isNullOrUndefined(this.height)) this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
-    if (!isNullOrUndefined(this.minHeight)) this.renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
-    if (!isNullOrUndefined(this.arrowSize)) {
+    if (this.height) {
+      this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
+    }
+
+    if (this.minHeight) {
+      this.renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
+    }
+
+    if (this.arrowSize) {
       this.renderer.setStyle(this.prevArrow.nativeElement, 'height', this.arrowSize);
       this.renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
       this.renderer.setStyle(this.nextArrow.nativeElement, 'height', this.arrowSize);
@@ -394,7 +430,6 @@ export class SlideshowComponent implements DoCheck {
    * @description compare image array to the cache, returns false if no changes
    */
   private checkCache(): boolean {
-    if (this.debug === true) console.log(`checkCache()`);
     return !(this.urlCache.length === this.imageUrls.length && this.urlCache.every((cacheElement, i) => cacheElement === this.imageUrls[i]));
   }
 
@@ -404,8 +439,14 @@ export class SlideshowComponent implements DoCheck {
    * @description get the index for the slide to the left of the new slide
    */
   private getLeftSideIndex(i?: number): number {
-    if (isUndefined(i)) i = this.slideIndex;
-    if (--i < 0) i = this.slides.length - 1;
+    if (i === undefined) {
+      i = this.slideIndex;
+    }
+
+    if (--i < 0) {
+      i = this.slides.length - 1;
+    }
+
     return i;
   }
 
@@ -415,8 +456,14 @@ export class SlideshowComponent implements DoCheck {
    * @description get the index for the slide to the right of the new slide
    */
   private getRightSideIndex(i?: number): number {
-    if (isUndefined(i)) i = this.slideIndex;
-    if (++i >= this.slides.length) i = 0;
+    if (i === undefined) {
+      i = this.slideIndex;
+    }
+
+    if (++i >= this.slides.length) {
+      i = 0;
+    }
+
     return i;
   }
 
