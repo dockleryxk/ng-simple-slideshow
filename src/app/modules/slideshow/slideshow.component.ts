@@ -15,10 +15,10 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
 export class SlideshowComponent implements OnInit, DoCheck {
   slideIndex: number = 0;
   slides: ISlide[] = [];
-  private urlCache: (string | IImage)[];
-  private autoplayIntervalId: any;
-  private initial: boolean = true;
-  private isHidden = false;
+  private _urlCache: (string | IImage)[];
+  private _autoplayIntervalId: any;
+  private _initial: boolean = true;
+  private _isHidden: boolean = false;
 
   @Input() imageUrls: (string | IImage)[] = [];
   @Input() height: string = '100%';
@@ -51,11 +51,15 @@ export class SlideshowComponent implements OnInit, DoCheck {
   @ViewChild('prevArrow') prevArrow: ElementRef;
   @ViewChild('nextArrow') nextArrow: ElementRef;
 
+  get safeStyleDotColor() {
+    return this.sanitizer.bypassSecurityTrustStyle(`--dot-color: ${ this.dotColor }`);
+  }
+
   constructor(
-    private swipeService: SwipeService,
-    private renderer: Renderer2,
-    private transferState: TransferState,
-    private ngZone: NgZone,
+    private _swipeService: SwipeService,
+    private _renderer: Renderer2,
+    private _transferState: TransferState,
+    private _ngZone: NgZone,
     public sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) private platform_id: any,
     @Inject(DOCUMENT) private document: any
@@ -70,20 +74,20 @@ export class SlideshowComponent implements OnInit, DoCheck {
   ngDoCheck() {
     // if this is the first being called, create a copy of the input
     if (this.imageUrls && this.imageUrls.length > 0) {
-      if (this.initial === true) {
-        this.urlCache = Array.from(this.imageUrls);
+      if (this._initial === true) {
+        this._urlCache = Array.from(this.imageUrls);
       }
 
-      if (this.isHidden === true) {
-        this.renderer.removeStyle(this.container.nativeElement, 'display');
-        this.isHidden = false;
+      if (this._isHidden === true) {
+        this._renderer.removeStyle(this.container.nativeElement, 'display');
+        this._isHidden = false;
       }
 
       this.setSlides();
     }
     else if (this.hideOnNoSlides === true) {
-      this.renderer.setStyle(this.container.nativeElement, 'display', 'none');
-      this.isHidden = true;
+      this._renderer.setStyle(this.container.nativeElement, 'display', 'none');
+      this._isHidden = true;
     }
 
     this.setStyles();
@@ -112,7 +116,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
       return;
     }
 
-    const indexDirection = this.swipeService.swipe(e, when);
+    const indexDirection = this._swipeService.swipe(e, when);
     // handle a failed swipe
     if (indexDirection === 0) {
       return;
@@ -275,9 +279,9 @@ export class SlideshowComponent implements OnInit, DoCheck {
    */
   private setSlides(): void {
     if (this.imageUrls) {
-      if (this.checkCache() || this.initial === true) {
-        this.initial = false;
-        this.urlCache = Array.from(this.imageUrls);
+      if (this.checkCache() || this._initial === true) {
+        this._initial = false;
+        this._urlCache = Array.from(this.imageUrls);
         this.slides = [];
 
         if (this.lazyLoad === true) {
@@ -340,10 +344,10 @@ export class SlideshowComponent implements OnInit, DoCheck {
     if (isPlatformServer(this.platform_id)) {
       this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
       this.slides[tmpIndex].loaded = true;
-      this.transferState.set(FIRST_SLIDE_KEY, this.slides[tmpIndex]);
+      this._transferState.set(FIRST_SLIDE_KEY, this.slides[tmpIndex]);
     }
     else {
-      const firstSlideFromTransferState = this.transferState.get(FIRST_SLIDE_KEY, null as any);
+      const firstSlideFromTransferState = this._transferState.get(FIRST_SLIDE_KEY, null as any);
       // if the first slide didn't finish loading on the server side, we need to load it
       if (firstSlideFromTransferState === null) {
         let loadImage = new Image();
@@ -355,7 +359,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
       }
       else {
         this.slides[tmpIndex] = firstSlideFromTransferState;
-        this.transferState.remove(FIRST_SLIDE_KEY);
+        this._transferState.remove(FIRST_SLIDE_KEY);
       }
     }
   }
@@ -391,15 +395,15 @@ export class SlideshowComponent implements OnInit, DoCheck {
     }
 
     if (stopAutoPlay === true || this.autoPlay === false) {
-      if (this.autoplayIntervalId) {
-        this.ngZone.runOutsideAngular(() => clearInterval(this.autoplayIntervalId));
+      if (this._autoplayIntervalId) {
+        this._ngZone.runOutsideAngular(() => clearInterval(this._autoplayIntervalId));
       }
     }
-    else if (!this.autoplayIntervalId) {
-      this.ngZone.runOutsideAngular(() => {
-        this.autoplayIntervalId = setInterval(() => {
+    else if (!this._autoplayIntervalId) {
+      this._ngZone.runOutsideAngular(() => {
+        this._autoplayIntervalId = setInterval(() => {
           if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex].loaded)) {
-            this.ngZone.run(() => this.slide(1));
+            this._ngZone.run(() => this.slide(1));
           }
         }, this.autoPlayInterval);
       });
@@ -411,18 +415,18 @@ export class SlideshowComponent implements OnInit, DoCheck {
    */
   private setStyles(): void {
     if (this.height) {
-      this.renderer.setStyle(this.container.nativeElement, 'height', this.height);
+      this._renderer.setStyle(this.container.nativeElement, 'height', this.height);
     }
 
     if (this.minHeight) {
-      this.renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
+      this._renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
     }
 
     if (this.arrowSize) {
-      this.renderer.setStyle(this.prevArrow.nativeElement, 'height', this.arrowSize);
-      this.renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
-      this.renderer.setStyle(this.nextArrow.nativeElement, 'height', this.arrowSize);
-      this.renderer.setStyle(this.nextArrow.nativeElement, 'width', this.arrowSize);
+      this._renderer.setStyle(this.prevArrow.nativeElement, 'height', this.arrowSize);
+      this._renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
+      this._renderer.setStyle(this.nextArrow.nativeElement, 'height', this.arrowSize);
+      this._renderer.setStyle(this.nextArrow.nativeElement, 'width', this.arrowSize);
     }
   }
 
@@ -430,7 +434,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
    * @description compare image array to the cache, returns false if no changes
    */
   private checkCache(): boolean {
-    return !(this.urlCache.length === this.imageUrls.length && this.urlCache.every((cacheElement, i) => cacheElement === this.imageUrls[i]));
+    return !(this._urlCache.length === this.imageUrls.length && this._urlCache.every((cacheElement, i) => cacheElement === this.imageUrls[i]));
   }
 
   /**

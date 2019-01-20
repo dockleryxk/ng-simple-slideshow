@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SwipeService {
   // adapted from https://stackoverflow.com/a/44511007/1743936
-  private swipeCoord?: [number, number];
-  private swipeTime?: number;
+  private _swipeCoord?: [number, number];
+  private _swipeTime?: number;
 
   /**
    * @param {TouchEvent} e
@@ -18,13 +18,13 @@ export class SwipeService {
     const time = new Date().getTime();
 
     if (when === 'start') {
-      this.swipeCoord = coord;
-      this.swipeTime = time;
+      this._swipeCoord = coord;
+      this._swipeTime = time;
     }
 
     else if (when === 'end') {
-      const direction = [coord[0] - this.swipeCoord[0], coord[1] - this.swipeCoord[1]];
-      const duration = time - this.swipeTime;
+      const direction = [coord[0] - this._swipeCoord[0], coord[1] - this._swipeCoord[1]];
+      const duration = time - this._swipeTime;
 
       if (duration < 1000 // Short enough
         && Math.abs(direction[1]) < Math.abs(direction[0]) // Horizontal enough

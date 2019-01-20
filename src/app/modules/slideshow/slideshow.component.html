@@ -52,7 +52,7 @@
         (click)="goToSlide(i)"
         [class.slick-active]="slide.selected">
       <button type="button"
-              [attr.style]="sanitizer.bypassSecurityTrustStyle('--dot-color:' + dotColor)">
+              [attr.style]="safeStyleDotColor">
         {{i}}
       </button>
     </li>
