@@ -41,6 +41,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
   @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
   @Input() lazyLoad: boolean = false;
   @Input() hideOnNoSlides: boolean = false;
+  @Input() fullscreen: boolean = false;
 
   @Output() onSlideLeft = new EventEmitter<number>();
   @Output() onSlideRight = new EventEmitter<number>();
@@ -185,6 +186,10 @@ export class SlideshowComponent implements OnInit, DoCheck {
         "background-repeat": undefined
       };
     }
+  }
+
+  exitFullScreen() {
+    this.fullscreen = false;
   }
 
   /**
@@ -414,14 +419,21 @@ export class SlideshowComponent implements OnInit, DoCheck {
    * @description Keep the styles up to date with the input
    */
   private setStyles(): void {
-    if (this.height) {
-      this._renderer.setStyle(this.container.nativeElement, 'height', this.height);
+    if (this.fullscreen) {
+      this._renderer.setStyle(this.container.nativeElement, 'height', '100%');
+      // Would be nice to make it configurable
+      this._renderer.setStyle(this.container.nativeElement, 'background-color', 'white');
+    } else {
+      // Would be nice to make it configurable
+      this._renderer.removeStyle(this.container.nativeElement, 'background-color');
+      if (this.height) {
+        this._renderer.setStyle(this.container.nativeElement, 'height', this.height);
+      }
+  
+      if (this.minHeight) {
+        this._renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
+      }
     }
-
-    if (this.minHeight) {
-      this._renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
-    }
-
     if (this.arrowSize) {
       this._renderer.setStyle(this.prevArrow.nativeElement, 'height', this.arrowSize);
       this._renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
