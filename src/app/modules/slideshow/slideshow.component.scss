@@ -21,23 +21,41 @@ $border-color: darken(#FFF, 5%);
   text-align: center;
   padding: 0;
   background-color: rgba(0,0,0,0.2);
+  transition: all .2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(0,0,0,0.33);
+  }
 
   .arrow-exitfs {
     display: block;
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
     background: transparent;
     border: {
       top: 2px solid $border-color;
-      left: 2px solid $border-color;
     }
-    transition: all .3s ease-in-out;
+    transition: all .2s ease-in-out;
 
     &.prev {
       transform: rotate(-45deg);
       position: relative;
       left: 18px;
-      top: 11px;
+      top: 18px;
+    }
+
+    &:after {
+      content: '';
+      width: 30px;
+      height: 30px;
+      background: transparent;
+      border: {
+        top: 2px solid $border-color;
+      }
+      transform: rotate(90deg);
+      position: absolute;
+      left: -15px;
+      top: -17px;
     }
   }
 }
@@ -177,7 +195,7 @@ $border-color: darken(#FFF, 5%);
         top: 2px solid $border-color;
         left: 2px solid $border-color;
       }
-      transition: all .3s ease-in-out;
+      transition: all .2s ease-in-out;
       user-select: none;
 
       &:before {

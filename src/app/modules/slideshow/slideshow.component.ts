@@ -430,7 +430,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
       if (this.height) {
         this._renderer.setStyle(this.container.nativeElement, 'height', this.height);
       }
-  
+
       if (this.minHeight) {
         this._renderer.setStyle(this.container.nativeElement, 'min-height', this.minHeight);
       }
