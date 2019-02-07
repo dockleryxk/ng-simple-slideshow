@@ -3,7 +3,7 @@ import { SwipeService } from './swipe.service';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
 import { ISlide } from './ISlide';
 import { IImage } from './IImage';
-import { DomSanitizer, TransferState, makeStateKey } from '@angular/platform-browser';
+import { DomSanitizer, TransferState, makeStateKey, SafeStyle } from '@angular/platform-browser';
 
 const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
 
@@ -52,7 +52,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
   @ViewChild('prevArrow') prevArrow: ElementRef;
   @ViewChild('nextArrow') nextArrow: ElementRef;
 
-  get safeStyleDotColor() {
+  get safeStyleDotColor(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(`--dot-color: ${ this.dotColor }`);
   }
 
