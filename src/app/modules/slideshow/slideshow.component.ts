@@ -397,6 +397,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
     if (stopAutoPlay === true || this.autoPlay === false) {
       if (this._autoplayIntervalId) {
         this._ngZone.runOutsideAngular(() => clearInterval(this._autoplayIntervalId));
+        this._autoplayIntervalId = null;
       }
     }
     else if (!this._autoplayIntervalId) {
