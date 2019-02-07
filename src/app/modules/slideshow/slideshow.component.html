@@ -1,7 +1,12 @@
+<!-- fullscreen bar -->
+<div [class.display-none]="!fullscreen" class="fs-container" (click)="exitFullScreen()">
+  <i title="Back" class="arrow-exitfs prev"></i>
+</div>
 <div #container
      (touchstart)="onSwipe($event, 'start')"
      (touchend)="onSwipe($event, 'end')"
-     class="slideshow-container">
+     class="slideshow-container"
+     [class.slideshow-container-fs]="fullscreen">
   <!-- slides -->
   <a *ngFor="let slide of slides; index as i; trackBy: trackByFn"
      class="slides"
