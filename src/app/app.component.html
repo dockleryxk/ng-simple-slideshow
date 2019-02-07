@@ -24,7 +24,8 @@
                [captionColor]="captionColor"
                [captionBackground]="captionBackground"
                [lazyLoad]="lazyLoad"
-               [hideOnNoSlides]="hideOnNoSlides">
+               [hideOnNoSlides]="hideOnNoSlides"
+               [fullscreen]="fullscreen">
     </slideshow>
   </div>
 </div>
@@ -197,6 +198,15 @@
       <input id="width"
              name="width"
              [(ngModel)]="width">
+    </td>
+    <td>
+      <label for="fullscreen">fullscreen</label>
+    </td>
+    <td>
+      <input id="fullscreen"
+             type="checkbox"
+             name="fullscreen"
+             [(ngModel)]="fullscreen">
     </td>
   </tr>
 </table>
