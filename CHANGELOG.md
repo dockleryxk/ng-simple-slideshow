@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.2.8] - 2019-02-06
 ### Changed
--
+- Merge Pull #58 for AutoPlay option working as a Play/Pause button -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/58)
 
 ## [1.2.7] - unknown
 ### Changed
-- Merge Pull #58 for AutoPlay option working as a Play/Pause button -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/58)
+- run setInterval outside of Angular zone
 
 ## [1.2.6] - 2018-10-24
 ### Added
