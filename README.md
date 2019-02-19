@@ -110,6 +110,7 @@ The imageUrls input can be an array of strings, however in order to enable slide
 | onSwipeLeft      | when a swipe left occurs        |
 | onSwipeRight     | when a swipe right occurs       |
 | onFullscreenExit | when fullscreen exits           |
+| onIndexChanged   | when slide index changes        |
 
 Note: all events emit the index number of the new slide
 
