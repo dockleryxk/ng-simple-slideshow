@@ -99,15 +99,17 @@ The imageUrls input can be an array of strings, however in order to enable slide
 | captionBackground       | no       | 'rgba(0, 0, 0, .35)' | string                                                                                                                    | color of caption background                                                                                                        |
 | lazyLoad                | no       | false                | boolean                                                                                                                   | turn on to lazy load images instead of preload                                                                                     |
 | hideOnNoSlides          | no       | false                | boolean                                                                                                                   | set the slideshow container display to none if imageUrls is empty, null, or undefined                                              |
+| fullscreen              | no       | false                | boolean                                                                                                                   | activate full screen for the slideshow on true, go back to normal view on false                                                    |
 
 ### Output Events
 
 | Event        | Description                     |
-| ------------ | ------------------------------- |
-| onSlideLeft  | when the left arrow is clicked  |
-| onSlideRight | when the right arrow is clicked |
-| onSwipeLeft  | when a swipe left occurs        |
-| onSwipeRight | when a swipe right occurs       |
+| ---------------- | ------------------------------- |
+| onSlideLeft      | when the left arrow is clicked  |
+| onSlideRight     | when the right arrow is clicked |
+| onSwipeLeft      | when a swipe left occurs        |
+| onSwipeRight     | when a swipe right occurs       |
+| onFullscreenExit | when fullscreen exits           |
 
 Note: all events emit the index number of the new slide
 

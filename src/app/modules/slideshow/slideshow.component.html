@@ -1,7 +1,7 @@
 <!-- fullscreen bar -->
 <div [class.display-none]="!fullscreen"
      class="fs-container"
-     (click)="exitFullScreen()">
+     (click)="exitFullScreen($event)">
   <i title="Back"
      class="arrow-exitfs prev"></i>
 </div>

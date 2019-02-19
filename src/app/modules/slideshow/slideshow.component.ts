@@ -47,6 +47,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
   @Output() onSlideRight = new EventEmitter<number>();
   @Output() onSwipeLeft = new EventEmitter<number>();
   @Output() onSwipeRight = new EventEmitter<number>();
+  @Output() onFullscreenExit = new EventEmitter<boolean>();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('prevArrow') prevArrow: ElementRef;
@@ -188,8 +189,10 @@ export class SlideshowComponent implements OnInit, DoCheck {
     }
   }
 
-  exitFullScreen() {
+  exitFullScreen(e: Event) {
+    e.preventDefault();
     this.fullscreen = false;
+    this.onFullscreenExit.emit(true);
   }
 
   /**
