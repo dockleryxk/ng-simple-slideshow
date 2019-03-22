@@ -13,7 +13,7 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   styleUrls: ['./slideshow.component.scss']
 })
 export class SlideshowComponent implements OnInit, DoCheck {
-  slideIndex: number = 0;
+  slideIndex: number = -1;
   slides: ISlide[] = [];
   private _urlCache: (string | IImage)[];
   private _autoplayIntervalId: any;
@@ -47,6 +47,8 @@ export class SlideshowComponent implements OnInit, DoCheck {
   @Output() onSlideRight = new EventEmitter<number>();
   @Output() onSwipeLeft = new EventEmitter<number>();
   @Output() onSwipeRight = new EventEmitter<number>();
+  @Output() onFullscreenExit = new EventEmitter<boolean>();
+  @Output() onIndexChanged = new EventEmitter<number>();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('prevArrow') prevArrow: ElementRef;
@@ -188,8 +190,10 @@ export class SlideshowComponent implements OnInit, DoCheck {
     }
   }
 
-  exitFullScreen() {
+  exitFullScreen(e: Event) {
+    e.preventDefault();
     this.fullscreen = false;
+    this.onFullscreenExit.emit(true);
   }
 
   /**
@@ -231,6 +235,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
     if (this.slideIndex >= this.slides.length) {
       this.slideIndex = 0;
     }
+    this.onIndexChanged.emit(this.slideIndex);
   }
 
   /**
@@ -314,9 +319,11 @@ export class SlideshowComponent implements OnInit, DoCheck {
         loaded: false
       });
     }
-
+    
+    this.slideIndex = 0;
     this.slides[this.slideIndex].selected = true;
     this.loadFirstSlide();
+    this.onIndexChanged.emit(this.slideIndex);
   }
 
   /**
@@ -333,8 +340,9 @@ export class SlideshowComponent implements OnInit, DoCheck {
         loaded: true
       });
     }
-
+    this.slideIndex = 0;
     this.slides[this.slideIndex].selected = true;
+    this.onIndexChanged.emit(this.slideIndex);
   }
 
   /**
