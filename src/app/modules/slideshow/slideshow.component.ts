@@ -1,9 +1,10 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit, OnDestroy } from '@angular/core';
 import { SwipeService } from './swipe.service';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
 import { ISlide } from './ISlide';
 import { IImage } from './IImage';
 import { DomSanitizer, TransferState, makeStateKey, SafeStyle } from '@angular/platform-browser';
+import { PointerService } from './pointer.service';
 
 const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
 
@@ -12,7 +13,7 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.scss']
 })
-export class SlideshowComponent implements OnInit, DoCheck {
+export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   slideIndex: number = -1;
   slides: ISlide[] = [];
   private _urlCache: (string | IImage)[];
@@ -59,6 +60,7 @@ export class SlideshowComponent implements OnInit, DoCheck {
   }
 
   constructor(
+    private _pointerService: PointerService,
     private _swipeService: SwipeService,
     private _renderer: Renderer2,
     private _transferState: TransferState,
@@ -72,6 +74,11 @@ export class SlideshowComponent implements OnInit, DoCheck {
     if (this.debug !== undefined) {
       console.warn('[Deprecation Warning]: The debug input will be removed from ng-simple-slideshow in 1.3.0');
     }
+    this._pointerService.bind(this.container);
+  }
+
+  ngOnDestroy() {
+    this._pointerService.unbind(this.container);
   }
 
   ngDoCheck() {

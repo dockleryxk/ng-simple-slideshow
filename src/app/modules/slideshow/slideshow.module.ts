@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SlideshowComponent } from './slideshow.component';
 import { SwipeService } from './swipe.service';
 import { BrowserTransferStateModule } from '@angular/platform-browser';
+import { PointerService } from './pointer.service';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { BrowserTransferStateModule } from '@angular/platform-browser';
     SlideshowComponent
   ],
   providers: [
-    SwipeService
+    SwipeService,
+    PointerService
   ]
 })
 export class SlideshowModule { }
