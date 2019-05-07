@@ -21,7 +21,7 @@ class State {
   get valid(): boolean {
     return this.w > 0 && this.h > 0 && this.aw > 0 && this.ah > 0;
   }
-  // is image actual size bounded by width against the a tag view port
+  // is image actual size bounded by width against the a tag view port, horizontal clip in case of cover
   get widthBound(): boolean {
     return this.ar > (this.aw / this.ah);
   }
@@ -31,6 +31,7 @@ class State {
 export class PointerService {
 
   // adapted from https://github.com/mdn/dom-examples/blob/master/pointerevents/Pinch_zoom_gestures.html
+  private _startEVCache: PointerEvent = null;
   private _evCache: Array<PointerEvent> = new Array();
   private _previousDiagonal: number = -1;
   private _originalState: State = new State();
@@ -67,6 +68,85 @@ export class PointerService {
 
   private _pointerDown(e: PointerEvent) {
     this._evCache.push(e);
+    if (this._evCache.length === 1) {
+      this._startEVCache = e;
+      // Cache the image sizes and container sizes 
+      this._loadOriginalState(e);
+      // Convert backgroundSize to pixels
+      this._convertBGSizeToPixels(e);
+      // Convert backgroundPosition to pixels
+      this._convertBGPosToPixels(e);
+    }
+  }
+
+  // Saving original state, calculation is done only once during during 1st pointerdown
+  private _loadOriginalState(e: PointerEvent): void {
+    if (!this._originalState.valid && e.target && (e.target as any).style && (e.target as any).style.backgroundImage) {
+      const imgUrlArr = (e.target as any).style.backgroundImage.match(/^url\(["']?(.+?)["']?\)$/);
+      const img = new Image;
+      img.src = imgUrlArr[1];
+      this._originalState.aw = (e.target as any).offsetWidth;
+      this._originalState.ah = (e.target as any).offsetHeight;
+      this._originalState.w = img.width;
+      this._originalState.h = img.height;
+    }
+  }
+
+  // Convert BG size literals and percentage to pixels in x axis and preserve image aspect ratio
+  private _convertBGSizeToPixels(e: PointerEvent): void {
+    const imgElement = (e.target as any);
+    let bgSize = imgElement.style.backgroundSize;
+    if (bgSize.indexOf(' ') > -1) {
+      // backgroundSize pattern "auto 100px" or "100px auto" or "100px 200px"
+      const sizeTuple = bgSize.split(' ');
+      bgSize = this._originalState.widthBound ? sizeTuple[0] : sizeTuple[1];
+    }
+    if(bgSize === 'cover') {
+      bgSize = this._originalState.widthBound ? this._originalState.ah * this._originalState.ar : this._originalState.aw;
+    } else if (bgSize.indexOf('px') > -1) {
+      bgSize = bgSize.substring(0, bgSize.length - 2);
+    } else if (bgSize.indexOf('%') > -1) { // Untested
+      const bgSizePercentage = Number(bgSize.substring(0, bgSize.length - 1)) / 100;
+      bgSize = this._originalState.widthBound ? this._originalState.aw * bgSizePercentage : this._originalState.ah * bgSizePercentage * this._originalState.ar;
+    } else if (bgSize === 'auto') {
+      bgSize = this._originalState.w;
+    } else if (bgSize === 'contain') {
+      bgSize = this._originalState.widthBound ? this._originalState.aw : this._originalState.ah * this._originalState.ar;
+    } else {
+      // backgroundSize pattern "could not identify" // will be treated as contain
+      bgSize = this._originalState.widthBound ? this._originalState.aw : this._originalState.ah * this._originalState.ar;
+    }
+    // set backgroundSize (TODO use angular binding ?)
+    imgElement.style.backgroundSize = bgSize + 'px auto';
+  }
+
+  // Convert BG position literals and percentage to pixels
+  private _convertBGPosToPixels(e: PointerEvent): void {
+    if (this._originalState.valid) {
+      const imgElement = (e.target as any);
+      const bgSize = this._currentBGSize(e);
+      let bgPosX = imgElement.style.backgroundPositionX;
+      if (bgPosX.indexOf('px') === -1) {
+        bgPosX = this._convertLiteralPosToPercentage(bgPosX);
+        if (bgPosX.indexOf('%') > -1) {
+          let bgPosXPercentage = Number(bgPosX.substring(0, bgPosX.length - 1)) / 100;
+          bgPosX = bgPosXPercentage * (this._originalState.aw - bgSize);
+          
+        }
+        // set backgroundPosition (TODO use angular binding ?)
+        imgElement.style.backgroundPositionX = bgPosX + 'px';
+      }
+      let bgPosY = imgElement.style.backgroundPositionY;
+      if (bgPosY.indexOf('px') === -1) {
+        bgPosY = this._convertLiteralPosToPercentage(bgPosY);
+        if (bgPosY.indexOf('%') > -1) {
+          let bgPosYPercentage = Number(bgPosY.substring(0, bgPosY.length - 1)) / 100;
+          bgPosY = bgPosYPercentage * (this._originalState.ah - (bgSize / this._originalState.ar));
+        }
+        // set backgroundPosition (TODO use angular binding ?)
+        imgElement.style.backgroundPositionY = bgPosY + 'px';
+      }
+    }
   }
 
   private _pointerUp(e: PointerEvent) {
@@ -77,11 +157,24 @@ export class PointerService {
         break;
       }
     }
-    this._previousDiagonal = -1;
-    this._originalState = new State();
+    // Purge diagonal if 2 pointers are not present
+    if ( this._evCache.length !== 2) {
+      this._previousDiagonal = -1;
+    }
+    // Purge start event and original state if no pointers are present
+    if (this._evCache.length === 0) {
+      // TODO Check for swipe here
+      // this.checkImageBoundariesAndSwipe(e);
+      this._startEVCache = null;
+      this._originalState = new State();
+    }
   }
 
   private _pointerMove(e: PointerEvent) {
+    // If one pointer is down, goto 1 point action
+    if (this._evCache.length === 1) {
+      this._1pointMoveAction(e);
+    }
     // Find this event in the cache and update its record with this event
     for (let i = 0; i < this._evCache.length; i++) {
       if (e.pointerId === this._evCache[i].pointerId) {
@@ -95,6 +188,16 @@ export class PointerService {
     }
   }
 
+  private _1pointMoveAction(e: PointerEvent): void {
+    if (this._evCache[0].pointerId === e.pointerId) {
+      const dx = this._evCache[0].clientX - e.clientX;
+      const dy = this._evCache[0].clientY - e.clientY;
+      if (this._originalState.valid && (dx !== 0 || dy !== 0)) {
+        this._transformBGPosition(e, dx, dy);
+      }
+    }
+  }
+
   private _2pointMoveAction(e: PointerEvent): void {
     // check for pinch gestures
     // Calculate the distance between the two pointers
@@ -103,25 +206,11 @@ export class PointerService {
     let currentDiagonal = Math.sqrt((x * x) + (y * y));
 
     // Start 2 point action after previous diagonal and orginal state is valid
-    if (this._previousDiagonal > 0 && this._loadOriginalState(e)) {
+    if (this._previousDiagonal > 0 && this._originalState.valid) {
       const deltaX = currentDiagonal - this._previousDiagonal;
-      this._transformImage(e, deltaX);
+      this._transformBGSize(e, deltaX);
     }
     this._previousDiagonal = currentDiagonal;
-  }
-
-  // Saving original state, calculation is done only once during during one pinch cycle
-  private _loadOriginalState(e: PointerEvent): boolean {
-    if (!this._originalState.valid && e.target && (e.target as any).style && (e.target as any).style.backgroundImage) {
-      const imgUrlArr = (e.target as any).style.backgroundImage.match(/^url\(["']?(.+?)["']?\)$/);
-      const img = new Image;
-      img.src = imgUrlArr[1];
-      this._originalState.aw = (e.target as any).offsetWidth;
-      this._originalState.ah = (e.target as any).offsetHeight;
-      this._originalState.w = img.width;
-      this._originalState.h = img.height;
-    }
-    return this._originalState.valid;
   }
 
   // commented and not used, actual deltaX is too small for proper user experience
@@ -130,38 +219,114 @@ export class PointerService {
   //   return (currDiag - prevDiag) / Math.sqrt(2);
   // }
 
-  // Transform the image
-  private _transformImage(e: PointerEvent, deltaX: number): void {
+  // Transform the image background position
+  private _transformBGPosition(e: PointerEvent, dx: number, dy: number): void {
     const imgElement = (e.target as any);
-    const previousSize = this._previousSize(e);
-    const newSize = this._newSizeConstraint(previousSize + deltaX);
-    
-    imgElement.style.backgroundSize = this._originalState.widthBound ? newSize + 'px auto' : 'auto ' + newSize + 'px';
+    const previousPosX = this._currentBGPosX(e);
+    const previousPosY = this._currentBGPosY(e);
+    const newPosX = this._newBGPosXConstraint(previousPosX - dx, e);
+    const newPosY = this._newBGPosYConstraint(previousPosY - dy, e);
+    // set backgroundPosition (TODO use angular binding ?)
+    imgElement.style.backgroundPositionX = newPosX + 'px';
+    imgElement.style.backgroundPositionY = newPosY + 'px';
   }
 
-  // Check for previous size
-  private _previousSize(e: PointerEvent): number {
-    const backgroundSize = (e.target as any).style.backgroundSize;
-    if (backgroundSize.indexOf(' ') > -1) {
-      // backgroundSize pattern "auto 100px" or "100px auto" or "100px 200px"
-      const sizeTuple = backgroundSize.split(' ');
-      const size = this._originalState.widthBound ? sizeTuple[0].substring(0, sizeTuple[0].length - 2) : sizeTuple[1].substring(0, sizeTuple[1].length - 2);
-      return Number(size);
-    } else if (backgroundSize.indexOf('px') > -1) {
-      // backgroundSize pattern "100px"
-      const size = backgroundSize.substring(0, backgroundSize.length - 2);
-      return Number(size);
-    } else {
-      return this._originalState.widthBound ? this._originalState.aw : this._originalState.ah;
+  // Check for current background position x
+  private _currentBGPosX(e: PointerEvent): number {
+    let bgPosX = (e.target as any).style.backgroundPositionX;
+    if (bgPosX.indexOf('px') > -1) {
+      bgPosX = bgPosX.substring(0, bgPosX.length - 2);
+    }
+    return Number(bgPosX);
+  }
+
+  // Check for current background position y
+  private _currentBGPosY(e: PointerEvent): number {
+    let bgPosY = (e.target as any).style.backgroundPositionY;
+    if (bgPosY.indexOf('px') > -1) {
+      bgPosY = bgPosY.substring(0, bgPosY.length - 2);
+    }
+    return Number(bgPosY);
+  }
+
+  private _convertLiteralPosToPercentage(literal: string): string {
+    if (literal === 'center') {
+      return '50%';
+    } else if (literal === 'top' || literal === 'left') {
+      return '0%';
+    } else if (literal === 'bottom' || literal === 'right') {
+      return '100%';
     }
   }
 
-  // If new size is below a tag bound, stop it
-  private _newSizeConstraint(newSize: number): number {
+  // Transform the image background size by deltaX
+  private _transformBGSize(e: PointerEvent, deltaX: number): void {
+    const imgElement = (e.target as any);
+    const currentSize = this._currentBGSize(e);
+    const newSize = this._newBGSizeConstraint(currentSize + deltaX);
+    // set backgroundSize (TODO use angular binding ?)
+    imgElement.style.backgroundSize = newSize + 'px auto';
+  }
+
+  // Check for current background size
+  private _currentBGSize(e: PointerEvent): number {
+    const bgSize = (e.target as any).style.backgroundSize;
+    if (bgSize.indexOf(' ') > -1) {
+      // backgroundSize pattern "auto 100px" or "100px auto" or "100px 200px"
+      const sizeTuple = bgSize.split(' ');
+      const size = this._originalState.widthBound ? sizeTuple[0].substring(0, sizeTuple[0].length - 2) : sizeTuple[1].substring(0, sizeTuple[1].length - 2);
+      return Number(size);
+    } else if (bgSize.indexOf('px') > -1) {
+      // backgroundSize pattern "100px"
+      const size = bgSize.substring(0, bgSize.length - 2);
+      return Number(size);
+    }
+  }
+
+  // If image size is below "contain", set to "contain"
+  private _newBGSizeConstraint(newSize: number): number {
     if (this._originalState.widthBound) {
       return newSize < this._originalState.aw ? this._originalState.aw : newSize;
     } else {
-      return newSize < this._originalState.ah ? this._originalState.ah : newSize;
+      return newSize / this._originalState.ar < this._originalState.ah ? this._originalState.ah * this._originalState.ar : newSize;
     }
+  }
+
+  private _newBGPosXConstraint(newX: number, e: PointerEvent): number {
+    const bgSize = this._currentBGSize(e);
+    if (bgSize >= this._originalState.aw) {
+      // when image width is greater than container width
+      if (newX > 0) {
+        return 0;
+      } else if (newX < this._originalState.aw - bgSize) {
+        return this._originalState.aw - bgSize;
+      }
+    } else {
+      if (newX < 0) {
+        return 0;
+      } else if (newX > this._originalState.aw - bgSize) {
+        return this._originalState.aw - bgSize;
+      }
+    }
+    return newX;
+  }
+
+  private _newBGPosYConstraint(newY: number, e: PointerEvent): number {
+    const bgSize = this._currentBGSize(e);
+    if (bgSize / this._originalState.ar >= this._originalState.ah) {
+      // when image height is greater than container height
+      if (newY > 0) {
+        return 0;
+      } else if (newY < this._originalState.ah - (bgSize / this._originalState.ar)) {
+        return this._originalState.ah - (bgSize / this._originalState.ar);
+      }
+    } else {
+      if (newY < 0) {
+        return 0;
+      } else if (newY > this._originalState.ah - (bgSize / this._originalState.ar)) { 
+        return this._originalState.ah - (bgSize / this._originalState.ar);
+      }
+    }
+    return newY;
   }
 }
