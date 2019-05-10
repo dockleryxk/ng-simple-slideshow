@@ -34,6 +34,8 @@ export class AppComponent implements OnInit {
   hideOnNoSlides: boolean = false;
   width: string = '100%';
   fullscreen: boolean = false;
+  enableZoom: boolean = false;
+  enablePan: boolean = false;
 
   ngOnInit() {
     // adding an image url dynamically.

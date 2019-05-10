@@ -5,6 +5,7 @@ import { ISlide } from './ISlide';
 import { IImage } from './IImage';
 import { DomSanitizer, TransferState, makeStateKey, SafeStyle } from '@angular/platform-browser';
 import { PointerService } from './pointer.service';
+import { Subscription } from 'rxjs';
 
 const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
 
@@ -20,6 +21,8 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   private _autoplayIntervalId: any;
   private _initial: boolean = true;
   private _isHidden: boolean = false;
+  private _slideSub: Subscription;
+  private _clickSub: Subscription;
 
   @Input() imageUrls: (string | IImage)[] = [];
   @Input() height: string = '100%';
@@ -43,6 +46,8 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   @Input() lazyLoad: boolean = false;
   @Input() hideOnNoSlides: boolean = false;
   @Input() fullscreen: boolean = false;
+  @Input() enableZoom: boolean = false;
+  @Input() enablePan: boolean = false;
 
   @Output() onSlideLeft = new EventEmitter<number>();
   @Output() onSlideRight = new EventEmitter<number>();
@@ -61,7 +66,6 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
 
   constructor(
     private _pointerService: PointerService,
-    private _swipeService: SwipeService,
     private _renderer: Renderer2,
     private _transferState: TransferState,
     private _ngZone: NgZone,
@@ -75,9 +79,17 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
       console.warn('[Deprecation Warning]: The debug input will be removed from ng-simple-slideshow in 1.3.0');
     }
     this._pointerService.bind(this.container);
+    this._slideSub = this._pointerService.slideEvent.subscribe((indexDirection: number) => {
+      this.onSlide(indexDirection, true);
+    });
+    this._clickSub = this._pointerService.clickEvent.subscribe(() => {
+      this.onClick();
+    });
   }
 
   ngOnDestroy() {
+    this._slideSub.unsubscribe();
+    this._clickSub.unsubscribe();
     this._pointerService.unbind(this.container);
   }
 
@@ -102,6 +114,9 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
 
     this.setStyles();
     this.handleAutoPlay();
+    this._pointerService.disableSwiping = this.disableSwiping;
+    this._pointerService.enableZoom = this.enableZoom;
+    this._pointerService.enablePan = this.enablePan;
   }
 
   /**
@@ -116,32 +131,30 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
     this.slide(indexDirection, isSwipe);
   }
 
-  /**
-   * @param {TouchEvent} e
-   * @param {string} when
-   * @description Use the swipe service to detect swipe events from phone and tablets
-   */
-  onSwipe(e: TouchEvent, when: string): void {
-    if (this.disableSwiping === true) {
-      return;
-    }
+  // /**
+  //  * @param {TouchEvent} e
+  //  * @param {string} when
+  //  * @description Use the swipe service to detect swipe events from phone and tablets
+  //  */
+  // onSwipe(e: TouchEvent, when: string): void {
+  //   if (this.disableSwiping === true) {
+  //     return;
+  //   }
 
-    const indexDirection = this._swipeService.swipe(e, when);
-    // handle a failed swipe
-    if (indexDirection === 0) {
-      return;
-    }
-    else {
-      this.onSlide(indexDirection, true);
-    }
-  }
+  //   const indexDirection = this._swipeService.swipe(e, when);
+  //   // handle a failed swipe
+  //   if (indexDirection === 0) {
+  //     return;
+  //   }
+  //   else {
+  //     this.onSlide(indexDirection, true);
+  //   }
+  // }
 
   /**
-   * @param {MouseEvent} e
    * @description Redirect to current slide "href" if defined
    */
-  onClick(e: MouseEvent): void {
-    e.preventDefault();
+  onClick(): void {
     const currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
 
     if (currentSlide && currentSlide.image.clickAction) {
