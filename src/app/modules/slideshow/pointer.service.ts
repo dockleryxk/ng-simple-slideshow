@@ -216,7 +216,8 @@ export class PointerService {
     const duration = e.timeStamp - this._startEVCache.timeStamp;
     const dirX = e.pageX - this._startEVCache.pageX;
     const dirY = e.pageY - this._startEVCache.pageY;
-    if (Math.abs(dirX) < 15 // Very less x movement
+    if (!this._enablePan // Skip click event when panning is enabled
+      && Math.abs(dirX) < 15 // Very less x movement
       && Math.abs(dirY) < 15 // Very less y movement
       ) {
         // Click

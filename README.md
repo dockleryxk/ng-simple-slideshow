@@ -100,6 +100,8 @@ The imageUrls input can be an array of strings, however in order to enable slide
 | lazyLoad                | no       | false                | boolean                                                                                                                   | turn on to lazy load images instead of preload                                                                                     |
 | hideOnNoSlides          | no       | false                | boolean                                                                                                                   | set the slideshow container display to none if imageUrls is empty, null, or undefined                                              |
 | fullscreen              | no       | false                | boolean                                                                                                                   | activate full screen for the slideshow on true, go back to normal view on false                                                    |
+| enableZoom              | no       | false                | boolean                                                                                                                   | enable (2 point/pinch) touch zoom in/out on  images                                                                                |
+| enablePan               | no       | false                | boolean                                                                                                                   | enable (1 point) touch/click panning of images, NOTE: "true" will disable image on click actions                                   |
 
 ### Output Events
 
