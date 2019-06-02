@@ -25,7 +25,9 @@
                [captionBackground]="captionBackground"
                [lazyLoad]="lazyLoad"
                [hideOnNoSlides]="hideOnNoSlides"
-               [fullscreen]="fullscreen">
+               [fullscreen]="fullscreen"
+               [enableZoom]="enableZoom"
+               [enablePan]="enablePan">
     </slideshow>
   </div>
 </div>
@@ -207,6 +209,26 @@
              type="checkbox"
              name="fullscreen"
              [(ngModel)]="fullscreen">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="enableZoom">enableZoom</label>
+    </td>
+    <td>
+      <input id="enableZoom"
+             type="checkbox"
+             name="enableZoom"
+             [(ngModel)]="enableZoom">
+    </td>
+    <td>
+      <label for="enablePan">enablePan</label>
+    </td>
+    <td>
+      <input id="enablePan"
+             type="checkbox"
+             name="enablePan"
+             [(ngModel)]="enablePan">
     </td>
   </tr>
 </table>

@@ -6,14 +6,12 @@
      class="arrow-exitfs prev"></i>
 </div>
 <div #container
-     (touchstart)="onSwipe($event, 'start')"
-     (touchend)="onSwipe($event, 'end')"
      class="slideshow-container"
      [class.slideshow-container-fs]="fullscreen">
   <!-- slides -->
   <a *ngFor="let slide of slides; index as i; trackBy: trackByFn"
      class="slides"
-     href="{{slide?.image?.clickAction ? '#' : slide?.image?.href}}"
+     href="#"
      title="{{slide?.image?.title}}"
      [ngStyle]="getSlideStyle(i)"
      [class.selected]="slide?.selected"
@@ -24,8 +22,7 @@
      [class.slide-in-right]="slide?.action === 'slideInRight'"
      [class.slide-out-left]="slide?.action === 'slideOutLeft'"
      [class.slide-out-right]="slide?.action === 'slideOutRight'"
-     [class.link]="slide?.image?.clickAction || slide?.image?.href"
-     (click)="onClick($event)">
+     [class.link]="slide?.image?.clickAction || slide?.image?.href">
     <div class="loader"
          *ngIf="!slide?.loaded"></div>
     <div *ngIf="showCaptions && slide?.image?.caption"

@@ -85,6 +85,7 @@ $border-color: darken(#FFF, 5%);
   }
 
   .slides {
+    touch-action: pan-y; // only allow browser vertical scroll
     position: absolute;
     top: 0;
     height: 100%;
