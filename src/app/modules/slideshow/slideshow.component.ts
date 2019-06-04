@@ -42,6 +42,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   @Input() dotColor: string = '#FFF';
   @Input() showCaptions: boolean = true;
   @Input() captionColor: string = '#FFF';
+  @Input() hideBackButton: boolean = false;
   @Input() captionBackground: string = 'rgba(0, 0, 0, .35)';
   @Input() lazyLoad: boolean = false;
   @Input() hideOnNoSlides: boolean = false;
