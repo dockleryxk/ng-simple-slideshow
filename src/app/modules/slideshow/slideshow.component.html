@@ -1,5 +1,5 @@
 <!-- fullscreen bar -->
-<div [class.display-none]="!fullscreen"
+<div [class.display-none]="!fullscreen || hideBackButton"
      class="fs-container"
      (click)="exitFullScreen($event)">
   <i title="Back"
