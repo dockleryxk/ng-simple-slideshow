@@ -1,4 +1,5 @@
-import { Injectable, ElementRef, EventEmitter } from '@angular/core';
+import { Injectable, ElementRef, EventEmitter, Renderer2, Inject, PLATFORM_ID, RendererFactory2 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 class State {
   // a tag width
@@ -10,11 +11,11 @@ class State {
   // actual image height
   h: number = 0;
   // aspect ratio of image
-  get ar(): number { 
+  get ar(): number {
     return this.w / this.h;
   }
   // diagonal of image
-  get diag(): number { 
+  get diag(): number {
     return Math.sqrt((this.w * this.w) + (this.h * this.h));
   }
   // is state populated and valid
@@ -29,6 +30,7 @@ class State {
 
 @Injectable()
 export class PointerService {
+  // private _renderer: Renderer2;
 
   //options
   private _disableSwiping = false;
@@ -69,21 +71,25 @@ export class PointerService {
   }
 
   bind(el: ElementRef) {
-    el.nativeElement.addEventListener('pointerdown', this.pointerDown);
-    el.nativeElement.addEventListener('pointerup', this.pointerUp);
-    el.nativeElement.addEventListener('pointercancel', this.pointerUp);
-    el.nativeElement.addEventListener('pointerout', this.pointerUp);
-    el.nativeElement.addEventListener('pointerleave', this.pointerUp);
-    el.nativeElement.addEventListener('pointermove', this.pointerMove);
+    if (isPlatformBrowser(this.platform_id)) {
+      el.nativeElement.addEventListener('pointerdown', this.pointerDown);
+      el.nativeElement.addEventListener('pointerup', this.pointerUp);
+      el.nativeElement.addEventListener('pointercancel', this.pointerUp);
+      el.nativeElement.addEventListener('pointerout', this.pointerUp);
+      el.nativeElement.addEventListener('pointerleave', this.pointerUp);
+      el.nativeElement.addEventListener('pointermove', this.pointerMove);
+    }
   }
 
   unbind(el: ElementRef) {
-    el.nativeElement.removeEventListener('pointerdown', this.pointerDown);
-    el.nativeElement.removeEventListener('pointerup', this.pointerUp);
-    el.nativeElement.removeEventListener('pointercancel', this.pointerUp);
-    el.nativeElement.removeEventListener('pointerout', this.pointerUp);
-    el.nativeElement.removeEventListener('pointerleave', this.pointerUp);
-    el.nativeElement.removeEventListener('pointermove', this.pointerMove);
+    if (isPlatformBrowser(this.platform_id)) {
+      el.nativeElement.removeEventListener('pointerdown', this.pointerDown);
+      el.nativeElement.removeEventListener('pointerup', this.pointerUp);
+      el.nativeElement.removeEventListener('pointercancel', this.pointerUp);
+      el.nativeElement.removeEventListener('pointerout', this.pointerUp);
+      el.nativeElement.removeEventListener('pointerleave', this.pointerUp);
+      el.nativeElement.removeEventListener('pointermove', this.pointerMove);
+    }
   }
 
   public get slideEvent(): EventEmitter<Number> {
@@ -94,12 +100,19 @@ export class PointerService {
     return this._clickEvent;
   }
 
+  constructor(
+    // rendererFactory: RendererFactory2,
+    @Inject(PLATFORM_ID) private platform_id: any
+  ) {
+    // this._renderer = rendererFactory.createRenderer(null, null);
+  }
+
   private _pointerDown(e: PointerEvent) {
     this._evCache.push(e);
     if (this._evCache.length === 1) {
       this._startEVCache = e;
       if (this._enablePan || this._enableZoom) {
-        // Cache the image sizes and container sizes 
+        // Cache the image sizes and container sizes
         this._loadOriginalState(e);
         // Convert backgroundSize to pixels
         this._convertBGSizeToPixels(e);
@@ -113,7 +126,7 @@ export class PointerService {
   private _loadOriginalState(e: PointerEvent): void {
     if (!this._originalState.valid && e.target && (e.target as any).style && (e.target as any).style.backgroundImage) {
       const imgUrlArr = (e.target as any).style.backgroundImage.match(/^url\(["']?(.+?)["']?\)$/);
-      const img = new Image;
+      const img = new Image();
       img.src = imgUrlArr[1];
       this._originalState.aw = (e.target as any).offsetWidth;
       this._originalState.ah = (e.target as any).offsetHeight;
@@ -131,18 +144,23 @@ export class PointerService {
       const sizeTuple = bgSize.split(' ');
       bgSize = this._originalState.widthBound ? sizeTuple[0] : sizeTuple[1];
     }
-    if(bgSize === 'cover') {
+    if (bgSize === 'cover') {
       bgSize = this._originalState.widthBound ? this._originalState.ah * this._originalState.ar : this._originalState.aw;
-    } else if (bgSize.indexOf('px') > -1) {
+    }
+    else if (bgSize.indexOf('px') > -1) {
       bgSize = bgSize.substring(0, bgSize.length - 2);
-    } else if (bgSize.indexOf('%') > -1) { // Untested
+    }
+    else if (bgSize.indexOf('%') > -1) { // Untested
       const bgSizePercentage = Number(bgSize.substring(0, bgSize.length - 1)) / 100;
       bgSize = this._originalState.widthBound ? this._originalState.aw * bgSizePercentage : this._originalState.ah * bgSizePercentage * this._originalState.ar;
-    } else if (bgSize === 'auto') {
+    }
+    else if (bgSize === 'auto') {
       bgSize = this._originalState.w;
-    } else if (bgSize === 'contain') {
+    }
+    else if (bgSize === 'contain') {
       bgSize = this._originalState.widthBound ? this._originalState.aw : this._originalState.ah * this._originalState.ar;
-    } else {
+    }
+    else {
       // backgroundSize pattern "could not identify" // will be treated as contain
       bgSize = this._originalState.widthBound ? this._originalState.aw : this._originalState.ah * this._originalState.ar;
     }
@@ -160,7 +178,6 @@ export class PointerService {
         if (bgPosX.indexOf('%') > -1) {
           let bgPosXPercentage = Number(bgPosX.substring(0, bgPosX.length - 1)) / 100;
           bgPosX = bgPosXPercentage * (this._originalState.aw - bgSize);
-          
         }
         imgElement.style.backgroundPositionX = bgPosX + 'px';
       }
@@ -185,13 +202,12 @@ export class PointerService {
       }
     }
     // Purge diagonal if 2 pointers are not present
-    if ( this._evCache.length !== 2) {
+    if (this._evCache.length !== 2) {
       this._previousDiagonal = -1;
     }
     // Purge start event and original state if no pointers are present
     if (this._evCache.length === 0 && this._startEVCache !== null) {
       this._checkClickOrSwipe(e);
-      
       this._startEVCache = null;
       this._originalState = new State();
     }
@@ -200,10 +216,10 @@ export class PointerService {
   /**
    * 0th Check
    * target is a slide
-   * 
-   * 1st Check for click 
+   *
+   * 1st Check for click
    * or x movement is less than 15 px and y movement is less than 15 px
-   * 
+   *
    * 2nd if not click, check for swipe
    * duration < 1000 ms
    * and x movement is >= 30 px
@@ -219,17 +235,18 @@ export class PointerService {
     if (!this._enablePan // Skip click event when panning is enabled
       && Math.abs(dirX) < 15 // Very less x movement
       && Math.abs(dirY) < 15 // Very less y movement
-      ) {
-        // Click
-        this._clickEvent.emit();
-    } else if (duration < 1000 // Short enough
+    ) {
+      // Click
+      this._clickEvent.emit();
+    }
+    else if (duration < 1000 // Short enough
       && Math.abs(dirY) <= 100 // Horizontal enough
       && Math.abs(dirX) >= 30 // Long enough
       && !this._disableSwiping // swipe enabled
       && this._cannotPanMoreTest(e, dirX) // cannot pan in swipe direction
-      ) { 
-        // swipe
-        this._slideEvent.emit(dirX < 0 ? 1 : -1);
+    ) {
+      // swipe
+      this._slideEvent.emit(dirX < 0 ? 1 : -1);
     }
   }
 
@@ -239,7 +256,7 @@ export class PointerService {
   }
 
   // Check if image can pan more in the swipe direction. Return false if it can.
-  private _cannotPanMoreTest(e:PointerEvent, dirX: number): boolean {
+  private _cannotPanMoreTest(e: PointerEvent, dirX: number): boolean {
     if (!this._enablePan) { // Pan not enabled
       return true;
     }
@@ -248,7 +265,8 @@ export class PointerService {
     if (dirX < 0 && bgSize > this._originalState.aw && Math.round(this._originalState.aw - bgSize - xPos) < 0) {
       // image can be panned to the right
       return false;
-    } else if (dirX > 0 && bgSize > this._originalState.aw && xPos < 0) {
+    }
+    else if (dirX > 0 && bgSize > this._originalState.aw && xPos < 0) {
       // image can be panned to the left
       return false;
     }
@@ -346,9 +364,11 @@ export class PointerService {
   private _convertLiteralPosToPercentage(literal: string): string {
     if (literal === 'center') {
       return '50%';
-    } else if (literal === 'top' || literal === 'left') {
+    }
+    else if (literal === 'top' || literal === 'left') {
       return '0%';
-    } else if (literal === 'bottom' || literal === 'right') {
+    }
+    else if (literal === 'bottom' || literal === 'right') {
       return '100%';
     }
   }
@@ -377,7 +397,8 @@ export class PointerService {
       const sizeTuple = bgSize.split(' ');
       const size = this._originalState.widthBound ? sizeTuple[0].substring(0, sizeTuple[0].length - 2) : sizeTuple[1].substring(0, sizeTuple[1].length - 2);
       return Number(size);
-    } else if (bgSize.indexOf('px') > -1) {
+    }
+    else if (bgSize.indexOf('px') > -1) {
       // backgroundSize pattern "100px"
       const size = bgSize.substring(0, bgSize.length - 2);
       return Number(size);
@@ -399,13 +420,16 @@ export class PointerService {
       // when image width is greater than container width
       if (newX > 0) {
         return 0;
-      } else if (newX < this._originalState.aw - bgSize) {
+      }
+      else if (newX < this._originalState.aw - bgSize) {
         return this._originalState.aw - bgSize;
       }
-    } else {
+    }
+    else {
       if (newX < 0) {
         return 0;
-      } else if (newX > this._originalState.aw - bgSize) {
+      }
+      else if (newX > this._originalState.aw - bgSize) {
         return this._originalState.aw - bgSize;
       }
     }
@@ -418,13 +442,16 @@ export class PointerService {
       // when image height is greater than container height
       if (newY > 0) {
         return 0;
-      } else if (newY < this._originalState.ah - (bgSize / this._originalState.ar)) {
+      }
+      else if (newY < this._originalState.ah - (bgSize / this._originalState.ar)) {
         return this._originalState.ah - (bgSize / this._originalState.ar);
       }
-    } else {
+    }
+    else {
       if (newY < 0) {
         return 0;
-      } else if (newY > this._originalState.ah - (bgSize / this._originalState.ar)) { 
+      }
+      else if (newY > this._originalState.ah - (bgSize / this._originalState.ar)) {
         return this._originalState.ah - (bgSize / this._originalState.ar);
       }
     }
