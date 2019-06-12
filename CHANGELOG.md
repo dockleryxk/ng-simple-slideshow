@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.3.0-beta.0] - 2019-06-11
+### Changed
+- Merge Pull #68: zoom & pan -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/68)
+
 ## [1.2.9] - 2019-03-21
 ### Changed
-- Merge Pull #60: stopped event propagation on fullscreen exit buttonm added new fullscreen exit event, and fullscreen exit button position is now fixed to view port rather than absolute to relative parent element -- [pull]([https://github.com/dockleryxk/ng-simple-slideshow/pull/58](https://github.com/dockleryxk/ng-simple-slideshow/pull/60))
+- Merge Pull #60: stopped event propagation on fullscreen exit buttonm added new fullscreen exit event, and fullscreen exit button position is now fixed to view port rather than absolute to relative parent element -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/60)
 
 ## [1.2.8] - 2019-02-06
 ### Changed
