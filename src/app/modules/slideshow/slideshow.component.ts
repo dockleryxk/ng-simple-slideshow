@@ -174,7 +174,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
     this.slideIndex = index - 1;
     this.setSlideIndex(1);
 
-    if (!this.slides[this.slideIndex].loaded) {
+    if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
       this.loadRemainingSlides();
     }
 
@@ -191,7 +191,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   getSlideStyle(index: number) {
     const slide = this.slides[index];
 
-    if (slide.loaded) {
+    if (slide && slide.loaded) {
       return {
         "background-image": 'url(' + slide.image.url + ')',
         "background-size": slide.image.backgroundSize || this.backgroundSize,
@@ -226,7 +226,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
 
     this.setSlideIndex(indexDirection);
 
-    if (!this.slides[this.slideIndex].loaded) {
+    if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
       this.loadRemainingSlides();
     }
 
@@ -339,7 +339,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
         loaded: false
       });
     }
-    
+
     this.slideIndex = 0;
     this.slides[this.slideIndex].selected = true;
     this.loadFirstSlide();
@@ -436,7 +436,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
     else if (!this._autoplayIntervalId) {
       this._ngZone.runOutsideAngular(() => {
         this._autoplayIntervalId = setInterval(() => {
-          if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex].loaded)) {
+          if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex] && this.slides[this.slideIndex].loaded)) {
             this._ngZone.run(() => this.slide(1));
           }
         }, this.autoPlayInterval);
@@ -452,7 +452,8 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
       this._renderer.setStyle(this.container.nativeElement, 'height', '100%');
       // Would be nice to make it configurable
       this._renderer.setStyle(this.container.nativeElement, 'background-color', 'white');
-    } else {
+    }
+    else {
       // Would be nice to make it configurable
       this._renderer.removeStyle(this.container.nativeElement, 'background-color');
       if (this.height) {
