@@ -15,7 +15,7 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   styleUrls: ['./slideshow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SlideshowComponent implements OnInit, DoCheck, OnChanges OnDestroy {
+export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy {
   slideIndex: number = -1;
   slides: ISlide[] = [];
   hideLeftArrow: boolean = false;
