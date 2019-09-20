@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit, OnDestroy } from '@angular/core';
-import { SwipeService } from './swipe.service';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+// import { SwipeService } from './swipe.service';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
 import { ISlide } from './ISlide';
 import { IImage } from './IImage';
@@ -12,7 +12,8 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
 @Component({
   selector: 'slideshow',
   templateUrl: './slideshow.component.html',
-  styleUrls: ['./slideshow.component.scss']
+  styleUrls: ['./slideshow.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   slideIndex: number = -1;
@@ -69,6 +70,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
     private _renderer: Renderer2,
     private _transferState: TransferState,
     private _ngZone: NgZone,
+    private _cdRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) private platform_id: any,
     @Inject(DOCUMENT) private document: any
@@ -182,6 +184,8 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
     this.slideRight(beforeClickIndex);
     this.slides[beforeClickIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
+
+    this._cdRef.detectChanges();
   }
 
   /**
@@ -239,6 +243,8 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
 
     this.slides[oldIndex].selected = false;
     this.slides[this.slideIndex].selected = true;
+
+    this._cdRef.detectChanges();
   }
 
   /**
@@ -320,6 +326,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
         else {
           this.buildSlideArray();
         }
+        this._cdRef.detectChanges();
       }
     }
   }
@@ -388,6 +395,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
         loadImage.addEventListener('load', () => {
           this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
           this.slides[tmpIndex].loaded = true;
+          this._cdRef.detectChanges();
         });
       }
       else {
@@ -410,6 +418,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
           loadImage.addEventListener('load', () => {
             this.slides[i].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
             this.slides[i].loaded = true;
+            this._cdRef.detectChanges();
             resolve();
           });
           loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
