@@ -91,9 +91,40 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._slideSub.unsubscribe();
-    this._clickSub.unsubscribe();
-    this._pointerService.unbind(this.container);
+    try {
+      if (this._slideSub && !this._slideSub.closed) {
+        this._slideSub.unsubscribe();
+      }
+    }
+    catch (error) {
+      console.warn('Slide Subscription error caught in ng-simple-slideshow OnDestroy:', error);
+    }
+
+    try {
+      if (this._clickSub && !this._clickSub.closed) {
+        this._clickSub.unsubscribe();
+      }
+    }
+    catch (error) {
+      console.warn('Click Subscription error caught in ng-simple-slideshow OnDestroy:', error);
+    }
+
+    try {
+      this._pointerService.unbind(this.container);
+    }
+    catch (error) {
+      console.warn('Pointer Service unbind error caught in ng-simple-slideshow OnDestroy:', error);
+    }
+
+    try {
+      if (this._autoplayIntervalId) {
+        this._ngZone.runOutsideAngular(() => clearInterval(this._autoplayIntervalId));
+        this._autoplayIntervalId = null;
+      }
+    }
+    catch (error) {
+      console.warn('Autoplay cancel error caught in ng-simple-slideshow OnDestroy:', error);
+    }
   }
 
   ngDoCheck() {
