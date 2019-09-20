@@ -27,7 +27,8 @@
                [hideOnNoSlides]="hideOnNoSlides"
                [fullscreen]="fullscreen"
                [enableZoom]="enableZoom"
-               [enablePan]="enablePan">
+               [enablePan]="enablePan"
+               [noLoop]="noLoop">
     </slideshow>
   </div>
 </div>
@@ -190,6 +191,15 @@
              type="checkbox"
              name="showCaptions"
              [(ngModel)]="showCaptions">
+    </td>
+    <td>
+      <label for="noLoop">noLoop</label>
+    </td>
+    <td>
+      <input id="noLoop"
+             type="checkbox"
+             name="noLoop"
+             [(ngModel)]="noLoop">
     </td>
   </tr>
   <tr>

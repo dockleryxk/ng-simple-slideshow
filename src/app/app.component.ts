@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   fullscreen: boolean = false;
   enableZoom: boolean = false;
   enablePan: boolean = false;
+  noLoop: boolean = false;
 
   ngOnInit() {
     // adding an image url dynamically.

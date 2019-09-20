@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
 // import { SwipeService } from './swipe.service';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
 import { ISlide } from './ISlide';
@@ -15,9 +15,11 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   styleUrls: ['./slideshow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
+export class SlideshowComponent implements OnInit, DoCheck, OnChanges OnDestroy {
   slideIndex: number = -1;
   slides: ISlide[] = [];
+  hideLeftArrow: boolean = false;
+  hideRightArrow: boolean = false;
   private _urlCache: (string | IImage)[];
   private _autoplayIntervalId: any;
   private _initial: boolean = true;
@@ -49,6 +51,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   @Input() fullscreen: boolean = false;
   @Input() enableZoom: boolean = false;
   @Input() enablePan: boolean = false;
+  @Input() noLoop: boolean = false;
 
   @Output() onSlideLeft = new EventEmitter<number>();
   @Output() onSlideRight = new EventEmitter<number>();
@@ -87,12 +90,30 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
     this._clickSub = this._pointerService.clickEvent.subscribe(() => {
       this.onClick();
     });
+    if (this.noLoop) {
+      this.hideLeftArrow = true;
+    }
   }
 
   ngOnDestroy() {
     this._slideSub.unsubscribe();
     this._clickSub.unsubscribe();
     this._pointerService.unbind(this.container);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['noLoop']) {
+      if (changes['noLoop'].currentValue) {
+        this.hideLeftArrow = this.slideIndex <= 0;
+        this.hideRightArrow = this.slideIndex === this.slides.length - 1;
+      }
+      else {
+        this.hideLeftArrow = false;
+        this.hideRightArrow = false;
+      }
+
+      this._cdRef.detectChanges();
+    }
   }
 
   ngDoCheck() {
@@ -228,21 +249,21 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   private slide(indexDirection: number, isSwipe?: boolean): void {
     const oldIndex = this.slideIndex;
 
-    this.setSlideIndex(indexDirection);
+    if (this.setSlideIndex(indexDirection)) {
+      if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
+        this.loadRemainingSlides();
+      }
 
-    if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
-      this.loadRemainingSlides();
-    }
+      if (indexDirection === 1) {
+        this.slideRight(oldIndex, isSwipe);
+      }
+      else {
+        this.slideLeft(oldIndex, isSwipe);
+      }
 
-    if (indexDirection === 1) {
-      this.slideRight(oldIndex, isSwipe);
+      this.slides[oldIndex].selected = false;
+      this.slides[this.slideIndex].selected = true;
     }
-    else {
-      this.slideLeft(oldIndex, isSwipe);
-    }
-
-    this.slides[oldIndex].selected = false;
-    this.slides[this.slideIndex].selected = true;
 
     this._cdRef.detectChanges();
   }
@@ -251,17 +272,41 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
    * @param {number} indexDirection
    * @description This is just treating the url array like a circular list.
    */
-  private setSlideIndex(indexDirection: number): void {
+  private setSlideIndex(indexDirection: number): boolean {
+    let willChange = true;
     this.slideIndex += indexDirection;
 
-    if (this.slideIndex < 0) {
-      this.slideIndex = this.slides.length - 1;
+    if (this.noLoop) {
+      this.hideRightArrow = this.slideIndex === this.slides.length - 1;
+      this.hideLeftArrow = false;
     }
 
-    if (this.slideIndex >= this.slides.length) {
-      this.slideIndex = 0;
+    if (this.slideIndex < 0) {
+      if (this.noLoop) {
+        this.slideIndex -= indexDirection;
+        willChange = false;
+        this.hideLeftArrow = true;
+      }
+      else {
+        this.slideIndex = this.slides.length - 1;
+      }
     }
-    this.onIndexChanged.emit(this.slideIndex);
+    else if (this.slideIndex >= this.slides.length) {
+      if (this.noLoop) {
+        this.slideIndex -= indexDirection;
+        willChange = false;
+        this.hideRightArrow = true;
+      }
+      else {
+        this.slideIndex = 0;
+      }
+    }
+
+    if (willChange) {
+      this.onIndexChanged.emit(this.slideIndex);
+    }
+
+    return willChange;
   }
 
   /**

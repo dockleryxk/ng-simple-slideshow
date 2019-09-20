@@ -35,7 +35,7 @@
     </div>
   </a>
   <!-- left arrow -->
-  <div [class.display-none]="!this.showArrows"
+  <div [class.display-none]="!showArrows || hideLeftArrow"
        (click)="onSlide(-1)"
        class="arrow-container prev">
     <i #prevArrow
@@ -43,7 +43,7 @@
        class="arrow prev"></i>
   </div>
   <!-- right arrow -->
-  <div [class.display-none]="!this.showArrows"
+  <div [class.display-none]="!showArrows || hideRightArrow"
        (click)="onSlide(1)"
        class="arrow-container next">
     <i #nextArrow
