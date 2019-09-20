@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.3.0-beta.2] - 2019-06-12
+### Added
+- noLoop input to add non-repeating slideshow functionality -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/77)
+- onImageLazyLoad event emitter when an image lazy loads -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/78)
+### Changed
+- ChangeDetectionStrategy is now onPush -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/79)
+- autoPlayWaitForLazyLoad now defaults to `true` instead of `false`
+
 ## [1.3.0-beta.1] - 2019-06-12
 ### Changed
 - Added some safeguards to prevent trying to access slides that don't exist
