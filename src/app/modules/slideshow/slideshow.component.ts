@@ -34,7 +34,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   @Input() autoPlay: boolean = false;
   @Input() autoPlayInterval: number = 3333;
   @Input() stopAutoPlayOnSlide: boolean = true;
-  @Input() autoPlayWaitForLazyLoad: boolean = false;
+  @Input() autoPlayWaitForLazyLoad: boolean = true;
   @Input() debug: boolean;
   @Input() backgroundSize: string = 'cover';
   @Input() backgroundPosition: string = 'center center';
@@ -56,6 +56,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
   @Output() onSwipeRight = new EventEmitter<number>();
   @Output() onFullscreenExit = new EventEmitter<boolean>();
   @Output() onIndexChanged = new EventEmitter<number>();
+  @Output() onImageLazyLoad = new EventEmitter<ISlide>();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('prevArrow') prevArrow: ElementRef;
@@ -395,6 +396,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
         loadImage.addEventListener('load', () => {
           this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
           this.slides[tmpIndex].loaded = true;
+          this.onImageLazyLoad.emit(this.slides[tmpIndex]);
           this._cdRef.detectChanges();
         });
       }
@@ -419,6 +421,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnDestroy {
             this.slides[i].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
             this.slides[i].loaded = true;
             this._cdRef.detectChanges();
+            this.onImageLazyLoad.emit(this.slides[i]);
             resolve();
           });
           loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
