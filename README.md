@@ -102,10 +102,11 @@ The imageUrls input can be an array of strings, however in order to enable slide
 | fullscreen              | no       | false                | boolean                                                                                                                   | activate full screen for the slideshow on true, go back to normal view on false                                                    |
 | enableZoom              | no       | false                | boolean                                                                                                                   | enable (2 point/pinch) touch zoom in/out on  images                                                                                |
 | enablePan               | no       | false                | boolean                                                                                                                   | enable (1 point) touch/click panning of images, NOTE: "true" will disable image on click actions                                   |
+| noLoop                  | no       | false                | boolean                                                                                                                   | block looping through slideshow like a circular list                                                                               |
 
 ### Output Events
 
-| Event        | Description                     |
+| Event            | Description                     |
 | ---------------- | ------------------------------- |
 | onSlideLeft      | when the left arrow is clicked  |
 | onSlideRight     | when the right arrow is clicked |
