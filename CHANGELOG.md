@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.3.0-beta.3] - 2019-10-31
+### Changed
+- Fix issue where the index kept resetting to zero while adding new urls -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/89)
+- Replaced "left" with "translate3d" for a better performance -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/83)
+
 ## [1.3.0-beta.2] - 2019-06-12
 ### Added
 - noLoop input to add non-repeating slideshow functionality -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/77)
