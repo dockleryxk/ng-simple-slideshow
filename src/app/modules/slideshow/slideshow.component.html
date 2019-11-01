@@ -11,7 +11,7 @@
   <!-- slides -->
   <a *ngFor="let slide of slides; index as i; trackBy: trackByFn"
      class="slides"
-     href="#"
+     href="#!"
      title="{{slide?.image?.title}}"
      [ngStyle]="getSlideStyle(i)"
      [class.selected]="slide?.selected"
