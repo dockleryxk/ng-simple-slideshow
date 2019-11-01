@@ -423,8 +423,9 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
         loaded: false
       });
     }
-
-    this.slideIndex = 0;
+    if (this.slideIndex === -1) {
+      this.slideIndex = 0;
+    }
     this.slides[this.slideIndex].selected = true;
     this.loadFirstSlide();
     this.onIndexChanged.emit(this.slideIndex);
