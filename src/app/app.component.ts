@@ -64,4 +64,9 @@ export class AppComponent implements OnInit {
 				                     \`
     `);
   }
+
+  testEvent(event) {
+    console.log(typeof event);
+    console.log(event);
+  }
 }

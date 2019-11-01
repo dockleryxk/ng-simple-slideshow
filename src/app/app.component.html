@@ -6,6 +6,7 @@
   <div style="display:block;"
        [style.width]="width">
     <slideshow #slideshow
+               (onClick)="testEvent($event)"
                [imageUrls]="imageUrls"
                [height]="height"
                [minHeight]="minHeight"

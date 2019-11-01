@@ -60,6 +60,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
   @Output() onFullscreenExit = new EventEmitter<boolean>();
   @Output() onIndexChanged = new EventEmitter<number>();
   @Output() onImageLazyLoad = new EventEmitter<ISlide>();
+  @Output() onClick = new EventEmitter<{ slide: ISlide, index: number }>();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('prevArrow') prevArrow: ElementRef;
@@ -89,7 +90,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
       this.onSlide(indexDirection, true);
     });
     this._clickSub = this._pointerService.clickEvent.subscribe(() => {
-      this.onClick();
+      this._onClick();
     });
     if (this.noLoop) {
       this.hideLeftArrow = true;
@@ -209,8 +210,9 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
   /**
    * @description Redirect to current slide "href" if defined
    */
-  onClick(): void {
+  private _onClick(): void {
     const currentSlide = this.slides.length > 0 && this.slides[this.slideIndex];
+    this.onClick.emit({ slide: currentSlide, index: this.slideIndex });
 
     if (currentSlide && currentSlide.image.clickAction) {
       currentSlide.image.clickAction();
