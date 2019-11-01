@@ -111,17 +111,18 @@ The imageUrls input can be an array of strings, however in order to enable slide
 
 ### Output Events
 
-| Event            | Description                     |
-| ---------------- | ------------------------------- |
-| onSlideLeft      | when the left arrow is clicked  |
-| onSlideRight     | when the right arrow is clicked |
-| onSwipeLeft      | when a swipe left occurs        |
-| onSwipeRight     | when a swipe right occurs       |
-| onFullscreenExit | when fullscreen exits           |
-| onIndexChanged   | when slide index changes        |
-| onImageLazyLoad  | when slide image lazy loads     |
+| Event            | Description                        |
+| ---------------- | ---------------------------------- |
+| onSlideLeft      | when the left arrow is clicked     |
+| onSlideRight     | when the right arrow is clicked    |
+| onSwipeLeft      | when a swipe left occurs           |
+| onSwipeRight     | when a swipe right occurs          |
+| onFullscreenExit | when fullscreen exits              |
+| onIndexChanged   | when slide index changes           |
+| onImageLazyLoad  | when slide image lazy loads        |
+| onClick          | when slide (not arrows) is clicked |
 
-Note: all events emit the index number of the new slide
+Note: all events emit the index number of the new slide, with the exception of onClick which returns the slide object in addition to the index.
 
 ### API
 
