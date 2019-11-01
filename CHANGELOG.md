@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.3.0-beta.5] - 2019-11-01
+### Changed
+- Use different href placeholder per [stackoverflow](https://stackoverflow.com/questions/4855168/what-is-href-and-why-is-it-used). I am really glad that website exists!
+
 ## [1.3.0-beta.4] - 2019-10-31
 ### Added
 - Click event emitter -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/90)
