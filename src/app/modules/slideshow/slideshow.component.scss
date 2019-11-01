@@ -80,7 +80,7 @@ $border-color: darken(#FFF, 5%);
     visibility: hidden;
     position: absolute;
     top: -100vw;
-    left: -100vw;
+    transform: translate3d(-100vw, 0, 0);
     opacity: 0;
   }
 
@@ -95,35 +95,35 @@ $border-color: darken(#FFF, 5%);
     display: block;
 
     &.selected {
-      left: 0;
+      transform: translate3d(0, 0, 0);
     }
 
     &.left-slide {
-      left: -100%;
+      transform: translate3d(-100%, 0, 0);
     }
 
     &.right-slide {
-      left: 100%;
+      transform: translate3d(100%, 0, 0);
     }
 
     &.slide-in-left {
-      left: 0;
-      animation: slideInLeft .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+      transform: translate3d(0, 0, 0);
+      animation: slideInLeft 0.5s cubic-bezier(0.42, 0, 0.58, 1);
     }
 
     &.slide-in-right {
-      left: 0;
-      animation: slideInRight .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+      transform: translate3d(0, 0, 0);
+      animation: slideInRight 0.5s cubic-bezier(0.42, 0, 0.58, 1);
     }
 
     &.slide-out-left {
-      left: -100%;
-      animation: slideOutLeft .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+      transform: translate3d(-100%, 0, 0);
+      animation: slideOutLeft 0.5s cubic-bezier(0.42, 0, 0.58, 1);
     }
 
     &.slide-out-right {
-      left: 100%;
-      animation: slideOutRight .5s cubic-bezier(0.420, 0.000, 0.580, 1.000);
+      transform: translate3d(100%, 0, 0);
+      animation: slideOutRight 0.5s cubic-bezier(0.42, 0, 0.58, 1);
     }
 
     &.link {
@@ -307,41 +307,41 @@ $border-color: darken(#FFF, 5%);
 
 @keyframes slideInRight {
   0% {
-    left: -100%;
+    transform: translate3d(-100%, 0, 0);
   }
 
   100% {
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes slideInLeft {
   0% {
-    left: 100%;
+    transform: translate3d(100%, 0, 0);
   }
 
   100% {
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes slideOutRight {
   0% {
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
 
   100% {
-    left: -100%;
+    transform: translate3d(-100%, 0, 0);
   }
 }
 
 @keyframes slideOutLeft {
   0% {
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
 
   100% {
-    left: 100%;
+    transform: translate3d(100%, 0, 0);
   }
 }
 
