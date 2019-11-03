@@ -616,8 +616,10 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
     return slide.image;
   }
 
+  /**
+   * @description don't let click events fire, handle in pointer service instead
+   */
   handleClick(event) {
     event.preventDefault();
-    console.log(event);
   }
 }
