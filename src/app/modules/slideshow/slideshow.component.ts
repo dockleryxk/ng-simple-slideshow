@@ -447,7 +447,9 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
         loaded: true
       });
     }
-    this.slideIndex = 0;
+    if (this.slideIndex === -1) {
+      this.slideIndex = 0;
+    }
     this.slides[this.slideIndex].selected = true;
     this.onIndexChanged.emit(this.slideIndex);
   }
@@ -612,5 +614,10 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
    */
   trackByFn(index: number, slide: ISlide): any {
     return slide.image;
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+    console.log(event);
   }
 }
