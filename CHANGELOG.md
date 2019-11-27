@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.3.0-beta.7] - 2019-11-27
+### Changed
+- Reverted: replace "left" with "translate3d" for a better performance -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/83) reverted because of bug on iOS and Safari
+
 ## [1.3.0-beta.6] - 2019-11-03
 ### Changed
 - Prevent default on click events
