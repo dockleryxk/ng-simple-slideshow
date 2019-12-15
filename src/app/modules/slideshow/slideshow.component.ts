@@ -13,6 +13,7 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   selector: 'slideshow',
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.scss'],
+  providers: [PointerService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy {

@@ -14,9 +14,6 @@ import { PointerService } from './pointer.service';
   ],
   exports: [
     SlideshowComponent
-  ],
-  providers: [
-    PointerService
   ]
 })
 export class SlideshowModule { }
