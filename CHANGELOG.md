@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
+## [1.3.0-beta.9] - 2019-12-15
+### Changed
+- Don't share PointerService across slideshows to prevent slides moving at the same time -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/90#issuecomment-565824180)
+
 ## [1.3.0-beta.8] - 2019-11-27
 ### Changed
 - Reverted: replace "left" with "translate3d" for a better performance -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/83) reverted because of bug on iOS and Safari
