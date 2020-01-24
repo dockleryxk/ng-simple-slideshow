@@ -32,6 +32,7 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
   @Input() height: string = '100%';
   @Input() minHeight: string;
   @Input() arrowSize: string;
+  @Input() arrowColor: string;
   @Input() showArrows: boolean = true;
   @Input() disableSwiping: boolean = false;
   @Input() autoPlay: boolean = false;
@@ -563,6 +564,10 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
       this._renderer.setStyle(this.prevArrow.nativeElement, 'width', this.arrowSize);
       this._renderer.setStyle(this.nextArrow.nativeElement, 'height', this.arrowSize);
       this._renderer.setStyle(this.nextArrow.nativeElement, 'width', this.arrowSize);
+    }
+    if (this.arrowColor) {
+      this._renderer.setStyle(this.prevArrow.nativeElement, 'border-color', this.arrowColor);
+      this._renderer.setStyle(this.nextArrow.nativeElement, 'border-color', this.arrowColor);
     }
   }
 
