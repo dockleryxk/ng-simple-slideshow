@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, Renderer2, ViewChild, DoCheck, NgZone, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 // import { SwipeService } from './swipe.service';
 import { isPlatformServer, DOCUMENT } from '@angular/common';
 import { ISlide } from './ISlide';
@@ -16,7 +16,7 @@ const FIRST_SLIDE_KEY = makeStateKey<any>('firstSlide');
   providers: [PointerService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy {
+export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   slideIndex: number = -1;
   slides: ISlide[] = [];
   hideLeftArrow: boolean = false;
@@ -86,7 +86,6 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
     if (this.debug !== undefined) {
       console.warn('[Deprecation Warning]: The debug input will be removed from ng-simple-slideshow in 1.3.0');
     }
-    this._pointerService.bind(this.container);
     this._slideSub = this._pointerService.slideEvent.subscribe((indexDirection: number) => {
       this.onSlide(indexDirection, true);
     });
@@ -96,6 +95,10 @@ export class SlideshowComponent implements OnInit, DoCheck, OnChanges, OnDestroy
     if (this.noLoop) {
       this.hideLeftArrow = true;
     }
+  }
+
+  ngAfterViewInit(): void {
+    this._pointerService.bind(this.container);
   }
 
   ngOnDestroy() {
