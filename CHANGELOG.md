@@ -1,174 +1,261 @@
 # Changelog
+
 Starting March 17, 2018 all notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 - Angular Universal (server side rendered) demo
 - Refactor code to [this format](https://github.com/dherges/ng-packaged)
 
-## [1.3.0-beta.9] - 2019-12-15
+## [1.3.0-beta.10] - 2020-3-3
+
 ### Changed
+
+- Merge [#102](https://github.com/dockleryxk/ng-simple-slideshow/pull/102) to support Angular 9/Ivy renderer -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/101)
+
+## [1.3.0-beta.9] - 2019-12-15
+
+### Changed
+
 - Don't share PointerService across slideshows to prevent slides moving at the same time -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/90#issuecomment-565824180)
 
 ## [1.3.0-beta.8] - 2019-11-27
+
 ### Changed
+
 - Reverted: replace "left" with "translate3d" for a better performance -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/83) reverted because of bug on iOS and Safari
 
 ## [1.3.0-beta.6] - 2019-11-03
+
 ### Changed
+
 - Prevent default on click events
 - Add tabindex="-1" on slide elements
 - Apply fix to index reset for non-lazy loaded slideshows
 
 ## [1.3.0-beta.5] - 2019-11-01
+
 ### Changed
+
 - Use different href placeholder per [stackoverflow](https://stackoverflow.com/questions/4855168/what-is-href-and-why-is-it-used). I am really glad that website exists!
 
 ## [1.3.0-beta.4] - 2019-10-31
+
 ### Added
+
 - Click event emitter -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/90)
 
 ## [1.3.0-beta.3] - 2019-10-31
+
 ### Changed
+
 - Fix issue where the index kept resetting to zero while adding new urls -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/89)
 - Replaced "left" with "translate3d" for a better performance -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/83)
 
 ## [1.3.0-beta.2] - 2019-06-12
+
 ### Added
+
 - noLoop input to add non-repeating slideshow functionality -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/77)
 - onImageLazyLoad event emitter when an image lazy loads -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/78)
+
 ### Changed
+
 - ChangeDetectionStrategy is now onPush -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/79)
 - autoPlayWaitForLazyLoad now defaults to `true` instead of `false`
 
 ## [1.3.0-beta.1] - 2019-06-12
+
 ### Changed
+
 - Added some safeguards to prevent trying to access slides that don't exist
 - Updated to support Angular 8
 
 ## [1.3.0-beta.0] - 2019-06-11
+
 ### Changed
+
 - Merge Pull #68: zoom & pan -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/68)
 
 ## [1.2.9] - 2019-03-21
+
 ### Changed
+
 - Merge Pull #60: stopped event propagation on fullscreen exit buttonm added new fullscreen exit event, and fullscreen exit button position is now fixed to view port rather than absolute to relative parent element -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/60)
 
 ## [1.2.8] - 2019-02-06
+
 ### Changed
+
 - Merge Pull #58 for AutoPlay option working as a Play/Pause button -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/58)
 - Merge Pull #56 for fullscreen implementation on bindable input -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/56)
 
 ## [1.2.7] - unknown
+
 ### Changed
+
 - run setInterval outside of Angular zone
 
 ## [1.2.6] - 2018-10-24
+
 ### Added
+
 - Use trackBy in the array of images
+
 ### Changed
+
 - Removed output aliasing
 - Updated to support Angular 7
 
 ## [1.2.5] - 2018-09-15
+
 ### Added
+
 - hideOnNoSlides which sets the container element style to display:none if no slides exists, or if the imageUrls array's length is zero
+
 ### Changed
+
 - imageUrls array can now be empty, null, or undefined
 
 ## [1.2.4] - 2018-08-26
+
 ### Added
+
 - backgroundPosition, backgroundRepeat, and backgroundSize props added to the IImage interface. This adds the ability to set these properties for each slide individually. These properties will default to the slideshow inputs
 
 ## [1.2.3] - 2018-07-08
+
 ### Changed
+
 - Merge Pull #23 for custom click functions -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/23)
 - Remove "next" and "previous" text -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/24)
 
 ## [1.2.2] - 2018-05-17
+
 ### Changed
+
 - Update npm tags
 
 ## [1.2.1] - 2018-05-17
+
 ### Changed
+
 - Fix this bug because of bad compilation -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/22)
 
 ## [1.2.0] - 2018-05-13
+
 ### Changed
+
 - Update peer dependency for Angular 6
 
 ## [1.1.19] - 2018-04-18
+
 ### Changed
+
 - imageUrl array initialized to []
 - make default height 100% from the ts instead of scss
 
 ## [1.1.18] - 2018-04-14
+
 ### Changed
+
 - actually make sure slides without hrefs don't redirect
 
 ## [1.1.17] - 2018-04-14
+
 ### Changed
+
 - Make sure slides without hrefs don't redirect -- [bug report](https://github.com/dockleryxk/ng-simple-slideshow/pull/11#commitcomment-28466991)
 - Use the document from angular core instead of the window object
 - add ability to use titles in anchor tags for images
+
 ### Breaking Changes
+
 - use a css spinner instead of a gif, remove option
 
 ## [1.1.16] - 2018-03-20
+
 ### Changed
+
 - Fix glitchy-looking UX by removing slide from transfer state after using it once
 
 ## [1.1.15] - 2018-03-20
+
 ### Changed
+
 - Better lazy loading for server side rendered applications
 
 ## [1.1.14] - 2018-03-20
+
 ### Changed
+
 - Lazy loading logic now lets DOM load completely before continuing to load images
 
 ## [1.1.13] - 2018-03-20
+
 ### Changed
+
 - Bug fix for lazy loading
 
 ## [1.1.11] - 2018-03-19
+
 ### Added
+
 - Spinner in place of blank space while images are lazy loading
 - Option for url to custom spinner gif
 - Option for autoplay to wait for images to lazy load before changing slides
+
 ### Changed
+
 - Improved lazy loading
 
 ## [1.1.10] - 2018-03-18
+
 ### Added
+
 - Option to turn captions on or off, regardless if the slides have them
 
 ## [1.1.9] - 2018-03-18
+
 ### Added
+
 - Lazy Loading
 
 ## [1.1.8] - 2018-03-17
+
 ### Changed
+
 - fix async binding error -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/13)
 
 ## [1.1.7] - 2018-03-17
+
 ### Changed
+
 - fix image url binding update -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/8)
 
 ## [1.1.6] - 2018-03-17
+
 ### Added
+
 - Option to change dot color -- [issue](https://github.com/dockleryxk/ng-simple-slideshow/issues/15)
 - Option to change caption text color
 - Option to change caption background
 
 ## [1.1.5] - 2018-03-17
+
 ### Changed
+
 - Slider as a tags instead of div tags for SEO -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/7)
 - Optional image caption -- [pull](https://github.com/dockleryxk/ng-simple-slideshow/pull/11)
 
 ## [1.1.4] - 2018-03-17
+
 ### Added
+
 - This changelog!
 
 ### Changed
+
 - Updated packages to fix vulernable dependency -- [ssri](https://nvd.nist.gov/vuln/detail/CVE-2018-7651)
