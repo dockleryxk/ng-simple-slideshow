@@ -191,26 +191,6 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
     this.slide(indexDirection, isSwipe);
   }
 
-  // /**
-  //  * @param {TouchEvent} e
-  //  * @param {string} when
-  //  * @description Use the swipe service to detect swipe events from phone and tablets
-  //  */
-  // onSwipe(e: TouchEvent, when: string): void {
-  //   if (this.disableSwiping === true) {
-  //     return;
-  //   }
-
-  //   const indexDirection = this._swipeService.swipe(e, when);
-  //   // handle a failed swipe
-  //   if (indexDirection === 0) {
-  //     return;
-  //   }
-  //   else {
-  //     this.onSlide(indexDirection, true);
-  //   }
-  // }
-
   /**
    * @description Redirect to current slide "href" if defined
    */
@@ -228,21 +208,38 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
 
   /**
    * @param {number} index
-   * @description set the index to the desired index - 1 and simulate a right slide
+   * @description manual selection of a slide - handle AutoPlay and perform Slide
    */
   goToSlide(index: number) {
-    const beforeClickIndex = this.slideIndex;
-    this.slideIndex = index - 1;
-    this.setSlideIndex(1);
+    this.handleAutoPlay(this.stopAutoPlayOnSlide);
+    this.performSlideAction(index);
+  }
+
+  /**
+   * @param {newSlideIndex} index
+   * @description prepare everything for the next slide animation and then run animation
+   */
+  private performSlideAction(newSlideIndex: number) {
+    const oldSlideIndex = this.slideIndex;
+    this.slideIndex = newSlideIndex % this.slides.length;
+    if (this.slideIndex < 0) {
+      this.slideIndex = this.slideIndex + this.slides.length;
+    }
 
     if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
       this.loadRemainingSlides();
     }
 
-    this.handleAutoPlay(this.stopAutoPlayOnSlide);
-    this.slideRight(beforeClickIndex);
-    this.slides[beforeClickIndex].selected = false;
-    this.slides[this.slideIndex].selected = true;
+    for (let i=0; i < this.slides.length; i++) {
+      this.slides[i] = { ...this.slides[i], action: '', leftSide: false, rightSide: false, selected: false };
+    }
+    if (oldSlideIndex < this.slideIndex) {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'slideOutRight', rightSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'slideInLeft', selected: true };
+    } else {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'slideOutLeft', leftSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'slideInRight', selected: true };
+    }
 
     this._cdRef.detectChanges();
   }
