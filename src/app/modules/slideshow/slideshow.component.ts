@@ -36,6 +36,7 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
   @Input() disableSwiping: boolean = false;
   @Input() autoPlay: boolean = false;
   @Input() autoPlayInterval: number = 3333;
+  @Input() autoPlayTransition: string = 'slide';
   @Input() stopAutoPlayOnSlide: boolean = true;
   @Input() autoPlayWaitForLazyLoad: boolean = true;
   @Input() debug: boolean;
@@ -215,6 +216,11 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
     this.performSlideAction(index);
   }
 
+  private resetAllSlides() {
+    for (let i=0; i < this.slides.length; i++) {
+      this.slides[i] = { ...this.slides[i], action: '', leftSide: false, rightSide: false, selected: false };
+    }
+  }
   /**
    * @param {newSlideIndex} index
    * @description prepare everything for the next slide animation and then run animation
@@ -226,19 +232,46 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
       this.slideIndex = this.slideIndex + this.slides.length;
     }
 
-    if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
-      this.loadSlide(this.slideIndex);
-    }
+    // always pre-load this slide plus next slide.
+    this.loadSlide(this.slideIndex);
+    this.loadSlide(this.slideIndex + 1);
 
-    for (let i=0; i < this.slides.length; i++) {
-      this.slides[i] = { ...this.slides[i], action: '', leftSide: false, rightSide: false, selected: false };
-    }
+    this.resetAllSlides();
+
     if (oldSlideIndex < this.slideIndex) {
       this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'slideOutRight', rightSide: true };
       this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'slideInLeft', selected: true };
     } else {
       this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'slideOutLeft', leftSide: true };
       this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'slideInRight', selected: true };
+    }
+
+    this._cdRef.detectChanges();
+  }
+
+  /**
+   * @param {newSlideIndex} index
+   * @description prepare everything for the next slide animation and then run animation
+   */
+  private performFadeAction(newSlideIndex: number) {
+    const oldSlideIndex = this.slideIndex;
+    this.slideIndex = newSlideIndex % this.slides.length;
+    if (this.slideIndex < 0) {
+      this.slideIndex = this.slideIndex + this.slides.length;
+    }
+
+    // always pre-load this slide plus next slide.
+    this.loadSlide(this.slideIndex);
+    this.loadSlide(this.slideIndex + 1);
+
+    this.resetAllSlides();
+
+    if (oldSlideIndex < this.slideIndex) {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'fadeOut', rightSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'fadeIn', selected: true };
+    } else {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'fadeOut', leftSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'fadeIn', selected: true };
     }
 
     this._cdRef.detectChanges();
@@ -293,6 +326,15 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
   }
 
   /**
+   * @param {number} indexDirection
+   * @description Set the new slide index, then make the fade-transition happen.
+   */
+  private fade(indexDirection: number): void {
+    this.performFadeAction(this.slideIndex + indexDirection);
+    indexDirection > 0 ? this.onSlideRight.emit(this.slideIndex) : this.onSlideLeft.emit(this.slideIndex);
+  }
+
+  /**
    * @description Check to make sure slide images have been set or haven't changed
    */
   private setSlides(): void {
@@ -332,7 +374,8 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
       this.slideIndex = 0;
     }
     this.slides[this.slideIndex].selected = true;
-    this.loadFirstSlide();
+    this.loadSlide(0);
+    this.loadSlide(1);
     this.onIndexChanged.emit(this.slideIndex);
   }
 
@@ -357,42 +400,8 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
     this.onIndexChanged.emit(this.slideIndex);
   }
 
-  /**
-   * @description load the first slide image if lazy loading
-   *              this takes server side and browser side into account
-   */
-  private loadFirstSlide(): void {
-    const tmpIndex = this.slideIndex;
-    const tmpImage = this.imageUrls[tmpIndex];
-
-    // if server side, we don't need to worry about the rest of the slides
-    if (isPlatformServer(this.platform_id)) {
-      this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
-      this.slides[tmpIndex].loaded = true;
-      this._transferState.set(FIRST_SLIDE_KEY, this.slides[tmpIndex]);
-    }
-    else {
-      const firstSlideFromTransferState = this._transferState.get(FIRST_SLIDE_KEY, null as any);
-      // if the first slide didn't finish loading on the server side, we need to load it
-      if (firstSlideFromTransferState === null) {
-        let loadImage = new Image();
-        loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
-        loadImage.addEventListener('load', () => {
-          this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
-          this.slides[tmpIndex].loaded = true;
-          this.onImageLazyLoad.emit(this.slides[tmpIndex]);
-          this._cdRef.detectChanges();
-        });
-      }
-      else {
-        this.slides[tmpIndex] = firstSlideFromTransferState;
-        this._transferState.remove(FIRST_SLIDE_KEY);
-      }
-    }
-  }
-
   private loadSlide(index: number) {
-    if (!this.slides[index].loaded) {
+    if (index < this.slides.length && !this.slides[index].loaded) {
       new Promise((resolve) => {
         const tmpImage = this.imageUrls[index];
         let loadImage = new Image();
@@ -422,12 +431,13 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
         this._ngZone.runOutsideAngular(() => clearInterval(this._autoplayIntervalId));
         this._autoplayIntervalId = null;
       }
+      this.autoPlay = false;
     }
     else if (!this._autoplayIntervalId) {
       this._ngZone.runOutsideAngular(() => {
         this._autoplayIntervalId = setInterval(() => {
           if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex] && this.slides[this.slideIndex].loaded)) {
-            this._ngZone.run(() => this.slide(1));
+            this._ngZone.run(() => this.autoPlayTransition == 'fade' ? this.fade(1) : this.slide(1));
           }
         }, this.autoPlayInterval);
       });

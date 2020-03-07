@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   autoPlay: boolean = true;
   autoPlayInterval: number = 3333;
   stopAutoPlayOnSlide: boolean = true;
+  autoPlayTransition: string = 'slide';
   debug: boolean = false;
   backgroundSize: string = 'cover';
   backgroundPosition: string = 'center center';
