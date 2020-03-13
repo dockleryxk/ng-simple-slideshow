@@ -1,6 +1,6 @@
 {
   "name": "ng-simple-slideshow",
-  "version": "1.3.0-beta.10",
+  "version": "1.3.0-beta.11",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -69,6 +69,7 @@
     "angular 6",
     "angular 7",
     "angular 8",
+    "angular 9",
     "ng",
     "ngx",
     "ng2",
@@ -77,6 +78,7 @@
     "ng6",
     "ng7",
     "ng8",
+    "ng9",
     "slideshow",
     "carousel",
     "slider",
@@ -85,7 +87,8 @@
     "angular5",
     "angular6",
     "angular7",
-    "angular8"
+    "angular8",
+    "angular9"
   ],
   "repository": {
     "type": "git",
