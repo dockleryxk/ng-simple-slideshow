@@ -24,6 +24,8 @@
      [class.slide-in-right]="slide?.action === 'slideInRight'"
      [class.slide-out-left]="slide?.action === 'slideOutLeft'"
      [class.slide-out-right]="slide?.action === 'slideOutRight'"
+     [class.fade-in]="slide?.action === 'fadeIn'"
+     [class.fade-out]="slide?.action === 'fadeOut'"
      [class.link]="slide?.image?.clickAction || slide?.image?.href">
     <div class="loader"
          *ngIf="!slide?.loaded"></div>

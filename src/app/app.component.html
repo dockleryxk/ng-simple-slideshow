@@ -15,6 +15,7 @@
                [disableSwiping]="disableSwiping"
                [autoPlay]="autoPlay"
                [stopAutoPlayOnSlide]="stopAutoPlayOnSlide"
+               [autoPlayTransition]="autoPlayTransition"
                [debug]="debug"
                [backgroundSize]="backgroundSize"
                [backgroundPosition]="backgroundPosition"
@@ -114,10 +115,12 @@
   </tr>
   <tr>
     <td>
-      <label for="debug">debug</label>
+      <label for="autoPlayTransition">autoPlayTransition</label>
     </td>
     <td>
-      <strong>debug has been deprecated, will be completely removed in 1.3.0</strong>
+      <input id="autoPlayTransition"
+             name="autoPlayTransition"
+             [(ngModel)]="autoPlayTransition">
     </td>
     <td>
       <label for="backgroundSize">backgroundSize</label>
@@ -241,6 +244,14 @@
              name="enablePan"
              [(ngModel)]="enablePan">
     </td>
+  </tr>
+  <tr>
+    <td>
+       <label for="debug">debug</label>
+    </td>
+    <td>
+       <strong>debug has been deprecated, will be completely removed in 1.3.0</strong>
+    </td>  
   </tr>
 </table>
 <p style="text-align:center">

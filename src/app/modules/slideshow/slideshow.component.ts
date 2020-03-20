@@ -36,6 +36,7 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
   @Input() disableSwiping: boolean = false;
   @Input() autoPlay: boolean = false;
   @Input() autoPlayInterval: number = 3333;
+  @Input() autoPlayTransition: string = 'slide';
   @Input() stopAutoPlayOnSlide: boolean = true;
   @Input() autoPlayWaitForLazyLoad: boolean = true;
   @Input() debug: boolean;
@@ -191,26 +192,6 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
     this.slide(indexDirection, isSwipe);
   }
 
-  // /**
-  //  * @param {TouchEvent} e
-  //  * @param {string} when
-  //  * @description Use the swipe service to detect swipe events from phone and tablets
-  //  */
-  // onSwipe(e: TouchEvent, when: string): void {
-  //   if (this.disableSwiping === true) {
-  //     return;
-  //   }
-
-  //   const indexDirection = this._swipeService.swipe(e, when);
-  //   // handle a failed swipe
-  //   if (indexDirection === 0) {
-  //     return;
-  //   }
-  //   else {
-  //     this.onSlide(indexDirection, true);
-  //   }
-  // }
-
   /**
    * @description Redirect to current slide "href" if defined
    */
@@ -228,21 +209,70 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
 
   /**
    * @param {number} index
-   * @description set the index to the desired index - 1 and simulate a right slide
+   * @description manual selection of a slide - handle AutoPlay and perform Slide
    */
   goToSlide(index: number) {
-    const beforeClickIndex = this.slideIndex;
-    this.slideIndex = index - 1;
-    this.setSlideIndex(1);
+    this.handleAutoPlay(this.stopAutoPlayOnSlide);
+    this.performSlideAction(index);
+  }
 
-    if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
-      this.loadRemainingSlides();
+  private resetAllSlides() {
+    for (let i=0; i < this.slides.length; i++) {
+      this.slides[i] = { ...this.slides[i], action: '', leftSide: false, rightSide: false, selected: false };
+    }
+  }
+  /**
+   * @param {newSlideIndex} index
+   * @description prepare everything for the next slide animation and then run animation
+   */
+  private performSlideAction(newSlideIndex: number) {
+    const oldSlideIndex = this.slideIndex;
+    this.slideIndex = newSlideIndex % this.slides.length;
+    if (this.slideIndex < 0) {
+      this.slideIndex = this.slideIndex + this.slides.length;
     }
 
-    this.handleAutoPlay(this.stopAutoPlayOnSlide);
-    this.slideRight(beforeClickIndex);
-    this.slides[beforeClickIndex].selected = false;
-    this.slides[this.slideIndex].selected = true;
+    // always pre-load this slide plus next slide.
+    this.loadSlide(this.slideIndex);
+    this.loadSlide(this.slideIndex + 1);
+
+    this.resetAllSlides();
+
+    if (oldSlideIndex < this.slideIndex) {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'slideOutRight', rightSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'slideInLeft', selected: true };
+    } else {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'slideOutLeft', leftSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'slideInRight', selected: true };
+    }
+
+    this._cdRef.detectChanges();
+  }
+
+  /**
+   * @param {newSlideIndex} index
+   * @description prepare everything for the next slide animation and then run animation
+   */
+  private performFadeAction(newSlideIndex: number) {
+    const oldSlideIndex = this.slideIndex;
+    this.slideIndex = newSlideIndex % this.slides.length;
+    if (this.slideIndex < 0) {
+      this.slideIndex = this.slideIndex + this.slides.length;
+    }
+
+    // always pre-load this slide plus next slide.
+    this.loadSlide(this.slideIndex);
+    this.loadSlide(this.slideIndex + 1);
+
+    this.resetAllSlides();
+
+    if (oldSlideIndex < this.slideIndex) {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'fadeOut', rightSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'fadeIn', selected: true };
+    } else {
+      this.slides[oldSlideIndex] = { ...this.slides[oldSlideIndex], action: 'fadeOut', leftSide: true };
+      this.slides[this.slideIndex] = { ...this.slides[this.slideIndex], action: 'fadeIn', selected: true };
+    }
 
     this._cdRef.detectChanges();
   }
@@ -285,112 +315,23 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
    * @description Set the new slide index, then make the transition happen.
    */
   private slide(indexDirection: number, isSwipe?: boolean): void {
-    const oldIndex = this.slideIndex;
+    this.performSlideAction(this.slideIndex + indexDirection);
 
-    if (this.setSlideIndex(indexDirection)) {
-      if (this.slides[this.slideIndex] && !this.slides[this.slideIndex].loaded) {
-        this.loadRemainingSlides();
-      }
-
-      if (indexDirection === 1) {
-        this.slideRight(oldIndex, isSwipe);
-      }
-      else {
-        this.slideLeft(oldIndex, isSwipe);
-      }
-
-      this.slides[oldIndex].selected = false;
-      this.slides[this.slideIndex].selected = true;
+    if (isSwipe === true) {
+      indexDirection > 0 ? this.onSwipeRight.emit(this.slideIndex) : this.onSwipeLeft.emit(this.slideIndex);
     }
-
-    this._cdRef.detectChanges();
+    else {
+      indexDirection > 0 ? this.onSlideRight.emit(this.slideIndex) : this.onSlideLeft.emit(this.slideIndex);
+    }
   }
 
   /**
    * @param {number} indexDirection
-   * @description This is just treating the url array like a circular list.
+   * @description Set the new slide index, then make the fade-transition happen.
    */
-  private setSlideIndex(indexDirection: number): boolean {
-    let willChange = true;
-    this.slideIndex += indexDirection;
-
-    if (this.noLoop) {
-      this.hideRightArrow = this.slideIndex === this.slides.length - 1;
-      this.hideLeftArrow = false;
-    }
-
-    if (this.slideIndex < 0) {
-      if (this.noLoop) {
-        this.slideIndex -= indexDirection;
-        willChange = false;
-        this.hideLeftArrow = true;
-      }
-      else {
-        this.slideIndex = this.slides.length - 1;
-      }
-    }
-    else if (this.slideIndex >= this.slides.length) {
-      if (this.noLoop) {
-        this.slideIndex -= indexDirection;
-        willChange = false;
-        this.hideRightArrow = true;
-      }
-      else {
-        this.slideIndex = 0;
-      }
-    }
-
-    if (willChange) {
-      this.onIndexChanged.emit(this.slideIndex);
-    }
-
-    return willChange;
-  }
-
-  /**
-   * @param {number} oldIndex
-   * @param {boolean} isSwipe
-   * @description This function handles the variables to move the CSS classes around accordingly.
-   *              In order to correctly handle animations, the new slide as well as the slides to
-   *              the left and right are assigned classes.
-   */
-  private slideLeft(oldIndex: number, isSwipe?: boolean): void {
-    if (isSwipe === true) {
-      this.onSwipeLeft.emit(this.slideIndex);
-    }
-    else {
-      this.onSlideLeft.emit(this.slideIndex);
-    }
-
-    this.slides[this.getLeftSideIndex(oldIndex)].leftSide = false;
-    this.slides[oldIndex].leftSide = true;
-    this.slides[oldIndex].action = 'slideOutLeft';
-    this.slides[this.slideIndex].rightSide = false;
-    this.slides[this.getRightSideIndex()].rightSide = true;
-    this.slides[this.slideIndex].action = 'slideInRight';
-  }
-
-  /**
-   * @param {number} oldIndex
-   * @param {boolean} isSwipe
-   * @description This function handles the variables to move the CSS classes around accordingly.
-   *              In order to correctly handle animations, the new slide as well as the slides to
-   *              the left and right are assigned classes.
-   */
-  private slideRight(oldIndex: number, isSwipe?: boolean): void {
-    if (isSwipe === true) {
-      this.onSwipeRight.emit(this.slideIndex);
-    }
-    else {
-      this.onSlideRight.emit(this.slideIndex);
-    }
-
-    this.slides[this.getRightSideIndex(oldIndex)].rightSide = false;
-    this.slides[oldIndex].rightSide = true;
-    this.slides[oldIndex].action = 'slideOutRight';
-    this.slides[this.slideIndex].leftSide = false;
-    this.slides[this.getLeftSideIndex()].leftSide = true;
-    this.slides[this.slideIndex].action = 'slideInLeft';
+  private fade(indexDirection: number): void {
+    this.performFadeAction(this.slideIndex + indexDirection);
+    indexDirection > 0 ? this.onSlideRight.emit(this.slideIndex) : this.onSlideLeft.emit(this.slideIndex);
   }
 
   /**
@@ -433,7 +374,8 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
       this.slideIndex = 0;
     }
     this.slides[this.slideIndex].selected = true;
-    this.loadFirstSlide();
+    this.loadSlide(0);
+    this.loadSlide(1);
     this.onIndexChanged.emit(this.slideIndex);
   }
 
@@ -458,60 +400,20 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
     this.onIndexChanged.emit(this.slideIndex);
   }
 
-  /**
-   * @description load the first slide image if lazy loading
-   *              this takes server side and browser side into account
-   */
-  private loadFirstSlide(): void {
-    const tmpIndex = this.slideIndex;
-    const tmpImage = this.imageUrls[tmpIndex];
-
-    // if server side, we don't need to worry about the rest of the slides
-    if (isPlatformServer(this.platform_id)) {
-      this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
-      this.slides[tmpIndex].loaded = true;
-      this._transferState.set(FIRST_SLIDE_KEY, this.slides[tmpIndex]);
-    }
-    else {
-      const firstSlideFromTransferState = this._transferState.get(FIRST_SLIDE_KEY, null as any);
-      // if the first slide didn't finish loading on the server side, we need to load it
-      if (firstSlideFromTransferState === null) {
+  private loadSlide(index: number) {
+    if (index < this.slides.length && !this.slides[index].loaded) {
+      new Promise((resolve) => {
+        const tmpImage = this.imageUrls[index];
         let loadImage = new Image();
-        loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
         loadImage.addEventListener('load', () => {
-          this.slides[tmpIndex].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
-          this.slides[tmpIndex].loaded = true;
-          this.onImageLazyLoad.emit(this.slides[tmpIndex]);
+          this.slides[index].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
+          this.slides[index].loaded = true;
           this._cdRef.detectChanges();
+          this.onImageLazyLoad.emit(this.slides[index]);
+          resolve();
         });
-      }
-      else {
-        this.slides[tmpIndex] = firstSlideFromTransferState;
-        this._transferState.remove(FIRST_SLIDE_KEY);
-      }
-    }
-  }
-
-  /**
-   * @description if lazy loading in browser, start loading remaining slides
-   * @todo: figure out how to not show the spinner if images are loading fast enough
-   */
-  private loadRemainingSlides(): void {
-    for (let i = 0; i < this.slides.length; i++) {
-      if (!this.slides[i].loaded) {
-        new Promise((resolve) => {
-          const tmpImage = this.imageUrls[i];
-          let loadImage = new Image();
-          loadImage.addEventListener('load', () => {
-            this.slides[i].image = (typeof tmpImage === 'string' ? { url: tmpImage } : tmpImage);
-            this.slides[i].loaded = true;
-            this._cdRef.detectChanges();
-            this.onImageLazyLoad.emit(this.slides[i]);
-            resolve();
-          });
-          loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
-        });
-      }
+        loadImage.src = (typeof tmpImage === 'string' ? tmpImage : tmpImage.url);
+      });
     }
   }
 
@@ -529,12 +431,13 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
         this._ngZone.runOutsideAngular(() => clearInterval(this._autoplayIntervalId));
         this._autoplayIntervalId = null;
       }
+      this.autoPlay = false;
     }
     else if (!this._autoplayIntervalId) {
       this._ngZone.runOutsideAngular(() => {
         this._autoplayIntervalId = setInterval(() => {
           if (!this.autoPlayWaitForLazyLoad || (this.autoPlayWaitForLazyLoad && this.slides[this.slideIndex] && this.slides[this.slideIndex].loaded)) {
-            this._ngZone.run(() => this.slide(1));
+            this._ngZone.run(() => this.autoPlayTransition == 'fade' ? this.fade(1) : this.slide(1));
           }
         }, this.autoPlayInterval);
       });
@@ -574,40 +477,6 @@ export class SlideshowComponent implements OnInit, AfterViewInit, DoCheck, OnCha
    */
   private checkCache(): boolean {
     return !(this._urlCache.length === this.imageUrls.length && this._urlCache.every((cacheElement, i) => cacheElement === this.imageUrls[i]));
-  }
-
-  /**
-   * @param {number} i
-   * @returns {number}
-   * @description get the index for the slide to the left of the new slide
-   */
-  private getLeftSideIndex(i?: number): number {
-    if (i === undefined) {
-      i = this.slideIndex;
-    }
-
-    if (--i < 0) {
-      i = this.slides.length - 1;
-    }
-
-    return i;
-  }
-
-  /**
-   * @param {number} i
-   * @returns {number}
-   * @description get the index for the slide to the right of the new slide
-   */
-  private getRightSideIndex(i?: number): number {
-    if (i === undefined) {
-      i = this.slideIndex;
-    }
-
-    if (++i >= this.slides.length) {
-      i = 0;
-    }
-
-    return i;
   }
 
   /**
