@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   height: string = '400px';
   minHeight: string;
   arrowSize: string = '30px';
+  arrowColor: string;
   showArrows: boolean = true;
   disableSwiping: boolean = false;
   autoPlay: boolean = true;

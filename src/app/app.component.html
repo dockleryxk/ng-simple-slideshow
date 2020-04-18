@@ -11,6 +11,7 @@
                [height]="height"
                [minHeight]="minHeight"
                [arrowSize]="arrowSize"
+               [arrowColor]="arrowColor"
                [showArrows]="showArrows"
                [disableSwiping]="disableSwiping"
                [autoPlay]="autoPlay"
@@ -240,6 +241,16 @@
              type="checkbox"
              name="enablePan"
              [(ngModel)]="enablePan">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="arrowColor">arrowColor</label>
+    </td>
+    <td>
+      <input id="arrowColor"
+             name="arrowColor"
+             [(ngModel)]="arrowColor">
     </td>
   </tr>
 </table>
